@@ -1,0 +1,6 @@
+
+public enum Categorias {
+
+	
+    REFRIGERADO, MUEBLE, ELECTRODOMESTICO, ALIMENTO, LIMPIEZA
+}
