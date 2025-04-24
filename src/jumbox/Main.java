@@ -1,3 +1,5 @@
+package jumbox;
+
 
 import javax.swing.JOptionPane;
 
