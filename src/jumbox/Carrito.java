@@ -1,3 +1,5 @@
+package jumbox;
+
 import java.util.LinkedList;
 
 public class Carrito {
