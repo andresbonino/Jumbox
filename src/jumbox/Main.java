@@ -30,7 +30,7 @@ public class Main {
 					//Encargado Sucursal
 					int opciones3 = 0;
 					opciones3 = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesSucursal.values(), OpcionesSucursal.values());
-
+					System.out.println("");
 					break;
 				case 3:
 					//Salir
