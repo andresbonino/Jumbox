@@ -7,11 +7,13 @@ public class Cliente {
 	private String nombre;
 	private String direccion;
 	private int telefono;
+	private String contrasena;
 	
-	public Cliente(String nombre, String direccion, int telefono) {
+	public Cliente(String nombre, String direccion, int telefono, String contrasena) {
 		this.nombre = nombre;
 		this.direccion = direccion;
 		this.telefono = telefono;
+		this.contrasena = contrasena;
 	}
 
 	public String getNombre() {
@@ -37,6 +39,15 @@ public class Cliente {
 	public void setTelefono(int telefono) {
 		this.telefono = telefono;
 	}
+	
+	public String getContrasena() {
+		return contrasena;
+	}
+
+	public void setContrasena(String contrasena) {
+		this.contrasena = contrasena;
+	}
+	
 	
 	
 	
