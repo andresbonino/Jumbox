@@ -9,6 +9,7 @@ public class Main {
 		
 		ControllerUsuario controller = new ControllerUsuario();
 		ControllerDeposito controllerD = new ControllerDeposito();
+		ControllerSucursal controllerS = new ControllerSucursal();
 		Conexion.getInstance();
 		int opcion = 0;
 
@@ -111,9 +112,25 @@ public class Main {
 					break;
 				case 2:
 					//Encargado Sucursal
-					int opciones3 = 0;
-					opciones3 = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesSucursal.values(), OpcionesSucursal.values());
-					System.out.println("");
+					String contraseniaS = "";
+                    while (contraseniaS.isEmpty()) {
+                        contraseniaS = JOptionPane.showInputDialog("Ingrese contraseña");
+                        if (contraseniaS.isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "Error: campo vacio");
+                        }
+                    }
+                    
+                    Sucursal usuario2 = controllerS.loginSucursal(contraseniaS);
+                    if (usuario2 != null) {
+                     JOptionPane.showMessageDialog(null, "Bienvenido a la Sucursal");
+                       // Ir a menu de la sucursal
+                     Sucursal encargadoS = (Sucursal)usuario2; 
+                     int opciones3 = 0;
+                     opciones3 = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesSucursal.values(), OpcionesSucursal.values());
+ 					
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
+                    }
 					break;
 				case 3:
 					//Salir
