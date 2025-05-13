@@ -15,6 +15,8 @@ public class Main {
 		ControllerUsuario controller = new ControllerUsuario();
 		ControllerDeposito controllerD = new ControllerDeposito();
 		ControllerSucursal controllerS = new ControllerSucursal();
+		
+		
 		Conexion.getInstance();
 		int opcion = 0;
 
@@ -23,8 +25,7 @@ public class Main {
 			opcion = JOptionPane.showOptionDialog(null, "¿Quien Eres?", "Jumbox", 0, 0, null, Usuarios.values(), Usuarios.values());
 
 			switch (opcion) {
-				case 0:
-					//Cliente
+				case 0: //Cliente
 					int opcionR = 0;
 					opcionR = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, Registro.values(), Registro.values());
 					if (opcionR==0) { //Iniciar Sesion
@@ -93,8 +94,11 @@ public class Main {
 					}
 
 					break;
-				case 1:
-					//Encargado Deposito
+					
+					
+					
+					
+				case 1: //Encargado Deposito
 					String contrasenia = "";
                     while (contrasenia.isEmpty()) {
                         contrasenia = JOptionPane.showInputDialog("Ingrese contraseña");
@@ -109,14 +113,36 @@ public class Main {
                        // Ir a menu del encargado del deposito
                      Deposito encargadoD = (Deposito)usuario; 
                        int opciones2 = 0;
+                       do {
                        opciones2 = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesDeposito.values(), OpcionesDeposito.values());
-
+                       		switch (opciones2) {
+                       		case 0: //Armar Envio
+                       			
+                       			break;
+                       		case 1: //Crear Producto
+                       				Productos.crearProducto("", 0, 0);
+                       			break; 
+                       		case 2: //Editar Producto
+        						
+                       			break; 
+                       		case 3: //Ver Stock
+        						
+                       			break;
+                       		case 4: //Salir
+        						
+                       			break;
+                       		default:
+                       			break;
+                       		}
+                    } while (opciones2!=4);
                     } else {
                         JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
                     }
 					break;
-				case 2:
-					//Encargado Sucursal
+					
+					
+					
+				case 2: //Encargado Sucursal
 					String contraseniaS = "";
                     while (contraseniaS.isEmpty()) {
                         contraseniaS = JOptionPane.showInputDialog("Ingrese contraseña");
@@ -137,8 +163,11 @@ public class Main {
                         JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
                     }
 					break;
-				case 3:
-					//Salir
+					
+					
+					
+				case 3: //Salir
+					
 					break;
 				default:
 					break;
