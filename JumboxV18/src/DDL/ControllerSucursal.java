@@ -1,4 +1,4 @@
-package jumbox;
+package DDL;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import jumbox.Sucursal;
 import repository.SucursalRepository;
 
 public class ControllerSucursal<T extends Sucursal> implements SucursalRepository {

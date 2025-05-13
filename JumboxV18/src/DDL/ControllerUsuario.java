@@ -1,10 +1,11 @@
-package jumbox;
+package DDL;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.LinkedList;
 
+import jumbox.Cliente;
 import repository.UsuarioRepository;
 
 public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
