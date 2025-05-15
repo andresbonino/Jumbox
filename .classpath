@@ -6,6 +6,10 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
+<<<<<<< Updated upstream:.classpath
 	<classpathentry kind="lib" path="C:/Users/Alumno/Documents/GitHub/Jumbox/src/jumbox/mysql-connector-java-5.1.13.jar"/>
+=======
+	<classpathentry kind="lib" path="C:/Users/Alumno/Downloads/mysql-connector-java-5.1.13.jar"/>
+>>>>>>> Stashed changes:JumboxV18/.classpath
 	<classpathentry kind="output" path="bin"/>
 </classpath>
