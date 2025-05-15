@@ -10,11 +10,16 @@ public class Productos {
 	private String nombre;
 	private double precio;
 	private int stock;
+	private int fk_categoria;
 	
-	public Productos(String nombre, double precio, int stock) {
+	
+
+	public Productos(String nombre, double precio, int stock, int fk_categoria) {
+		super();
 		this.nombre = nombre;
 		this.precio = precio;
 		this.stock = stock;
+		this.fk_categoria = fk_categoria;
 	}
 
 	public String getNombre() {
@@ -41,6 +46,16 @@ public class Productos {
 		this.stock = stock;
 	}
 	
+	
+	
+	public int getFk_categoria() {
+		return fk_categoria;
+	}
+
+	public void setFk_categoria(int fk_categoria) {
+		this.fk_categoria = fk_categoria;
+	}
+
 	public static void crearProducto(String nombre, double precio, int stock) {//, int categoria
 		ControllerProducto controller = new ControllerProducto();
 		
@@ -65,11 +80,69 @@ public class Productos {
                 }
             }
          
-		//categoria = (int) JOptionPane.showInputDialog(null, "¿En que categoria entra tu producto?", "Jumbox", categoria, null, Categorias.values(), Categorias.values()[0]);
+         Categorias fk_categoriaa;
+         
+		int categoria = (int) JOptionPane.showInputDialog(null, "¿En que categoria entra tu producto?", "Jumbox", 0, null, Categorias.values(), Categorias.values()[0]);
 
-            
+
+         switch (categoria) {
+		case 0:
+			fk_categoriaa = Categorias.Refrigerado;
+			break;
+		case 1:
+			fk_categoriaa = Categorias.Mueble;
+			break;
+		case 2:
+			fk_categoriaa = Categorias.Electrodomestico;
+			break;
+		case 3:
+			fk_categoriaa = Categorias.Alimento;
+			break;
+		case 4:
+			fk_categoriaa = Categorias.Limpieza;
+			break;
+		case 5:
+			fk_categoriaa = Categorias.Higiene_Personal;
+			break;
+			
+		case 6:
+			fk_categoriaa = Categorias.Farmacia;
+			break;
+			
+		case 7:
+			fk_categoriaa = Categorias.Farmacia;
+			break;
+			
+		case 8:
+			fk_categoriaa = Categorias.Mascotas;
+			break;
+			
+		case 9:
+			fk_categoriaa = Categorias.Hogar;
+			break;
+			
+		case 10:
+			fk_categoriaa = Categorias.Ferreteria;
+			break;
+			
+		case 11:
+			fk_categoriaa = Categorias.Libreria;
+			break;
+			
+		case 12:
+			fk_categoriaa = Categorias.Bebidas;
+			break;
+			
+		case 13:
+			fk_categoriaa = Categorias.Despensa;
+			break;
+		
+
+		default:
+			break;
+		}
         
-        Productos producto = new Productos(nombre, precio, stock);
+        Productos producto = new Productos(nombre, precio, stock, categoria);
         controller.agregarProducto(producto);
 	}
 	
