@@ -38,8 +38,7 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
         }
         return usuario;
     }
-    
-    
+
     @Override
     public void agregarUsuario(Cliente usuario) {
         try {
@@ -59,8 +58,6 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
             e.printStackTrace();
         }
     }
-    
-    
 
     @Override
     public LinkedList<Cliente> mostrarUsuarios() {
@@ -84,9 +81,8 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
         }
         return usuarios;
     }
-
-
-	@Override
+    
+    @Override
 	public void verificarUsuario(Cliente usuario) {
 		LinkedList<Cliente> existentes = mostrarUsuarios();
     	boolean flag = true;

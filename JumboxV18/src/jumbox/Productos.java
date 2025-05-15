@@ -73,9 +73,5 @@ public class Productos {
         controller.agregarProducto(producto);
 	}
 	
-	public static void editarProducto(String nombre) {
-		
-	}
-	
 	
 }

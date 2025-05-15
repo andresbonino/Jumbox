@@ -129,7 +129,7 @@ public class Main {
         						
                        			break;
                        		case 4: //Salir
-                       			JOptionPane.showMessageDialog(null, "Saliendo...");
+        						JOptionPane.showMessageDialog(null, "Saliendo...");
                        			break;
                        		default:
                        			break;
