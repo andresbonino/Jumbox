@@ -90,7 +90,7 @@ public class Main {
 	                        }
 	                    }
 	                    Cliente usuario = new Cliente(nombre, direccion, telefono, contrasena);
-	                    controller.agregarUsuario(usuario);
+	                    controller.verificarUsuario(usuario);
 					}
 
 					break;
@@ -129,7 +129,7 @@ public class Main {
         						
                        			break;
                        		case 4: //Salir
-        						
+        						JOptionPane.showMessageDialog(null, "Saliendo...");
                        			break;
                        		default:
                        			break;
@@ -167,7 +167,7 @@ public class Main {
 					
 					
 				case 3: //Salir
-					
+					JOptionPane.showMessageDialog(null, "Saliendo...");
 					break;
 				default:
 					break;

@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.LinkedList;
 
+import javax.swing.JOptionPane;
+
 import jumbox.Cliente;
 import repository.UsuarioRepository;
 
@@ -79,4 +81,22 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
         }
         return usuarios;
     }
+    
+    @Override
+	public void verificarUsuario(Cliente usuario) {
+		LinkedList<Cliente> existentes = mostrarUsuarios();
+    	boolean flag = true;
+    	for (Cliente existente : existentes) {
+			if (existente.getTelefono()==usuario.getTelefono()) {
+				flag = false;
+				break;
+			}
+		}
+    	if (flag) {
+    		agregarUsuario(usuario);
+		}else {
+			JOptionPane.showMessageDialog(null, "El usuario se registró anteriormente");
+		}
+		
+	}
 }
