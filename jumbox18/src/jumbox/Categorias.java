@@ -3,6 +3,19 @@ package jumbox;
 
 public enum Categorias {
 
-	
-    REFRIGERADO, MUEBLE, ELECTRODOMESTICO, ALIMENTO, LIMPIEZA
+	Refrigerado,
+	Mueble,
+	Electrodomestico,
+	Alimento,
+	Limpieza,
+	Higiene_Personal,
+	Farmacia,
+	Mascotas,
+	Hogar,
+	Ferreteria,
+	Jugueteria,
+	Libreria,
+	Bebidas,
+	Despensa
+
 }
