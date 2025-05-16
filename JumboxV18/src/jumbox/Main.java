@@ -5,6 +5,7 @@ import javax.swing.JOptionPane;
 
 import DDL.Conexion;
 import DDL.ControllerDeposito;
+import DDL.ControllerProducto;
 import DDL.ControllerSucursal;
 import DDL.ControllerUsuario;
 
@@ -15,7 +16,7 @@ public class Main {
 		ControllerUsuario controller = new ControllerUsuario();
 		ControllerDeposito controllerD = new ControllerDeposito();
 		ControllerSucursal controllerS = new ControllerSucursal();
-		
+		ControllerProducto controllerP = new ControllerProducto();
 		
 		Conexion.getInstance();
 		int opcion = 0;
@@ -126,10 +127,10 @@ public class Main {
         						
                        			break; 
                        		case 3: //Ver Stock
-        						
+                       			controllerP.verStock();	
                        			break;
                        		case 4: //Salir
-        						JOptionPane.showMessageDialog(null, "Saliendo...");
+                       			JOptionPane.showMessageDialog(null, "Saliendo del depósito...");
                        			break;
                        		default:
                        			break;
@@ -167,7 +168,7 @@ public class Main {
 					
 					
 				case 3: //Salir
-					JOptionPane.showMessageDialog(null, "Saliendo...");
+					JOptionPane.showMessageDialog(null, "Saliendo de la app...");
 					break;
 				default:
 					break;
