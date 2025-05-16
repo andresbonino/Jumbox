@@ -8,5 +8,5 @@ public interface ProductoRepository {
     List<Productos> mostrarProducto();
     void verStock();
     void editarProducto(Productos Producto);
-    void editar(Productos producto);
+    void editar();
 }

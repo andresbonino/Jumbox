@@ -18,6 +18,7 @@ public class Main {
 		ControllerSucursal controllerS = new ControllerSucursal();
 		ControllerProducto controllerP = new ControllerProducto();
 		
+		
 		Conexion.getInstance();
 		int opcion = 0;
 
@@ -124,7 +125,7 @@ public class Main {
                        				Productos.crearProducto("", 0, 0);
                        			break; 
                        		case 2: //Editar Producto
-        						
+                       			controllerP.editar();
                        			break; 
                        		case 3: //Ver Stock
                        			controllerP.verStock();	
@@ -158,7 +159,23 @@ public class Main {
                        // Ir a menu de la sucursal
                      Sucursal encargadoS = (Sucursal)usuario2; 
                      int opciones3 = 0;
-                     opciones3 = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesSucursal.values(), OpcionesSucursal.values());
+                     do {
+                    	 opciones3 = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesSucursal.values(), OpcionesSucursal.values());
+                    	 
+                    	 switch (opciones3) {
+						case 0: //Consultar los productos
+							
+							break;
+
+						case 1: //Gestionar pedidos
+							
+							break;
+							
+						case 2:
+							JOptionPane.showMessageDialog(null, "Saliendo de las sucursales...");
+							break;
+						}
+					} while (opciones3!=2);
  					
                     } else {
                         JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
