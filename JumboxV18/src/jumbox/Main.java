@@ -120,7 +120,7 @@ public class Main {
                        			
                        			break;
                        		case 1: //Crear Producto
-                       				Productos.crearProducto("", 0, 0);
+                       				Productos.crearProducto("", 0, -1, 0);
                        			break; 
                        		case 2: //Editar Producto
         						
