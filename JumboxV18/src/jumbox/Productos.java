@@ -21,6 +21,7 @@ public class Productos {
 		this.stock = stock;
 		this.fk_categoria = fk_categoria;
 	}
+	
 
 	public String getNombre() {
 		return nombre;
@@ -142,8 +143,7 @@ public class Productos {
 			break;
 		}
         
-        Productos producto = new Productos(nombre, precio, stock, categoria);
-        controller.agregarProducto(producto);
+
 	}
 	
 	

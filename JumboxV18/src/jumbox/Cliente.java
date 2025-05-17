@@ -3,7 +3,7 @@ package jumbox;
 
 public class Cliente {
 
-	
+	private int id;
 	private String nombre;
 	private String direccion;
 	private int telefono;
@@ -15,6 +15,31 @@ public class Cliente {
 		this.telefono = telefono;
 		this.contrasena = contrasena;
 	}
+	
+	
+
+	public Cliente(int id, String nombre, String direccion, int telefono, String contrasena) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+		this.direccion = direccion;
+		this.telefono = telefono;
+		this.contrasena = contrasena;
+	}
+
+
+
+	public int getId() {
+		return id;
+	}
+
+
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
 
 	public String getNombre() {
 		return nombre;

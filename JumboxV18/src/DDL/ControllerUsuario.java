@@ -79,4 +79,39 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
         }
         return usuarios;
     }
+    
+    public T buscarUsuario(int id) {
+		
+    	T cliente = null;
+    	
+    	try {
+    		
+    		PreparedStatement stmt = con.prepareStatement( "SELECT * FROM cliente WHERE id_cliente = ?");
+    		
+    		stmt.setInt(1, id);
+    		 
+    		ResultSet rs = stmt.executeQuery();
+    		
+    		if (rs.next()) {
+    			
+    			String nombre = rs.getString("nombre");
+    			String direccion = rs.getString("direccion");
+
+    			int telefono = rs.getInt("telefono");
+
+    			String contrasena = rs.getString("contrasena");
+    			
+    			cliente = (T) new Cliente(id, nombre, direccion, telefono, contrasena);
+
+				
+			}
+			
+		} catch (Exception e) {
+			 e.printStackTrace();
+		}
+    	
+    	return cliente;
+    	
+	}
+    
 }
