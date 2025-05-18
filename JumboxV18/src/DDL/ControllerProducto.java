@@ -19,11 +19,12 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
     public void agregarProducto(Productos producto) {
         try {
             PreparedStatement statement = con.prepareStatement(
-                "INSERT INTO producto (nombre, precio, stock) VALUES (?, ?, ?)"
+            	"INSERT INTO producto (nombre, precio, stock, fk_categoria) VALUES (?, ?, ?, ?)"
             );
             statement.setString(1, producto.getNombre());
             statement.setDouble(2, producto.getPrecio());
             statement.setInt(3, producto.getStock());
+            statement.setInt(4, producto.getCategoria());
 
             int filas = statement.executeUpdate();
             if (filas > 0) {
@@ -45,8 +46,9 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
                 String nombre = rs.getString("nombre");
                 Double precio = rs.getDouble("precio");
                 int stock = rs.getInt("stock");
+                int categoria = rs.getInt("categoria");
                
-                producto.add((T) new Productos(nombre, precio, stock));
+                producto.add((T) new Productos(nombre, precio, stock, categoria));
                         
             }
         } catch (Exception e) {

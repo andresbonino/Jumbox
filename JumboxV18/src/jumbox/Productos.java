@@ -10,11 +10,13 @@ public class Productos {
 	private String nombre;
 	private double precio;
 	private int stock;
+	private int categoria;
 	
-	public Productos(String nombre, double precio, int stock) {
+	public Productos(String nombre, double precio, int stock, int categoria) {
 		this.nombre = nombre;
 		this.precio = precio;
 		this.stock = stock;
+		this.categoria = categoria;
 	}
 
 	public String getNombre() {
@@ -41,7 +43,15 @@ public class Productos {
 		this.stock = stock;
 	}
 	
-	public static void crearProducto(String nombre, double precio, int stock) {//, int categoria
+	public int getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(int categoria) {
+		this.categoria = categoria;
+	}
+	
+	public static void crearProducto(String nombre, double precio, int stock, int categoria) {
 		ControllerProducto controller = new ControllerProducto();
 		
         while (nombre.isEmpty()) {
@@ -51,9 +61,9 @@ public class Productos {
             }
         }
            
-         while (precio==0) {
+        while (precio<=0) {
         	 precio = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el precio del producto"));
-             if (precio==0) {
+        	 if (precio<=0) {
                 JOptionPane.showMessageDialog(null, "Error");
                 }
             }
@@ -65,11 +75,13 @@ public class Productos {
                 }
             }
          
-		//categoria = (int) JOptionPane.showInputDialog(null, "¿En que categoria entra tu producto?", "Jumbox", categoria, null, Categorias.values(), Categorias.values()[0]);
+         Categorias categoriaSeleccionada = (Categorias) JOptionPane.showInputDialog(null, "¿En qué categoría entra tu producto?", "Jumbox", JOptionPane.QUESTION_MESSAGE, null,Categorias.values(), Categorias.values()[0]);
+
+         int fk_categoria = categoriaSeleccionada.getId();
 
             
         
-        Productos producto = new Productos(nombre, precio, stock);
+         Productos producto = new Productos(nombre, precio, stock, fk_categoria);
         controller.agregarProducto(producto);
 	}
 	
