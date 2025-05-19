@@ -7,6 +7,7 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
+import jumbox.Categorias;
 import jumbox.Productos;
 import repository.ProductoRepository;
 
@@ -46,9 +47,8 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
                 String nombre = rs.getString("nombre");
                 Double precio = rs.getDouble("precio");
                 int stock = rs.getInt("stock");
-                int categoria = rs.getInt("categoria");
                
-                producto.add((T) new Productos(nombre, precio, stock, categoria));
+                producto.add((T) new Productos(nombre, precio, stock));
                         
             }
         } catch (Exception e) {
@@ -61,11 +61,12 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
     public void editarProducto(Productos producto) {
         try {
             PreparedStatement stmt = con.prepareStatement(
-                "UPDATE producto SET precio = ?, stock = ? WHERE nombre = ?"
+                "UPDATE producto SET precio = ?, stock = ?, fk_categoria = ? WHERE nombre = ?"
             );
             stmt.setDouble(1, producto.getPrecio());
             stmt.setInt(2, producto.getStock());
-            stmt.setString(3, producto.getNombre());
+            stmt.setInt(3, producto.getCategoria());
+            stmt.setString(4, producto.getNombre());
 
             int filas = stmt.executeUpdate();
             if (filas > 0) {
@@ -141,6 +142,9 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 							nuevoS = Integer.parseInt(nuevoStock);
 						}
 					} while (nuevoStock.isEmpty() || nuevoS<=0);
+					 Categorias categoriaSeleccionada = (Categorias) JOptionPane.showInputDialog(null, "Cambie la categoria de su producto", "Jumbox", JOptionPane.QUESTION_MESSAGE, null,Categorias.values(), Categorias.values()[0]);
+
+					seleccionado.setCategoria(categoriaSeleccionada.getId());
 		            seleccionado.setPrecio(nuevoP);
 		            seleccionado.setStock(nuevoS);
 		                

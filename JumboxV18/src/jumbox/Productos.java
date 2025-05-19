@@ -11,12 +11,19 @@ public class Productos {
 	private double precio;
 	private int stock;
 	private int categoria;
+	private int idProducto;
 	
 	public Productos(String nombre, double precio, int stock, int categoria) {
 		this.nombre = nombre;
 		this.precio = precio;
 		this.stock = stock;
 		this.categoria = categoria;
+	}
+	
+	public Productos(String nombre, double precio, int stock) {
+		this.nombre = nombre;
+		this.precio = precio;
+		this.stock = stock;
 	}
 
 	public String getNombre() {
@@ -49,6 +56,12 @@ public class Productos {
 
 	public void setCategoria(int categoria) {
 		this.categoria = categoria;
+	}
+	public int getIdProducto() {
+		return idProducto;
+	}
+	public void setIdProducto(int idProducto) {
+		this.idProducto = idProducto;
 	}
 	
 	public static void crearProducto(String nombre, double precio, int stock, int categoria) {
@@ -84,6 +97,8 @@ public class Productos {
          Productos producto = new Productos(nombre, precio, stock, fk_categoria);
         controller.agregarProducto(producto);
 	}
+
+	
 	
 	
 }
