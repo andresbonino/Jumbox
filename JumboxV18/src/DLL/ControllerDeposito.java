@@ -1,23 +1,23 @@
-package DDL;
+package DLL;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 
-import jumbox.Sucursal;
-import repository.SucursalRepository;
+import jumbox.Deposito;
+import repository.DepositoRepository;
 
-public class ControllerSucursal<T extends Sucursal> implements SucursalRepository {
+public class ControllerDeposito<T extends Deposito> implements DepositoRepository {
 	
     private static Connection con = Conexion.getInstance().getConnection();
 
     @Override
-    public T loginSucursal(String contrasena) {
-        T EncargadoS = null;
+    public T loginDeposito(String contrasena) {
+        T EncargadoD = null;
         try {
             PreparedStatement stmt = con.prepareStatement(
-                "SELECT * FROM sucursal WHERE contrasena = ?"
+                "SELECT * FROM deposito WHERE contrasena = ?"
             );
             stmt.setString(1, contrasena);
             
@@ -25,23 +25,23 @@ public class ControllerSucursal<T extends Sucursal> implements SucursalRepositor
 
             if (rs.next()) {
 
-            	EncargadoS = (T) new Sucursal(contrasena);
+            	EncargadoD = (T) new Deposito(contrasena);
                        
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return EncargadoS;
+        return EncargadoD;
     }
 
 	@Override
-	public void agregarEncargadoS(Sucursal EncargadoS) {
+	public void agregarEncargadoD(Deposito EncargadoD) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public List<Sucursal> mostrarEncargadoS() {
+	public List<Deposito> mostrarEncargadoD() {
 		// TODO Auto-generated method stub
 		return null;
 	}

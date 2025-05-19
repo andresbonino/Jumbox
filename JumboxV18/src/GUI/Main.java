@@ -1,13 +1,22 @@
-package jumbox;
+package GUI;
 
 
 import javax.swing.JOptionPane;
 
-import DDL.Conexion;
-import DDL.ControllerDeposito;
-import DDL.ControllerProducto;
-import DDL.ControllerSucursal;
-import DDL.ControllerUsuario;
+import DLL.Conexion;
+import DLL.ControllerDeposito;
+import DLL.ControllerProducto;
+import DLL.ControllerSucursal;
+import DLL.ControllerUsuario;
+import jumbox.Cliente;
+import jumbox.Deposito;
+import jumbox.OpcionesCliente;
+import jumbox.OpcionesDeposito;
+import jumbox.OpcionesSucursal;
+import jumbox.Productos;
+import jumbox.Registro;
+import jumbox.Sucursal;
+import jumbox.Usuarios;
 
 public class Main {
 

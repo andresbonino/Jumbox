@@ -2,8 +2,8 @@ package jumbox;
 
 import javax.swing.JOptionPane;
 
-import DDL.ControllerProducto;
-import DDL.ControllerUsuario;
+import DLL.ControllerProducto;
+import DLL.ControllerUsuario;
 
 public class Productos {
 
