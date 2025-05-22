@@ -1,13 +1,22 @@
-package jumbox;
+package GUI;
 
 
 import javax.swing.JOptionPane;
 
-import DDL.Conexion;
-import DDL.ControllerDeposito;
-import DDL.ControllerProducto;
-import DDL.ControllerSucursal;
-import DDL.ControllerUsuario;
+import DLL.Conexion;
+import DLL.ControllerDeposito;
+import DLL.ControllerProducto;
+import DLL.ControllerSucursal;
+import DLL.ControllerUsuario;
+import jumbox.Cliente;
+import jumbox.Deposito;
+import jumbox.OpcionesCliente;
+import jumbox.OpcionesDeposito;
+import jumbox.OpcionesSucursal;
+import jumbox.Productos;
+import jumbox.Registro;
+import jumbox.Sucursal;
+import jumbox.Usuarios;
 
 public class Main {
 
@@ -122,16 +131,16 @@ public class Main {
                        			
                        			break;
                        		case 1: //Crear Producto
-                       				Productos.crearProducto("", 0, 0);
+                       			Productos.crearProducto("", 0, -1, 0);
                        			break; 
                        		case 2: //Editar Producto
-        						
+                       			controllerP.editar();
                        			break; 
                        		case 3: //Ver Stock
                        			controllerP.verStock();	
                        			break;
                        		case 4: //Salir
-        						JOptionPane.showMessageDialog(null, "Saliendo del depósito...");
+                       			JOptionPane.showMessageDialog(null, "Saliendo del depósito...");
                        			break;
                        		default:
                        			break;
@@ -159,7 +168,23 @@ public class Main {
                        // Ir a menu de la sucursal
                      Sucursal encargadoS = (Sucursal)usuario2; 
                      int opciones3 = 0;
-                     opciones3 = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesSucursal.values(), OpcionesSucursal.values());
+                     do {
+                    	 opciones3 = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesSucursal.values(), OpcionesSucursal.values());
+                    	 
+                    	 switch (opciones3) {
+						case 0: //Consultar los productos
+							
+							break;
+
+						case 1: //Gestionar pedidos
+							
+							break;
+							
+						case 2:
+							JOptionPane.showMessageDialog(null, "Saliendo de las sucursales...");
+							break;
+						}
+					} while (opciones3!=2);
  					
                     } else {
                         JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
