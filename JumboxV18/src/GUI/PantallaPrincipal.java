@@ -5,6 +5,11 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import jumbox.Cliente;
+import jumbox.Deposito;
+import jumbox.Registro;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -66,7 +71,15 @@ public class PantallaPrincipal extends JFrame {
 		btnNewButton.setFont(new Font("Swis721 Blk BT", Font.PLAIN, 30));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
+				dispose();
+				int opcionR = 0;
+				opcionR = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, Registro.values(), Registro.values());
+					if (opcionR==0) {
+						Cliente.LoginCliente("","");
+					
+					}else if (opcionR==1) {
+						Cliente.RegistroCliente("", "", "", 0);
+					}
 			}
 		});
 		btnNewButton.setBounds(41, 519, 190, 50);
@@ -75,6 +88,9 @@ public class PantallaPrincipal extends JFrame {
 		JButton btnDeposito = new JButton("Deposito");
 		btnDeposito.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				dispose();
+				InicioDeposito menu = new InicioDeposito();
+       	        menu.setVisible(true);
 			}
 		});
 		btnDeposito.setFont(new Font("Swis721 Blk BT", Font.PLAIN, 30));
@@ -90,5 +106,10 @@ public class PantallaPrincipal extends JFrame {
 		btnSalir.setFont(new Font("Swis721 Blk BT", Font.PLAIN, 30));
 		btnSalir.setBounds(261, 599, 190, 50);
 		contentPane.add(btnSalir);
+		btnSalir.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        System.exit(0);
+		    }
+		});
 	}
 }
