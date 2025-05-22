@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
+<<<<<<< Updated upstream
 	<name>Jumbox</name>
+=======
+	<name>jumbox</name>
+>>>>>>> Stashed changes
 	<comment></comment>
 	<projects>
 	</projects>
