@@ -76,9 +76,34 @@ public class Cliente {
 	         JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
 	           // Ir a menu de cliente
 	           Cliente comprador = (Cliente)usuario;
+	           
 	           int opciones = 0;
-	           opciones = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesCliente.values(), OpcionesCliente.values());
+               do {
+            	   opciones = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesCliente.values(), OpcionesCliente.values());
+            	   
+            	   switch (opciones) {
+				case 0: //Comprar
+					
+					break;
 
+				case 1: //Ver el carrito
+					
+					break;
+				
+				case 2: //Editar carrito
+					
+					break;
+					
+				case 3: //Estado de la compra
+					
+					break;
+
+				case 4: //Salir
+					JOptionPane.showMessageDialog(null, "Saliendo...");
+					break;
+
+				}
+               } while (opciones!=4);
 	            
 	        } else {
 	            JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");

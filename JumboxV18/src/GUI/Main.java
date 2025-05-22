@@ -58,12 +58,11 @@ public class Main {
 
 	                    Cliente usuario = controller.login(nombre, contrasenia);
 	                    if (usuario != null) {
-	                     JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
+	                    	JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
 	                       // Ir a menu de cliente
 	                       Cliente comprador = (Cliente)usuario;
-	                       int opciones = 0;
-	                       opciones = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesCliente.values(), OpcionesCliente.values());
-
+	                       
+	                       
 	                        
 	                    } else {
 	                        JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");

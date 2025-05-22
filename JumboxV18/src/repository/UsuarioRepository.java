@@ -8,4 +8,8 @@ public interface UsuarioRepository {
     List<Cliente> mostrarUsuarios();
 	<T> T login(String nombre, String contrasena);
 	void verificarUsuario(Cliente usuario);
+	void compras();
+	void verCarrito();
+	void editarCarrito();
+	void verCompra();
 }

@@ -77,7 +77,7 @@ public class PantallaPrincipal extends JFrame {
 					if (opcionR==0) {
 						Cliente.LoginCliente("","");
 					
-					}else if (opcionR==1) {
+					}else {
 						Cliente.RegistroCliente("", "", "", 0);
 					}
 			}
