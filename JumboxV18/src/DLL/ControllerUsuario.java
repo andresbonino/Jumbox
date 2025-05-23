@@ -7,6 +7,7 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
+import jumbox.Carrito;
 import jumbox.Cliente;
 import jumbox.Productos;
 import repository.UsuarioRepository;
@@ -100,29 +101,5 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
 		}
 		
 	}
-
-	@Override
-	public void compras() {
-		LinkedList<Productos> carrito = new LinkedList<>();
-		
-		
-	}
-
-	@Override
-	public void verCarrito() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void editarCarrito() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void verCompra() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 }

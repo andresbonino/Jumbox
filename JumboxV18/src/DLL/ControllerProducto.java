@@ -12,7 +12,6 @@ import jumbox.Productos;
 import repository.ProductoRepository;
 
 public class ControllerProducto<T extends Productos> implements ProductoRepository {
-	
     private static Connection con = Conexion.getInstance().getConnection();
 
     
