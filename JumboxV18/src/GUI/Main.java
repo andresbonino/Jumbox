@@ -1,6 +1,5 @@
 package GUI;
 
-
 import javax.swing.JOptionPane;
 
 import DLL.Conexion;
@@ -26,7 +25,6 @@ public class Main {
 		ControllerDeposito controllerD = new ControllerDeposito();
 		ControllerSucursal controllerS = new ControllerSucursal();
 		ControllerProducto controllerP = new ControllerProducto();
-		
 		
 		Conexion.getInstance();
 		int opcion = 0;
@@ -58,13 +56,42 @@ public class Main {
 
 	                    Cliente usuario = controller.login(nombre, contrasenia);
 	                    if (usuario != null) {
-	                     JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
-	                       // Ir a menu de cliente
-	                       Cliente comprador = (Cliente)usuario;
-	                       int opciones = 0;
-	                       opciones = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesCliente.values(), OpcionesCliente.values());
+	                    	JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
+	                    	Cliente comprador = (Cliente)usuario;
 
-	                        
+	                        int opciones = 0;
+	                        do {
+	                            opciones = JOptionPane.showOptionDialog(null, "¿Qué deseas hacer?", "Menú Cliente", 0, 0, null,
+	                                OpcionesCliente.values(), OpcionesCliente.values());
+
+	                            switch (opciones) {
+	                                case 0: // VER_CARRITO
+	                                    controller.verCarrito(comprador.getId());
+	                                    break;
+
+	                                case 1: // AGREGAR_PRODUCTO
+	                                    try {
+	                                        int idProducto = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el ID del producto que desea agregar:"));
+	                                        controller.agregarProductoACarrito(comprador.getId(), idProducto);
+	                                    } catch (NumberFormatException e) {
+	                                        JOptionPane.showMessageDialog(null, "ID inválido.");
+	                                    }
+	                                    break;
+
+	                                case 2: // REALIZAR_COMPRA
+	                                    controller.realizarCompra(comprador.getId());
+	                                    break;
+
+	                                case 3: // ESTADO_COMPRA
+	                                    controller.estadoCompra(comprador.getId());
+	                                    break;
+
+	                                case 4: // SALIR
+	                                    JOptionPane.showMessageDialog(null, "Saliendo del menú cliente...");
+	                                    break;
+	                            }
+	                        } while (opciones != 4);
+
 	                    } else {
 	                        JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
 	                    }
@@ -105,10 +132,7 @@ public class Main {
 					}
 
 					break;
-					
-					
-					
-					
+
 				case 1: //Encargado Deposito
 					String contrasenia = "";
                     while (contrasenia.isEmpty()) {
@@ -120,39 +144,35 @@ public class Main {
                     
                     Deposito usuario = controllerD.loginDeposito(contrasenia);
                     if (usuario != null) {
-                     JOptionPane.showMessageDialog(null, "Bienvenido al Deposito");
-                       // Ir a menu del encargado del deposito
-                     Deposito encargadoD = (Deposito)usuario; 
-                       int opciones2 = 0;
-                       do {
-                       opciones2 = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesDeposito.values(), OpcionesDeposito.values());
-                       		switch (opciones2) {
-                       		case 0: //Armar Envio
-                       			
-                       			break;
-                       		case 1: //Crear Producto
-                       			Productos.crearProducto("", 0, -1, 0);
-                       			break; 
-                       		case 2: //Editar Producto
-                       			controllerP.editar();
-                       			break; 
-                       		case 3: //Ver Stock
-                       			controllerP.verStock();	
-                       			break;
-                       		case 4: //Salir
-                       			JOptionPane.showMessageDialog(null, "Saliendo del depósito...");
-                       			break;
-                       		default:
-                       			break;
-                       		}
+                    	JOptionPane.showMessageDialog(null, "Bienvenido al Deposito");
+                    	Deposito encargadoD = (Deposito)usuario; 
+                    	int opciones2 = 0;
+                    	do {
+                    		opciones2 = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesDeposito.values(), OpcionesDeposito.values());
+                    		switch (opciones2) {
+                    		case 0: //Armar Envio
+                    			break;
+                    		case 1: //Crear Producto
+                    			Productos.crearProducto("", 0, -1, 0);
+                    			break; 
+                    		case 2: //Editar Producto
+                    			controllerP.editar();
+                    			break; 
+                    		case 3: //Ver Stock
+                    			controllerP.verStock();	
+                    			break;
+                    		case 4: //Salir
+                    			JOptionPane.showMessageDialog(null, "Saliendo del depósito...");
+                    			break;
+                    		default:
+                    			break;
+                    		}
                     } while (opciones2!=4);
                     } else {
                         JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
                     }
 					break;
-					
-					
-					
+
 				case 2: //Encargado Sucursal
 					String contraseniaS = "";
                     while (contraseniaS.isEmpty()) {
@@ -164,44 +184,32 @@ public class Main {
                     
                     Sucursal usuario2 = controllerS.loginSucursal(contraseniaS);
                     if (usuario2 != null) {
-                     JOptionPane.showMessageDialog(null, "Bienvenido a la Sucursal");
-                       // Ir a menu de la sucursal
-                     Sucursal encargadoS = (Sucursal)usuario2; 
-                     int opciones3 = 0;
-                     do {
-                    	 opciones3 = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesSucursal.values(), OpcionesSucursal.values());
-                    	 
-                    	 switch (opciones3) {
-						case 0: //Consultar los productos
-							
-							break;
-
-						case 1: //Gestionar pedidos
-							
-							break;
-							
-						case 2:
-							JOptionPane.showMessageDialog(null, "Saliendo de las sucursales...");
-							break;
-						}
-					} while (opciones3!=2);
- 					
+                    	JOptionPane.showMessageDialog(null, "Bienvenido a la Sucursal");
+                    	Sucursal encargadoS = (Sucursal)usuario2; 
+                    	int opciones3 = 0;
+                    	do {
+                    		opciones3 = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesSucursal.values(), OpcionesSucursal.values());
+                    		switch (opciones3) {
+							case 0: //Consultar los productos
+								break;
+							case 1: //Gestionar pedidos
+								break;
+							case 2:
+								JOptionPane.showMessageDialog(null, "Saliendo de las sucursales...");
+								break;
+							}
+						} while (opciones3!=2);
                     } else {
                         JOptionPane.showMessageDialog(null, "Contraseña incorrecta");
                     }
 					break;
-					
-					
-					
+
 				case 3: //Salir
 					JOptionPane.showMessageDialog(null, "Saliendo de la app...");
 					break;
 				default:
 					break;
-				}
-			} while (opcion!=3);
-			
-		
-		
+			}
+		} while (opcion!=3);
 	}
 }
