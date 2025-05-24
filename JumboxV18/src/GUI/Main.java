@@ -81,10 +81,17 @@ public class Main {
 									case 2: // EDITAR CARRITO
 										controllerC.editarCarrito(carrito);
 										break;
+										
+									case 3: // REALIZAR COMPRA
+										controllerC.realizarCompra(carrito, comprador);
+										carrito.clear();
 
-									case 3: // SALIR
-										JOptionPane.showMessageDialog(null, "Saliendo del menú cliente...");
+									case 4: // SALIR
+										
+										controllerC.verCompra();
 										break;
+										
+										
 								}
 							} while (opciones != 3);
 
