@@ -16,6 +16,8 @@ public class Cliente {
 	private String contrasena;
 	static ControllerUsuario controller = new ControllerUsuario();
 	static ControllerCarrito controllerCarr = new ControllerCarrito();
+	private int id;
+	
 	
 	public Cliente(String nombre, String direccion, int telefono, String contrasena) {
 		this.nombre = nombre;
@@ -23,6 +25,32 @@ public class Cliente {
 		this.telefono = telefono;
 		this.contrasena = contrasena;
 	}
+	
+	
+
+	public Cliente(String nombre, String direccion, int telefono, String contrasena, int id) {
+		super();
+		this.nombre = nombre;
+		this.direccion = direccion;
+		this.telefono = telefono;
+		this.contrasena = contrasena;
+		this.id = id;
+	}
+
+	
+
+
+	public int getId() {
+		return id;
+	}
+
+
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+
 
 	public String getNombre() {
 		return nombre;

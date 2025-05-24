@@ -23,15 +23,12 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
             );
             stmt.setString(1, nombre);
             stmt.setString(2, contrasena);
-            
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                int telefono = rs.getInt("telefono");
                 String direccion = rs.getString("direccion");
-
+                int telefono = rs.getInt("telefono");
                 usuario = (T) new Cliente(nombre, direccion, telefono, contrasena);
-                       
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,7 +49,9 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
 
             int filas = statement.executeUpdate();
             if (filas > 0) {
-                System.out.println("Usuario agregado correctamente.");
+                JOptionPane.showMessageDialog(null, "Usuario agregado correctamente.");
+            } else {
+                JOptionPane.showMessageDialog(null, "No se pudo agregar el usuario.");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,31 +71,28 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
                 int telefono = rs.getInt("telefono");
                 String contrasena = rs.getString("contrasena");
 
-               
                 usuarios.add((T) new Cliente(nombre, direccion, telefono, contrasena));
-                        
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return usuarios;
     }
-    
+
     @Override
-	public void verificarUsuario(Cliente usuario) {
-		LinkedList<Cliente> existentes = mostrarUsuarios();
-    	boolean flag = true;
-    	for (Cliente existente : existentes) {
-			if (existente.getTelefono()==usuario.getTelefono()) {
-				flag = false;
-				break;
-			}
-		}
-    	if (flag) {
-    		agregarUsuario(usuario);
-		}else {
-			JOptionPane.showMessageDialog(null, "El usuario se registró anteriormente");
-		}
-		
-	}
+    public void verificarUsuario(Cliente usuario) {
+        LinkedList<Cliente> existentes = mostrarUsuarios();
+        boolean flag = true;
+        for (Cliente existente : existentes) {
+            if (existente.getTelefono() == usuario.getTelefono()) {
+                flag = false;
+                break;
+            }
+        }
+        if (flag) {
+            agregarUsuario(usuario);
+        } else {
+            JOptionPane.showMessageDialog(null, "El usuario se registró anteriormente");
+        }
+    }
 }

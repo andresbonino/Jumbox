@@ -2,12 +2,14 @@ package DLL;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
-import com.mysql.jdbc.PreparedStatement;
-import com.mysql.jdbc.Statement;
+import java.sql.PreparedStatement;
+
+
 
 import jumbox.Carrito;
 import jumbox.Cliente;
@@ -16,7 +18,9 @@ import repository.CarritoRepository;
 
 
 public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
+	
 	static ControllerUsuario controller = new ControllerUsuario();
+	
 	private static Connection con = Conexion.getInstance().getConnection();
 	
 	@Override
@@ -141,10 +145,98 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	    }
 		
 	}
+	
+	
+	public void realizarCompra(LinkedList<Carrito> carrito, Cliente cliente) {
+        try {
+            // Insertar pedido
+            LocalDate fecha = LocalDate.now();
+            PreparedStatement stmtPedido = (PreparedStatement) con.prepareStatement(
+                "INSERT INTO pedido (fecha, estado, fk_cliente) VALUES (?, 'pendiente', ?)"
+            );
+            stmtPedido.setString(1, fecha.toString());
+            stmtPedido.setInt(2, cliente.getTelefono()); // Usamos teléfono como identificador
+            stmtPedido.executeUpdate();
+
+            // Obtener id del pedido
+            PreparedStatement buscarPedido = (PreparedStatement) con.prepareStatement(
+                "SELECT id_pedido FROM pedido WHERE fecha = ? AND fk_cliente = ? ORDER BY id_pedido DESC LIMIT 1"
+            );
+            buscarPedido.setString(1, fecha.toString());
+            buscarPedido.setInt(2, cliente.getTelefono());
+            ResultSet rs = buscarPedido.executeQuery();
+
+            int idPedido = -1;
+            if (rs.next()) {
+                idPedido = rs.getInt("id_pedido");
+            }
+
+            // Insertar detalles
+            for (Carrito item : carrito) {
+                PreparedStatement stmtDetalle = (PreparedStatement) con.prepareStatement(
+                    "INSERT INTO detalles_pedido (cantidad, fk_producto, fk_pedido) VALUES (?, ?, ?)"
+                );
+                stmtDetalle.setInt(1, item.getCantidad());
+                stmtDetalle.setInt(2, item.getProducto().getIdProducto());
+                stmtDetalle.setInt(3, idPedido);
+                stmtDetalle.executeUpdate();
+            }
+
+            JOptionPane.showMessageDialog(null, "compra realizada con éxito.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "error al realizar la compra.");
+        }
+    }
 
 	@Override
 	public void verCompra() {
-		// TODO Auto-generated method stub
+		
+		try {
+            String nombre = JOptionPane.showInputDialog("Ingrese su nombre para ver sus pedidos:");
+            PreparedStatement stmt =  con.prepareStatement(
+            		"SELECT p.id_pedido, p.fecha, p.estado, d.cantidad, prod.nombre, prod.precio " +
+                    "FROM pedido p " +
+                    "JOIN detalles_pedido d ON p.id_pedido = d.fk_pedido " +
+                    "JOIN producto prod ON d.fk_producto = prod.id_producto " +
+                    "JOIN cliente c ON p.fk_cliente = c.id_cliente " +
+                    "WHERE c.nombre = ?");
+
+            stmt.setString(1, nombre);
+            ResultSet rs = stmt.executeQuery();
+
+            String resumen = "";
+            int pedidoActual = -1;
+
+            while (rs.next()) {
+                int idPedido = rs.getInt("id_pedido");
+                String fecha = rs.getString("fecha");
+                String estado = rs.getString("estado");
+                String producto = rs.getString("nombre");
+                int cantidad = rs.getInt("cantidad");
+                double precio = rs.getDouble("precio");
+
+                if (pedidoActual != idPedido) {
+                    if (pedidoActual != -1) resumen += "\n-----------------------------\n";
+                    resumen += "Pedido #" + idPedido +
+                               "\nFecha: " + fecha +
+                               "\nEstado: " + estado +
+                               "\nProductos:\n";
+                    pedidoActual = idPedido;
+                }
+                resumen += "- " + producto + " x " + cantidad + " = $" + (precio * cantidad) + "\n";
+            }
+
+            if (resumen.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No se encontraron compras para ese cliente.");
+            } else {
+                JOptionPane.showMessageDialog(null, resumen);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al consultar compras.");
+        }
 		
 	}
 }
