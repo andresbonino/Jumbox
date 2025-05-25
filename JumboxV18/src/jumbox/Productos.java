@@ -2,7 +2,8 @@ package jumbox;
 
 import javax.swing.JOptionPane;
 
-import DDL.ControllerProducto;
+import DLL.ControllerProducto;
+import DLL.ControllerUsuario;
 
 public class Productos {
 
@@ -10,12 +11,20 @@ public class Productos {
 	private double precio;
 	private int stock;
 	private int categoria;
+	private int idProducto;
 	
-	public Productos(String nombre, double precio, int stock, int categoria) {
+	public Productos(String nombre, double precio, int stock, int categoria, int idProducto) {
 		this.nombre = nombre;
 		this.precio = precio;
 		this.stock = stock;
 		this.categoria = categoria;
+		this.idProducto = idProducto;
+	}
+	
+	public Productos(String nombre, double precio, int stock) {
+		this.nombre = nombre;
+		this.precio = precio;
+		this.stock = stock;
 	}
 
 	public String getNombre() {
@@ -49,8 +58,14 @@ public class Productos {
 	public void setCategoria(int categoria) {
 		this.categoria = categoria;
 	}
+	public int getIdProducto() {
+		return idProducto;
+	}
+	public void setIdProducto(int idProducto) {
+		this.idProducto = idProducto;
+	}
 	
-	public static void crearProducto(String nombre, double precio, int stock, int categoria) {
+	public static void crearProducto(String nombre, double precio, int stock, int categoria, int idProducto) {
 		ControllerProducto controller = new ControllerProducto();
 		
         while (nombre.isEmpty()) {
@@ -60,9 +75,9 @@ public class Productos {
             }
         }
            
-         while (precio<=0) {
+        while (precio<=0) {
         	 precio = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el precio del producto"));
-             if (precio<=0) {
+        	 if (precio<=0) {
                 JOptionPane.showMessageDialog(null, "Error");
                 }
             }
@@ -76,13 +91,16 @@ public class Productos {
          
          Categorias categoriaSeleccionada = (Categorias) JOptionPane.showInputDialog(null, "¿En qué categoría entra tu producto?", "Jumbox", JOptionPane.QUESTION_MESSAGE, null,Categorias.values(), Categorias.values()[0]);
 
-        int fk_categoria = categoriaSeleccionada.getId();
+         int fk_categoria = categoriaSeleccionada.getId();
 
             
         
-        Productos producto = new Productos(nombre, precio, stock, fk_categoria);
+         Productos producto = new Productos(nombre, precio, stock, fk_categoria, idProducto);
         controller.agregarProducto(producto);
 	}
+
+
+	
 	
 	
 }

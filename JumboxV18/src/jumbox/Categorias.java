@@ -2,7 +2,8 @@ package jumbox;
 
 
 public enum Categorias {
-    Refrigerado(1),
+
+	Refrigerado(1),
     Mueble(2),
     Electrodomestico(3),
     Alimento(4),
@@ -16,14 +17,13 @@ public enum Categorias {
     Libreria(12),
     Bebidas(13),
     Despensa(14);
-
-    private final int id;
-
-    Categorias(int id) {
+	private final int id;
+	Categorias(int id) {
         this.id = id;
     }
 
     public int getId() {
         return id;
     }
+
 }

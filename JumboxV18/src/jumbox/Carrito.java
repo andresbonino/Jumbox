@@ -1,21 +1,29 @@
 package jumbox;
 
-import java.util.LinkedList;
-
-public class Carrito {
+public class Carrito{
 	
-	LinkedList<Productos> Carrito = new LinkedList<>();
+	private Productos producto;
+    private int cantidad;
 
-	public Carrito(LinkedList<Productos> carrito) {
-		Carrito = carrito;
-	}
+    public Carrito(Productos producto, int cantidad) {
+        this.producto = producto;
+        this.cantidad = cantidad;
+    }
 
-	public LinkedList<Productos> getCarrito() {
-		return Carrito;
-	}
+    public Productos getProducto() {
+        return producto;
+    }
 
-	public void setCarrito(LinkedList<Productos> carrito) {
-		Carrito = carrito;
-	}
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public double getTotal() {
+        return producto.getPrecio() * cantidad;
+    }
 
 }

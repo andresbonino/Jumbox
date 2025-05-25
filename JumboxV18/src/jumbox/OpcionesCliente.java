@@ -3,5 +3,5 @@ package jumbox;
 
 public enum OpcionesCliente {
 	
-	Comprar, Carrito, Mi_Compra, Salir;
+	Comprar, Carrito, Editar_carrito, Mi_Compra, Salir;
 }
