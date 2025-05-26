@@ -193,7 +193,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	public void verCompra() {
 		
 		try {
-            String nombre = JOptionPane.showInputDialog("Ingrese su nombre para ver sus pedidos:");
+            String nombre = JOptionPane.showInputDialog("ingrese su nombre para ver sus pedidos:");
             PreparedStatement stmt =  con.prepareStatement(
             		"SELECT p.id_pedido, p.fecha, p.estado, d.cantidad, prod.nombre, prod.precio " +
                     "FROM pedido p " +
