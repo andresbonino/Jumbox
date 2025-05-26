@@ -71,11 +71,18 @@ public class Main {
 
 								switch (opciones) {
 									case 0: // VER_CARRITO
+										
 										controllerC.verCarrito(carrito);
+										
 										break;
 
 									case 1: // AGREGAR_PRODUCTO
-										controllerC.compras(listaProductos, carrito);
+										
+										Carrito nuevo = controllerC.compras(listaProductos);
+										if (nuevo != null) {
+											carrito.add(nuevo);
+											controllerC.guardarProductoBD(nuevo, comprador);
+										}
 										break;
 
 									case 2: // EDITAR CARRITO
@@ -85,6 +92,7 @@ public class Main {
 									case 3: // REALIZAR COMPRA
 										controllerC.realizarCompra(carrito, comprador);
 										carrito.clear();
+										controllerC.limpiarCarritoBD(comprador);
 
 									case 4: // SALIR
 										

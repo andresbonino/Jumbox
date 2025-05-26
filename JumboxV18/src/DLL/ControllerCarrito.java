@@ -188,6 +188,82 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
             JOptionPane.showMessageDialog(null, "error al realizar la compra.");
         }
     }
+	
+	public void guardarProductoBD(Carrito item, Cliente cliente) {
+		
+		try {
+			
+			PreparedStatement buscarCarrito = con.prepareStatement("SELECT id_carrito FROM carrito WHERE fk_cliente = ?");
+			
+			buscarCarrito.setInt(1, cliente.getTelefono());
+			
+			ResultSet rs = buscarCarrito.executeQuery();
+            int idCarrito = -1;
+            if (rs.next()) {
+                idCarrito = rs.getInt("id_carrito");
+            }
+
+            PreparedStatement insertar = con.prepareStatement(
+                    "INSERT INTO producto_carrito (fk_carrito, fk_producto, cantidad) VALUES (?, ?, ?)"
+                );
+                insertar.setInt(1, idCarrito);
+                insertar.setInt(2, item.getProducto().getIdProducto());
+                insertar.setInt(3, item.getCantidad());
+                insertar.executeUpdate();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+	}
+	
+	public void cargarCarritoDesdeBD(LinkedList<Carrito> carrito, Cliente cliente) {
+        try {
+            PreparedStatement cargarCarrito = con.prepareStatement(
+                "SELECT p.id_producto, p.nombre, p.precio, p.stock, pc.cantidad " +
+                "FROM producto_carrito pc " +
+                "JOIN producto p ON pc.fk_producto = p.id_producto " +
+                "JOIN carrito c ON pc.fk_carrito = c.id_carrito " +
+                "WHERE c.fk_cliente = ?"
+            );
+            cargarCarrito.setInt(1, cliente.getTelefono());
+            ResultSet rs = cargarCarrito.executeQuery();
+
+            while (rs.next()) {
+                Productos prod = new Productos(
+                    rs.getString("nombre"),
+                    rs.getDouble("precio"),
+                    rs.getInt("stock"),
+                    0
+                );
+                prod.setIdProducto(rs.getInt("id_producto"));
+                Carrito item = new Carrito(prod, rs.getInt("cantidad"));
+                carrito.add(item);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void limpiarCarritoBD(Cliente cliente) {
+        try {
+            PreparedStatement buscarCarrito = con.prepareStatement("SELECT id_carrito FROM carrito WHERE fk_cliente = ?");
+            buscarCarrito.setInt(1, cliente.getTelefono());
+            ResultSet rs = buscarCarrito.executeQuery();
+            int idCarrito = -1;
+            if (rs.next()) {
+                idCarrito = rs.getInt("id_carrito");
+            }
+
+            PreparedStatement delete = con.prepareStatement("DELETE FROM producto_carrito WHERE fk_carrito = ?");
+            delete.setInt(1, idCarrito);
+            delete.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 	@Override
 	public void verCompra() {
@@ -237,6 +313,9 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error al consultar compras.");
         }
+		
+		
+		
 		
 	}
 }
