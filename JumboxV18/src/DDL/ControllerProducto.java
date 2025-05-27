@@ -9,6 +9,8 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
+import com.mysql.jdbc.Statement;
+
 import jumbox.Categorias;
 import jumbox.OpcionesSucursal;
 import jumbox.Productos;
@@ -23,7 +25,8 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
     public void agregarProducto(Productos producto) {
         try {
             PreparedStatement statement = con.prepareStatement(
-            	"INSERT INTO producto (nombre, precio, stock, fk_categoria) VALUES (?, ?, ?, ?)"
+            	"INSERT INTO producto (nombre, precio, stock, fk_categoria) VALUES (?, ?, ?, ?)",
+            	Statement.RETURN_GENERATED_KEYS
             );
             statement.setString(1, producto.getNombre());
             statement.setDouble(2, producto.getPrecio());
@@ -32,7 +35,12 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 
             int filas = statement.executeUpdate();
             if (filas > 0) {
-                System.out.println("Producto agregado correctamente.");
+                ResultSet rs = statement.getGeneratedKeys();
+                if (rs.next()) {
+                    int idGenerado = rs.getInt(1);
+                    producto.setIdProducto(idGenerado);
+                    System.out.println("Producto agregado correctamente");
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

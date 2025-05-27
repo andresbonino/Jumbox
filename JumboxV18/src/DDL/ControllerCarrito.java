@@ -7,6 +7,8 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
+import com.mysql.jdbc.Statement;
+
 import java.sql.PreparedStatement;
 
 
@@ -22,9 +24,28 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	static ControllerUsuario controller = new ControllerUsuario();
 	
 	private static Connection con = Conexion.getInstance().getConnection();
-	
-	public void compras(LinkedList<Productos> productos, LinkedList<Carrito> carrito) {
+    private LinkedList<Carrito> carrito = new LinkedList<>();
+
+        LinkedList<Carrito> carritoRecuperado = new LinkedList<>();
+
+
+
+	public void compras(LinkedList<Productos> productos, Cliente cliente) {
+		
 	    try {
+	    	// Crear el carrito una sola vez
+	    	PreparedStatement stmtCarrito = con.prepareStatement(
+	    	    "INSERT INTO `carrito`(`fk_cliente`) VALUES (?)", Statement.RETURN_GENERATED_KEYS
+	    	);
+	    	stmtCarrito.setInt(1, cliente.getIdCliente());
+	    	stmtCarrito.executeUpdate();
+
+	    	ResultSet generatedKeys = stmtCarrito.getGeneratedKeys();
+	    	int idCarrito = -1;
+	    	if (generatedKeys.next()) {
+	    	    idCarrito = generatedKeys.getInt(1);
+	    	}
+
 	        // 1. Elegir sucursal
 	        OpcionesSucursales opcionesSucursales = (OpcionesSucursales) JOptionPane.showInputDialog(
 	            null,
@@ -135,6 +156,32 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	                    } else {
 	                        carrito.add(new Carrito(productoElegido, cantidad));
 	                        JOptionPane.showMessageDialog(null, "Producto agregado al carrito.");
+
+	                        
+	                     // Traer id_producto desde la base de datos según el nombre
+	                        PreparedStatement stmtProductoId = con.prepareStatement(
+	                            "SELECT id_producto FROM producto WHERE nombre = ?"
+	                        );
+	                        stmtProductoId.setString(1, productoElegido.getNombre());
+
+	                        ResultSet rsProducto = stmtProductoId.executeQuery();
+
+	                        int idProductoReal = -1;
+	                        if (rsProducto.next()) {
+	                            idProductoReal = rsProducto.getInt("id_producto");
+	                        } else {
+	                            JOptionPane.showMessageDialog(null, "No se encontró el producto.");
+	                            return;
+	                        }
+	                        
+	                        PreparedStatement stmtProductoCarrito = (PreparedStatement) con.prepareStatement(
+	                        		"INSERT INTO `producto_carrito`(`fk_producto`, `fk_carrito`, `cantidad`) VALUES (?, ?, ?)"
+	                            );
+	                        stmtProductoCarrito.setInt(1, idProductoReal);
+	                        stmtProductoCarrito.setInt(2, idCarrito);
+	                        stmtProductoCarrito.setInt(3, cantidad);
+	                        stmtProductoCarrito.executeUpdate();
+	                        
 	                        break;
 	                    }
 	                } catch (NumberFormatException e) {
@@ -151,8 +198,8 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 
 
 	@Override
-	public void verCarrito(LinkedList<Carrito> carrito) {
-		if (carrito.isEmpty()) {
+	public void verCarrito() {
+	    if (carrito.isEmpty()) {
 	        JOptionPane.showMessageDialog(null, "El carrito está vacío.");
 	        return;
 	    }
@@ -161,17 +208,22 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	    double total = 0;
 
 	    for (Carrito item : carrito) {
-	        resumen.append(item.getProducto().getNombre()).append(" x ").append(item.getCantidad()).append(" = $").append(item.getTotal()).append("\n");
+	        resumen.append(item.getProducto().getNombre())
+	               .append(" x ")
+	               .append(item.getCantidad())
+	               .append(" = $")
+	               .append(item.getTotal())
+	               .append("\n");
 	        total += item.getTotal();
 	    }
 
 	    resumen.append("\nTOTAL: $").append(total);
 	    JOptionPane.showMessageDialog(null, resumen.toString());
-		
 	}
 
+
 	@Override
-	public void editarCarrito(LinkedList<Carrito> carrito) {
+	public void editarCarrito() {
 		if (carrito.isEmpty()) {
 	        JOptionPane.showMessageDialog(null, "El carrito está vacío.");
 	        return;
@@ -237,7 +289,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
                 "INSERT INTO pedido (fecha, estado, fk_cliente) VALUES (?, 'pendiente', ?)"
             );
             stmtPedido.setString(1, fecha.toString());
-            stmtPedido.setInt(2, cliente.getTelefono()); // Usamos teléfono como identificador
+            stmtPedido.setInt(2, cliente.getTelefono());
             stmtPedido.executeUpdate();
 
             // Obtener id del pedido

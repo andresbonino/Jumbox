@@ -66,29 +66,31 @@ public class Main {
 
 						Cliente usuario = controller.login(nombre, contrasenia);
 						if (usuario != null) {
+
 							JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
 							Cliente comprador = (Cliente)usuario;
-							LinkedList<Carrito> carrito = new LinkedList<>();
+
 							LinkedList<Productos> listaProductos = controllerP.mostrarProducto();
 
 							int opciones = 0;
 							do {
+
 								opciones = JOptionPane.showOptionDialog(null, "¿Qué deseas hacer?", "Menú Cliente", 0, 0, null,
 									OpcionesCliente.values(), OpcionesCliente.values());
-
+								
 								switch (opciones) {
 									case 0: // COMPRAR
-										controllerC.compras(listaProductos, carrito);
+										controllerC.compras(listaProductos, comprador);
 										break;
 
 									case 1: // VER_CARRITO
-										controllerC.verCarrito(carrito);
+										controllerC.verCarrito();
 										//controllerC.realizarCompra(carrito, comprador);
 										//carrito.clear();
 										break;
 
 									case 2: // EDITAR CARRITO
-										controllerC.editarCarrito(carrito);
+										controllerC.editarCarrito();
 										break;
 										
 									case 3: // MI COMPRA

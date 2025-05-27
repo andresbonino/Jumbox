@@ -104,15 +104,15 @@ public class Cliente {
             	   opciones = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesCliente.values(), OpcionesCliente.values());
             	   switch (opciones) {
 					case 0: //Comprar
-						controllerCarr.compras(producto, carrito);
+						controllerCarr.compras(producto,  usuario);
 						break;
 	
 					case 1: //Ver el carrito
-						controllerCarr.verCarrito(carrito);
+						controllerCarr.verCarrito();
 						break;
 						
 					case 2: //Editar carrito
-						controllerCarr.editarCarrito(carrito);
+						controllerCarr.editarCarrito();
 						break;
 						
 					case 3: //Estado de la compra
