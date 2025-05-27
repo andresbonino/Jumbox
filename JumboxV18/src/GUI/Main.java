@@ -63,6 +63,7 @@ public class Main {
 							Cliente comprador = (Cliente)usuario;
 							LinkedList<Carrito> carrito = new LinkedList<>();
 							LinkedList<Productos> listaProductos = controllerP.mostrarProducto();
+							controllerC.cargarCarritoDesdeBD(carrito, comprador);
 
 							int opciones = 0;
 							do {
@@ -71,18 +72,11 @@ public class Main {
 
 								switch (opciones) {
 									case 0: // VER_CARRITO
-										
 										controllerC.verCarrito(carrito);
-										
 										break;
 
 									case 1: // AGREGAR_PRODUCTO
-										
-										Carrito nuevo = controllerC.compras(listaProductos);
-										if (nuevo != null) {
-											carrito.add(nuevo);
-											controllerC.guardarProductoBD(nuevo, comprador);
-										}
+										controllerC.compras(listaProductos, carrito, comprador);
 										break;
 
 									case 2: // EDITAR CARRITO
@@ -92,7 +86,6 @@ public class Main {
 									case 3: // REALIZAR COMPRA
 										controllerC.realizarCompra(carrito, comprador);
 										carrito.clear();
-										controllerC.limpiarCarritoBD(comprador);
 
 									case 4: // SALIR
 										

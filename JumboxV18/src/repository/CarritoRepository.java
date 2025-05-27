@@ -8,8 +8,10 @@ import jumbox.Cliente;
 import jumbox.Productos;
 
 public interface CarritoRepository {
-	void compras(LinkedList<Productos> productos, LinkedList<Carrito> carrito);
+	void compras(LinkedList<Productos> productos, LinkedList<Carrito> carrito, Cliente cliente);
 	void verCarrito(LinkedList<Carrito> carrito);
 	void editarCarrito(LinkedList<Carrito> carrito);
 	void verCompra();
+	void guardarProductoBD(Carrito item, Cliente cliente);
+	void cargarCarritoDesdeBD(LinkedList<Carrito> carrito, Cliente cliente);
 }

@@ -24,7 +24,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	private static Connection con = Conexion.getInstance().getConnection();
 	
 	@Override
-	public void compras(LinkedList<Productos> productos, LinkedList<Carrito> carrito) {
+	public void compras(LinkedList<Productos> productos, LinkedList<Carrito> carrito, Cliente cliente) {
 		if (productos.isEmpty()) {
 	        JOptionPane.showMessageDialog(null, "No hay productos disponibles.");
 	        return;
@@ -58,7 +58,13 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 							JOptionPane.showMessageDialog(null, "No puede ser menor o igual a 0");
 							return;
 						}else {
-		                    carrito.add(new Carrito(productoElegido, Cant));
+							
+							
+							Carrito nuevo = new Carrito(productoElegido, Cant, cliente);
+
+							carrito.add(nuevo);
+							guardarProductoBD(nuevo, cliente);
+							
 		                    JOptionPane.showMessageDialog(null, "Producto agregado al carrito.");
 		                }
 					}
@@ -188,82 +194,6 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
             JOptionPane.showMessageDialog(null, "error al realizar la compra.");
         }
     }
-	
-	public void guardarProductoBD(Carrito item, Cliente cliente) {
-		
-		try {
-			
-			PreparedStatement buscarCarrito = con.prepareStatement("SELECT id_carrito FROM carrito WHERE fk_cliente = ?");
-			
-			buscarCarrito.setInt(1, cliente.getTelefono());
-			
-			ResultSet rs = buscarCarrito.executeQuery();
-            int idCarrito = -1;
-            if (rs.next()) {
-                idCarrito = rs.getInt("id_carrito");
-            }
-
-            PreparedStatement insertar = con.prepareStatement(
-                    "INSERT INTO producto_carrito (fk_carrito, fk_producto, cantidad) VALUES (?, ?, ?)"
-                );
-                insertar.setInt(1, idCarrito);
-                insertar.setInt(2, item.getProducto().getIdProducto());
-                insertar.setInt(3, item.getCantidad());
-                insertar.executeUpdate();
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
-	}
-	
-	public void cargarCarritoDesdeBD(LinkedList<Carrito> carrito, Cliente cliente) {
-        try {
-            PreparedStatement cargarCarrito = con.prepareStatement(
-                "SELECT p.id_producto, p.nombre, p.precio, p.stock, pc.cantidad " +
-                "FROM producto_carrito pc " +
-                "JOIN producto p ON pc.fk_producto = p.id_producto " +
-                "JOIN carrito c ON pc.fk_carrito = c.id_carrito " +
-                "WHERE c.fk_cliente = ?"
-            );
-            cargarCarrito.setInt(1, cliente.getTelefono());
-            ResultSet rs = cargarCarrito.executeQuery();
-
-            while (rs.next()) {
-                Productos prod = new Productos(
-                    rs.getString("nombre"),
-                    rs.getDouble("precio"),
-                    rs.getInt("stock"),
-                    0
-                );
-                prod.setIdProducto(rs.getInt("id_producto"));
-                Carrito item = new Carrito(prod, rs.getInt("cantidad"));
-                carrito.add(item);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void limpiarCarritoBD(Cliente cliente) {
-        try {
-            PreparedStatement buscarCarrito = con.prepareStatement("SELECT id_carrito FROM carrito WHERE fk_cliente = ?");
-            buscarCarrito.setInt(1, cliente.getTelefono());
-            ResultSet rs = buscarCarrito.executeQuery();
-            int idCarrito = -1;
-            if (rs.next()) {
-                idCarrito = rs.getInt("id_carrito");
-            }
-
-            PreparedStatement delete = con.prepareStatement("DELETE FROM producto_carrito WHERE fk_carrito = ?");
-            delete.setInt(1, idCarrito);
-            delete.executeUpdate();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
 	@Override
 	public void verCompra() {
@@ -318,4 +248,100 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 		
 		
 	}
+	
+	private int obtenerIdCarrito(Cliente cliente) {
+	    try {
+	        PreparedStatement buscar = con.prepareStatement("SELECT id_carrito FROM carrito WHERE fk_cliente = ?");
+	        buscar.setInt(1, cliente.getTelefono());
+	        ResultSet rs = buscar.executeQuery();
+	        if (rs.next()) {
+	            return rs.getInt("id_carrito");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return -1;
+	}
+
+	
+	@Override
+	public void guardarProductoBD(Carrito item, Cliente cliente) {
+	    try {
+	        int idCarrito = obtenerIdCarrito(cliente);
+	        if (idCarrito == -1) {
+	            PreparedStatement crearCarrito = con.prepareStatement("INSERT INTO carrito (fk_cliente) VALUES (?)");
+	            crearCarrito.setInt(1, cliente.getTelefono());
+	            crearCarrito.executeUpdate();
+	            idCarrito = obtenerIdCarrito(cliente);
+	        }
+
+	        PreparedStatement verificar = con.prepareStatement(
+	            "SELECT cantidad FROM producto_carrito WHERE fk_carrito = ? AND fk_producto = ?"
+	        );
+	        verificar.setInt(1, idCarrito);
+	        verificar.setInt(2, item.getProducto().getIdProducto());
+	        ResultSet rs = verificar.executeQuery();
+
+	        if (rs.next()) {
+	            int cantidadActual = rs.getInt("cantidad");
+	            int nuevaCantidad = cantidadActual + item.getCantidad();
+	            PreparedStatement update = con.prepareStatement(
+	                "UPDATE producto_carrito SET cantidad = ? WHERE fk_carrito = ? AND fk_producto = ?"
+	            );
+	            update.setInt(1, cantidadActual + item.getCantidad());
+	            update.setInt(2, idCarrito);
+	            update.setInt(3, item.getProducto().getIdProducto());
+	            update.executeUpdate();
+	        } else {
+	            PreparedStatement insertar = con.prepareStatement(
+	                "INSERT INTO producto_carrito (fk_carrito, fk_producto, cantidad) VALUES (?, ?, ?)"
+	            );
+	            insertar.setInt(1, idCarrito);
+	            insertar.setInt(2, item.getProducto().getIdProducto());
+	            insertar.setInt(3, item.getCantidad());
+	            insertar.executeUpdate();
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(null, "Error al guardar producto en la base de datos.");
+	    }
+	}
+	
+	@Override
+	public void cargarCarritoDesdeBD(LinkedList<Carrito> carrito, Cliente cliente) {
+	    try {
+	        PreparedStatement stmt = con.prepareStatement(
+	            "SELECT p.id_producto, p.nombre, p.precio, p.stock, pc.cantidad " +
+	            "FROM producto_carrito pc " +
+	            "JOIN producto p ON pc.fk_producto = p.id_producto " +
+	            "JOIN carrito c ON pc.fk_carrito = c.id_carrito " +
+	            "WHERE c.fk_cliente = ?"
+	        );
+	        stmt.setInt(1, cliente.getTelefono());
+	        ResultSet rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+	            Productos producto = new Productos(
+	                rs.getString("nombre"),
+	                rs.getDouble("precio"),
+	                rs.getInt("stock"),
+	                0
+	            );
+	            producto.setIdProducto(rs.getInt("id_producto"));
+	            int cantidad = rs.getInt("cantidad");
+
+	            Carrito item = new Carrito(producto, cantidad);
+	            carrito.add(item);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(null, "Error al cargar el carrito desde la base de datos.");
+	    }
+	
+	
+	}
+	
+
 }

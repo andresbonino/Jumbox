@@ -49,6 +49,20 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
 
             int filas = statement.executeUpdate();
             if (filas > 0) {
+            	
+            	ResultSet rs = statement.getGeneratedKeys();
+            	int idCliente = usuario.getTelefono();
+            	if (rs.next()) {
+            		idCliente = rs.getInt(1);
+				}
+            	
+            	
+            	PreparedStatement stmtCarrito = con.prepareStatement("INSERT INTO carrito (fk_cliente) VALUES (?)");
+            	
+            	
+            	stmtCarrito.setInt(1, idCliente);
+            	stmtCarrito.executeUpdate();
+            	
                 JOptionPane.showMessageDialog(null, "Usuario agregado correctamente.");
             } else {
                 JOptionPane.showMessageDialog(null, "No se pudo agregar el usuario.");
