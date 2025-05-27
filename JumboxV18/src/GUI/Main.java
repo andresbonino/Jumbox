@@ -60,9 +60,11 @@ public class Main {
 						Cliente usuario = controller.login(nombre, contrasenia);
 						if (usuario != null) {
 							JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
+							
 							Cliente comprador = (Cliente)usuario;
 							LinkedList<Carrito> carrito = new LinkedList<>();
 							LinkedList<Productos> listaProductos = controllerP.mostrarProducto();
+							
 							controllerC.cargarCarritoDesdeBD(carrito, comprador);
 
 							int opciones = 0;

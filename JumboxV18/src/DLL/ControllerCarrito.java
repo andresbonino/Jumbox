@@ -81,15 +81,16 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	        return;
 	    }
 
-	    StringBuilder resumen = new StringBuilder("Carrito de Compras:\n");
+		String resumen = "Carrito de Compras:\n";
 	    double total = 0;
 
 	    for (Carrito item : carrito) {
-	        resumen.append(item.getProducto().getNombre()).append(" x ").append(item.getCantidad()).append(" = $").append(item.getTotal()).append("\n");
-	        total += item.getTotal();
+	    	resumen += item.getProducto().getNombre() + " x " + item.getCantidad()
+            + " = $" + item.getTotal() + "\n";
+	    	total += item.getTotal();
 	    }
 
-	    resumen.append("\nTOTAL: $").append(total);
+	    resumen+=("\nTOTAL: $")+(total);
 	    JOptionPane.showMessageDialog(null, resumen.toString());
 		
 	}
@@ -161,7 +162,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
                 "INSERT INTO pedido (fecha, estado, fk_cliente) VALUES (?, 'pendiente', ?)"
             );
             stmtPedido.setString(1, fecha.toString());
-            stmtPedido.setInt(2, cliente.getTelefono()); // Usamos teléfono como identificador
+            stmtPedido.setInt(2, cliente.getId_cliente());
             stmtPedido.executeUpdate();
 
             // Obtener id del pedido
@@ -169,29 +170,29 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
                 "SELECT id_pedido FROM pedido WHERE fecha = ? AND fk_cliente = ? ORDER BY id_pedido DESC LIMIT 1"
             );
             buscarPedido.setString(1, fecha.toString());
-            buscarPedido.setInt(2, cliente.getTelefono());
+            buscarPedido.setInt(2, cliente.getId_cliente());
             ResultSet rs = buscarPedido.executeQuery();
-
+            
             int idPedido = -1;
             if (rs.next()) {
                 idPedido = rs.getInt("id_pedido");
             }
 
-            // Insertar detalles
+            
             for (Carrito item : carrito) {
-                PreparedStatement stmtDetalle = (PreparedStatement) con.prepareStatement(
-                    "INSERT INTO detalles_pedido (cantidad, fk_producto, fk_pedido) VALUES (?, ?, ?)"
-                );
+                PreparedStatement stmtDetalle = con.prepareStatement(
+                        "INSERT INTO detalles_pedido (cantidad, fk_producto, fk_pedido) VALUES (?, ?, ?)");
                 stmtDetalle.setInt(1, item.getCantidad());
                 stmtDetalle.setInt(2, item.getProducto().getIdProducto());
                 stmtDetalle.setInt(3, idPedido);
                 stmtDetalle.executeUpdate();
             }
 
-            JOptionPane.showMessageDialog(null, "compra realizada con éxito.");
+            limpiarCarritoBD(cliente);
+            JOptionPane.showMessageDialog(null, "Compra realizada con éxito.");
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "error al realizar la compra.");
+            JOptionPane.showMessageDialog(null, "Error al realizar la compra.");
         }
     }
 
@@ -321,7 +322,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	        stmt.setInt(1, cliente.getTelefono());
 	        ResultSet rs = stmt.executeQuery();
 
-	        while (rs.next()) {
+	        while (rs.next()) {	
 	            Productos producto = new Productos(
 	                rs.getString("nombre"),
 	                rs.getDouble("precio"),
@@ -331,7 +332,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	            producto.setIdProducto(rs.getInt("id_producto"));
 	            int cantidad = rs.getInt("cantidad");
 
-	            Carrito item = new Carrito(producto, cantidad);
+	            Carrito item = new Carrito(producto, cantidad, cliente);
 	            carrito.add(item);
 	        }
 
@@ -341,6 +342,22 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	    }
 	
 	
+	}
+
+	@Override
+	public void limpiarCarritoBD(Cliente cliente) {
+		try {
+            int idCarrito = obtenerIdCarrito(cliente);
+            if (idCarrito != -1) {
+                PreparedStatement delete = con.prepareStatement(
+                        "DELETE FROM producto_carrito WHERE fk_carrito = ?");
+                delete.setInt(1, idCarrito);
+                delete.executeUpdate();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+		
 	}
 	
 

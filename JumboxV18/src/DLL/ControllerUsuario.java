@@ -26,9 +26,10 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
+            	int id = rs.getInt("id_cliente");
                 String direccion = rs.getString("direccion");
                 int telefono = rs.getInt("telefono");
-                usuario = (T) new Cliente(nombre, direccion, telefono, contrasena);
+                usuario = (T) new Cliente(nombre, direccion, telefono, contrasena, id);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -40,7 +41,8 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
     public void agregarUsuario(Cliente usuario) {
         try {
             PreparedStatement statement = con.prepareStatement(
-                "INSERT INTO cliente (nombre, direccion, telefono, contrasena) VALUES (?, ?, ?, ?)"
+            		"INSERT INTO cliente (nombre, direccion, telefono, contrasena) VALUES (?, ?, ?, ?)",
+            	    PreparedStatement.RETURN_GENERATED_KEYS
             );
             statement.setString(1, usuario.getNombre());
             statement.setString(2, usuario.getDireccion());
@@ -84,8 +86,9 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
                 String direccion = rs.getString("direccion");
                 int telefono = rs.getInt("telefono");
                 String contrasena = rs.getString("contrasena");
+                int id = rs.getInt("id_cliente");
 
-                usuarios.add((T) new Cliente(nombre, direccion, telefono, contrasena));
+                usuarios.add((T) new Cliente(nombre, direccion, telefono, contrasena, id));
             }
         } catch (Exception e) {
             e.printStackTrace();

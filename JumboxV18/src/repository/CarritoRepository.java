@@ -14,4 +14,6 @@ public interface CarritoRepository {
 	void verCompra();
 	void guardarProductoBD(Carrito item, Cliente cliente);
 	void cargarCarritoDesdeBD(LinkedList<Carrito> carrito, Cliente cliente);
+	void limpiarCarritoBD(Cliente cliente);
+	void realizarCompra(LinkedList<Carrito> carrito, Cliente cliente);
 }

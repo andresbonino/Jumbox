@@ -16,7 +16,7 @@ public class Cliente {
 	private String contrasena;
 	static ControllerUsuario controller = new ControllerUsuario();
 	static ControllerCarrito controllerCarr = new ControllerCarrito();
-	private int id;
+	private int id_cliente;
 	
 	
 	public Cliente(String nombre, String direccion, int telefono, String contrasena) {
@@ -28,27 +28,42 @@ public class Cliente {
 	
 	
 
-	public Cliente(String nombre, String direccion, int telefono, String contrasena, int id) {
+	
+
+
+
+	public Cliente(String nombre, String direccion, int telefono, String contrasena, int id_cliente) {
 		super();
 		this.nombre = nombre;
 		this.direccion = direccion;
 		this.telefono = telefono;
 		this.contrasena = contrasena;
-		this.id = id;
+		this.id_cliente = id_cliente;
 	}
 
+
+
+				
 	
 
 
-	public int getId() {
-		return id;
+	public int getId_cliente() {
+		return id_cliente;
 	}
 
 
 
-	public void setId(int id) {
-		this.id = id;
+
+
+
+
+	public void setId_cliente(int id_cliente) {
+		this.id_cliente = id_cliente;
 	}
+
+
+
+
 
 
 
