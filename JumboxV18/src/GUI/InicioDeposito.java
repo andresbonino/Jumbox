@@ -24,6 +24,7 @@ public class InicioDeposito extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	protected static final JLabel LblError = null;
+	
 	private JPanel contentPane;
 	private JPasswordField passwordField;
 	ControllerDeposito controllerD = new ControllerDeposito();

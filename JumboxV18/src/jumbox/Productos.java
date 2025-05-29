@@ -20,12 +20,23 @@ public class Productos {
 		this.categoria = categoria;
 	}
 	
-	public Productos(String nombre, double precio, int stock) {
+	
+
+	public Productos(String nombre, double precio, int stock, int categoria, int idProducto) {
+		super();
 		this.nombre = nombre;
 		this.precio = precio;
 		this.stock = stock;
+		this.categoria = categoria;
+		this.idProducto = idProducto;
 	}
 
+
+	
+
+	
+	
+	
 	public String getNombre() {
 		return nombre;
 	}
