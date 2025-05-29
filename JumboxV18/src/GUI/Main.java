@@ -5,15 +5,13 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
-import DLL.Conexion;
-import DLL.ControllerCarrito;
-import DLL.ControllerDeposito;
-import DLL.ControllerPedidoSucursal;
-import DLL.ControllerProducto;
-import DLL.ControllerSucursal;
-import DLL.ControllerUsuario;
-import jumbox.Carrito;
-import jumbox.Categorias;
+import DDL.Conexion;
+import DDL.ControllerCarrito;
+import DDL.ControllerDeposito;
+import DDL.ControllerPedidoSucursal;
+import DDL.ControllerProducto;
+import DDL.ControllerSucursal;
+import DDL.ControllerUsuario;
 import jumbox.Cliente;
 import jumbox.Deposito;
 import jumbox.OpcionesCliente;

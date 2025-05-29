@@ -1,4 +1,4 @@
-package DLL;
+package DDL;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -47,6 +47,29 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
         }
     }
 
+    public static LinkedList<Productos> mostrarProducto2() {
+        LinkedList<Productos> producto = new LinkedList<>();
+        try {
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM producto");
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+            	int id = rs.getInt("id_producto");
+                String nombre = rs.getString("nombre");
+                Double precio = rs.getDouble("precio");
+                int stock = rs.getInt("stock");
+               
+                Productos p = new Productos(nombre, precio, stock);
+                p.setIdProducto(id);
+                producto.add(p);
+                        
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return producto;
+    }
+    
     @Override
     public LinkedList<Productos> mostrarProducto() {
         LinkedList<Productos> producto = new LinkedList<>();

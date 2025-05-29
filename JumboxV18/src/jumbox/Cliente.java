@@ -2,10 +2,10 @@ package jumbox;
 
 import javax.swing.JOptionPane;
 import java.util.LinkedList;
-import DLL.ControllerUsuario;
+import DDL.ControllerUsuario;
 
-import DLL.ControllerCarrito;
-import DLL.ControllerProducto;
+import DDL.ControllerCarrito;
+import DDL.ControllerProducto;
 
 public class Cliente {
 

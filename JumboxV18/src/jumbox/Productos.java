@@ -2,8 +2,8 @@ package jumbox;
 
 import javax.swing.JOptionPane;
 
-import DLL.ControllerProducto;
-import DLL.ControllerUsuario;
+import DDL.ControllerProducto;
+import DDL.ControllerUsuario;
 
 public class Productos {
 
@@ -13,7 +13,7 @@ public class Productos {
 	private int categoria;
 	private int idProducto;
 	
-	public Productos(String nombre, double precio, int stock, int categoria, int idProducto) {
+	public Productos(int idProducto, String nombre, double precio, int stock, int categoria) {
 		this.nombre = nombre;
 		this.precio = precio;
 		this.stock = stock;
@@ -95,10 +95,11 @@ public class Productos {
 
             
         
-         Productos producto = new Productos(nombre, precio, stock, fk_categoria, idProducto);
+         Productos producto = new Productos(idProducto, nombre, precio, stock, fk_categoria);
         controller.agregarProducto(producto);
 	}
 
+	
 
 	
 	

@@ -1,4 +1,4 @@
-package DLL;
+package DDL;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

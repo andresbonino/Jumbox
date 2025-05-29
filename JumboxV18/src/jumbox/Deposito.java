@@ -2,8 +2,8 @@ package jumbox;
 
 import javax.swing.JOptionPane;
 
-import DLL.ControllerDeposito;
-import DLL.ControllerProducto;
+import DDL.ControllerDeposito;
+import DDL.ControllerProducto;
 import GUI.PantallaPrincipal;
 
 public class Deposito {
