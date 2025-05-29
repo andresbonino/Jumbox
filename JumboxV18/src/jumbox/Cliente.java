@@ -10,7 +10,7 @@ import DLL.ControllerUsuario;
 
 public class Cliente{
 
-	
+	private int id_cliente;
 	private String nombre;
 	private String direccion;
 	private int telefono;
@@ -23,6 +23,13 @@ public class Cliente{
 		this.direccion = direccion;
 		this.telefono = telefono;
 		this.contrasena = contrasena;
+	}
+	public Cliente(int id_cliente, String nombre, String direccion, int telefono, String contrasena) {
+		this.nombre = nombre;
+		this.direccion = direccion;
+		this.telefono = telefono;
+		this.contrasena = contrasena;
+		this.id_cliente = id_cliente;
 	}
 
 	public String getNombre() {
@@ -57,6 +64,13 @@ public class Cliente{
 		this.contrasena = contrasena;
 	}
 	
+	public int getIdCliente() {
+		return id_cliente;
+	}
+
+	public void setIdCliente(int id_cliente) {
+		this.id_cliente = id_cliente;
+	}
 	
 	public static void LoginCliente(String nombre, String contrasena) {
 		 //Iniciar Sesion
@@ -89,15 +103,15 @@ public class Cliente{
             	   
             	   switch (opciones) {
 				case 0: //Comprar
-					controllerCarr.compras(producto, carrito);
+					controllerCarr.compras(producto, usuario);
 					break;
 
 				case 1: //Ver el carrito
-					controllerCarr.verCarrito(carrito);
+					controllerCarr.verCarrito();
 					break;
 				
 				case 2: //Editar carrito
-					controllerCarr.editarCarrito(carrito);
+					controllerCarr.editarCarrito();
 					break;
 					
 				case 3: //Estado de la compra

@@ -2,71 +2,204 @@ package DLL;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.time.LocalDate;
 import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
-import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
+
+import java.sql.PreparedStatement;
+
+
 
 import jumbox.Carrito;
 import jumbox.Cliente;
+import jumbox.OpcionesSucursales;
 import jumbox.Productos;
 import repository.CarritoRepository;
 
-
 public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
+	
 	static ControllerUsuario controller = new ControllerUsuario();
+	
 	private static Connection con = Conexion.getInstance().getConnection();
-	
-	@Override
-	public void compras(LinkedList<Productos> productos, LinkedList<Carrito> carrito) {
-		if (productos.isEmpty()) {
-	        JOptionPane.showMessageDialog(null, "No hay productos disponibles.");
-	        return;
-	    }else {
-			String[] nombres = new String[productos.size()];
-		    for (int i = 0; i < productos.size(); i++) {
-		        nombres[i] = productos.get(i).getNombre();
-		    }
-	
-		    String seleccion = (String) JOptionPane.showInputDialog(null, "Seleccione producto:", "Agregar al carrito", JOptionPane.QUESTION_MESSAGE, null, nombres, nombres[0]);
-	
-		    Productos productoElegido = null;
-		    for (Productos p : productos) {
-		        if (p.getNombre().equals(seleccion)) {
-		            productoElegido = p;
-		            break;
-		        }
-		    }
-	
-		    if (productoElegido != null) {
-		    	
-		    	int Cant=0;
-                String cantidad;
-				do {
-					cantidad = JOptionPane.showInputDialog("Cantidad:", null);
-					if (!cantidad.isEmpty()) {
-						Cant = Integer.parseInt(cantidad);
-						if (Cant > productoElegido.getStock()) {
-							JOptionPane.showMessageDialog(null, "No hay suficiente stock.");
-						}else if(Cant<=0){
-							JOptionPane.showMessageDialog(null, "No puede ser menor o igual a 0");
-							return;
-						}else {
-		                    carrito.add(new Carrito(productoElegido, Cant));
-		                    JOptionPane.showMessageDialog(null, "Producto agregado al carrito.");
-		                }
-					}
-				} while (cantidad.isEmpty() || Cant<=0 || Cant > productoElegido.getStock());
-		    }
+    private LinkedList<Carrito> carrito = new LinkedList<>();
+
+        LinkedList<Carrito> carritoRecuperado = new LinkedList<>();
+
+
+
+	public void compras(LinkedList<Productos> productos, Cliente cliente) {
 		
+	    try {
+	    	// Crear el carrito una sola vez
+	    	PreparedStatement stmtCarrito = con.prepareStatement(
+	    	    "INSERT INTO `carrito`(`fk_cliente`) VALUES (?)", Statement.RETURN_GENERATED_KEYS
+	    	);
+	    	stmtCarrito.setInt(1, cliente.getIdCliente());
+	    	stmtCarrito.executeUpdate();
+
+	    	ResultSet generatedKeys = stmtCarrito.getGeneratedKeys();
+	    	int idCarrito = -1;
+	    	if (generatedKeys.next()) {
+	    	    idCarrito = generatedKeys.getInt(1);
+	    	}
+
+	        // 1. Elegir sucursal
+	        OpcionesSucursales opcionesSucursales = (OpcionesSucursales) JOptionPane.showInputDialog(
+	            null,
+	            "¿En que sucursal quieres comprar?",
+	            "Jumbox",
+	            JOptionPane.QUESTION_MESSAGE,
+	            null,
+	            OpcionesSucursales.values(),
+	            OpcionesSucursales.values()[0]
+	        );
+
+	        if (opcionesSucursales == null) return;
+
+	        int idSucursal = opcionesSucursales.getId();
+
+	        // 2. Buscar productos de esa sucursal
+	        PreparedStatement stmt = Conexion.getInstance().getConnection().prepareStatement(
+	            "SELECT a.fk_producto, a.cantidad, p.nombre, p.precio " +
+	            "FROM almacen_sucursal a " +
+	            "JOIN producto p ON a.fk_producto = p.id_producto " +
+	            "WHERE a.fk_sucursal = ? AND a.cantidad > 0"
+	        );
+
+	        stmt.setInt(1, idSucursal);
+	        ResultSet rs = stmt.executeQuery();
+
+	        LinkedList<Productos> productosSucursal = new LinkedList<>();
+	        StringBuilder sb = new StringBuilder("Productos disponibles en la " + opcionesSucursales + " Sucursal:\n");
+
+	        while (rs.next()) {
+	            int idProducto = rs.getInt("fk_producto");
+	            String nombre = rs.getString("nombre");
+	            double precio = rs.getDouble("precio");
+	            int stock = rs.getInt("cantidad");
+
+	            Productos prod = new Productos(nombre, precio, stock);
+	            productosSucursal.add(prod);
+
+	            sb.append("- ").append(nombre)
+	              .append(" | Precio: $").append(precio)
+	              .append(" | Stock: ").append(stock)
+	              .append("\n");
+	        }
+	        
+	        sb.append("\nSeleccione un producto:");
+
+	        if (productosSucursal.isEmpty()) {
+	            JOptionPane.showMessageDialog(null, "No hay productos disponibles en esta sucursal.");
+	            return;
+	        }
+
+	        // 3. Mostrar opciones para elegir producto
+	        String[] nombres = new String[productosSucursal.size()];
+	        for (int i = 0; i < productosSucursal.size(); i++) {
+	            nombres[i] = productosSucursal.get(i).getNombre();
+	        }
+
+	        String seleccion = (String) JOptionPane.showInputDialog(
+	            null,
+	            sb.toString(),
+	            "Agregar al carrito",
+	            JOptionPane.QUESTION_MESSAGE,
+	            null,
+	            nombres,
+	            nombres[0]
+	        );
+
+	        if (seleccion == null) return;
+
+	        Productos productoElegido = null;
+	        for (Productos p : productosSucursal) {
+	            if (p.getNombre().equals(seleccion)) {
+	                productoElegido = p;
+	                break;
+	            }
+	        }
+
+	        if (productoElegido != null) {
+	        	
+	        	// Verificar si ya está en el carrito
+	        	boolean yaEnCarrito = false;
+	        	for (Carrito item : carrito) {
+	        	    if (item.getProducto().getNombre().equals(productoElegido.getNombre())) {
+	        	        yaEnCarrito = true;
+	        	        break;
+	        	    }
+	        	}
+
+	        	if (yaEnCarrito) {
+	        	    JOptionPane.showMessageDialog(null, "Este producto ya está en el carrito.");
+	        	    return;
+	        	}
+
+	        	
+	        	
+	            int cantidad = 0;
+	            do {
+	                String input = JOptionPane.showInputDialog("Cantidad:");
+	                if (input == null || input.isEmpty()) return;
+
+	                try {
+	                    cantidad = Integer.parseInt(input);
+
+	                    if (cantidad <= 0) {
+	                        JOptionPane.showMessageDialog(null, "La cantidad debe ser mayor a cero.");
+	                    } else if (cantidad > productoElegido.getStock()) {
+	                        JOptionPane.showMessageDialog(null, "No hay suficiente stock.");
+	                    } else {
+	                        carrito.add(new Carrito(productoElegido, cantidad));
+	                        JOptionPane.showMessageDialog(null, "Producto agregado al carrito.");
+
+	                        
+	                     // Traer id_producto desde la base de datos según el nombre
+	                        PreparedStatement stmtProductoId = con.prepareStatement(
+	                            "SELECT id_producto FROM producto WHERE nombre = ?"
+	                        );
+	                        stmtProductoId.setString(1, productoElegido.getNombre());
+
+	                        ResultSet rsProducto = stmtProductoId.executeQuery();
+
+	                        int idProductoReal = -1;
+	                        if (rsProducto.next()) {
+	                            idProductoReal = rsProducto.getInt("id_producto");
+	                        } else {
+	                            JOptionPane.showMessageDialog(null, "No se encontró el producto.");
+	                            return;
+	                        }
+	                        
+	                        PreparedStatement stmtProductoCarrito = (PreparedStatement) con.prepareStatement(
+	                        		"INSERT INTO `producto_carrito`(`fk_producto`, `fk_carrito`, `cantidad`) VALUES (?, ?, ?)"
+	                            );
+	                        stmtProductoCarrito.setInt(1, idProductoReal);
+	                        stmtProductoCarrito.setInt(2, idCarrito);
+	                        stmtProductoCarrito.setInt(3, cantidad);
+	                        stmtProductoCarrito.executeUpdate();
+	                        
+	                        break;
+	                    }
+	                } catch (NumberFormatException e) {
+	                    JOptionPane.showMessageDialog(null, "Debe ingresar un número válido.");
+	                }
+	            } while (true);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(null, "Error al obtener productos de la sucursal.");
 	    }
 	}
 
+
 	@Override
-	public void verCarrito(LinkedList<Carrito> carrito) {
-		if (carrito.isEmpty()) {
+	public void verCarrito() {
+	    if (carrito.isEmpty()) {
 	        JOptionPane.showMessageDialog(null, "El carrito está vacío.");
 	        return;
 	    }
@@ -75,17 +208,22 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	    double total = 0;
 
 	    for (Carrito item : carrito) {
-	        resumen.append(item.getProducto().getNombre()).append(" x ").append(item.getCantidad()).append(" = $").append(item.getTotal()).append("\n");
+	        resumen.append(item.getProducto().getNombre())
+	               .append(" x ")
+	               .append(item.getCantidad())
+	               .append(" = $")
+	               .append(item.getTotal())
+	               .append("\n");
 	        total += item.getTotal();
 	    }
 
 	    resumen.append("\nTOTAL: $").append(total);
 	    JOptionPane.showMessageDialog(null, resumen.toString());
-		
 	}
 
+
 	@Override
-	public void editarCarrito(LinkedList<Carrito> carrito) {
+	public void editarCarrito() {
 		if (carrito.isEmpty()) {
 	        JOptionPane.showMessageDialog(null, "El carrito está vacío.");
 	        return;
@@ -117,7 +255,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	                int nuevaC=0;
 	                String nuevaCantidad;
 					do {
-						nuevaCantidad = JOptionPane.showInputDialog("Nueva Catidad:", itemSeleccionado.getCantidad());
+						nuevaCantidad = JOptionPane.showInputDialog("Nueva Cantidad:", itemSeleccionado.getCantidad());
 						if (!nuevaCantidad.isEmpty()) {
 							nuevaC = Integer.parseInt(nuevaCantidad);
 							if (nuevaC > itemSeleccionado.getProducto().getStock()) {
@@ -126,10 +264,10 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 								JOptionPane.showMessageDialog(null, "No puede ser menor o igual a 0");
 								return;
 							}else {
-							}
+							
 			                    itemSeleccionado.setCantidad(nuevaC);
 			                    JOptionPane.showMessageDialog(null, "Cantidad actualizada.");
-			                
+							}
 						}
 					} while (nuevaCantidad.isEmpty() || nuevaC<=0 || nuevaC > itemSeleccionado.getProducto().getStock());
 					
@@ -141,10 +279,98 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	    }
 		
 	}
+	
+	
+	public void realizarCompra(LinkedList<Carrito> carrito, Cliente cliente) {
+        try {
+            // Insertar pedido
+            LocalDate fecha = LocalDate.now();
+            PreparedStatement stmtPedido = (PreparedStatement) con.prepareStatement(
+                "INSERT INTO pedido (fecha, estado, fk_cliente) VALUES (?, 'pendiente', ?)"
+            );
+            stmtPedido.setString(1, fecha.toString());
+            stmtPedido.setInt(2, cliente.getTelefono());
+            stmtPedido.executeUpdate();
+
+            // Obtener id del pedido
+            PreparedStatement buscarPedido = (PreparedStatement) con.prepareStatement(
+                "SELECT id_pedido FROM pedido WHERE fecha = ? AND fk_cliente = ? ORDER BY id_pedido DESC LIMIT 1"
+            );
+            buscarPedido.setString(1, fecha.toString());
+            buscarPedido.setInt(2, cliente.getTelefono());
+            ResultSet rs = buscarPedido.executeQuery();
+
+            int idPedido = -1;
+            if (rs.next()) {
+                idPedido = rs.getInt("id_pedido");
+            }
+
+            // Insertar detalles
+            for (Carrito item : carrito) {
+                PreparedStatement stmtDetalle = (PreparedStatement) con.prepareStatement(
+                    "INSERT INTO detalles_pedido (cantidad, fk_producto, fk_pedido) VALUES (?, ?, ?)"
+                );
+                stmtDetalle.setInt(1, item.getCantidad());
+                stmtDetalle.setInt(2, item.getProducto().getIdProducto());
+                stmtDetalle.setInt(3, idPedido);
+                stmtDetalle.executeUpdate();
+            }
+
+            JOptionPane.showMessageDialog(null, "compra realizada con éxito.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "error al realizar la compra.");
+        }
+    }
 
 	@Override
 	public void verCompra() {
-		// TODO Auto-generated method stub
+		
+		try {
+            int telefono = Integer.parseInt(JOptionPane.showInputDialog("Ingrese su telefono para ver sus pedidos:"));
+            PreparedStatement stmt =  con.prepareStatement(
+            		"SELECT p.id_pedido, p.fecha, p.estado, d.cantidad, prod.nombre, prod.precio " +
+                    "FROM pedido p " +
+                    "JOIN detalles_pedido d ON p.id_pedido = d.fk_pedido " +
+                    "JOIN producto prod ON d.fk_producto = prod.id_producto " +
+                    "JOIN cliente c ON p.fk_cliente = c.id_cliente " +
+                    "WHERE c.telefono = ?");
+
+            stmt.setInt(1, telefono);
+            ResultSet rs = stmt.executeQuery();
+
+            String resumen = "";
+            int pedidoActual = -1;
+
+            while (rs.next()) {
+                int idPedido = rs.getInt("id_pedido");
+                String fecha = rs.getString("fecha");
+                String estado = rs.getString("estado");
+                String producto = rs.getString("nombre");
+                int cantidad = rs.getInt("cantidad");
+                double precio = rs.getDouble("precio");
+
+                if (pedidoActual != idPedido) {
+                    if (pedidoActual != -1) resumen += "\n-----------------------------\n";
+                    resumen += "Pedido #" + idPedido +
+                               "\nFecha: " + fecha +
+                               "\nEstado: " + estado +
+                               "\nProductos:\n";
+                    pedidoActual = idPedido;
+                }
+                resumen += "- " + producto + " x " + cantidad + " = $" + (precio * cantidad) + "\n";
+            }
+
+            if (resumen.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "No se encontraron compras para ese cliente.");
+            } else {
+                JOptionPane.showMessageDialog(null, resumen);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al consultar compras.");
+        }
 		
 	}
 }

@@ -3,29 +3,31 @@ package DLL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.LinkedList;
 import java.util.List;
 
+import jumbox.Productos;
 import jumbox.Sucursal;
 import repository.SucursalRepository;
 
-public class ControllerSucursal<T extends Sucursal> implements SucursalRepository {
+public class ControllerSucursal{
 	
     private static Connection con = Conexion.getInstance().getConnection();
 
-    @Override
-    public T loginSucursal(String contrasena) {
-        T EncargadoS = null;
+    public Sucursal loginSucursal(int id_sucursal, String contrasena) {
+        Sucursal EncargadoS = null;
         try {
             PreparedStatement stmt = con.prepareStatement(
-                "SELECT * FROM sucursal WHERE contrasena = ?"
+            		"SELECT * FROM sucursal WHERE id_sucursal = ? AND contrasena = ?"
             );
-            stmt.setString(1, contrasena);
+            stmt.setInt(1, id_sucursal);
+            stmt.setString(2, contrasena);
             
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
 
-            	EncargadoS = (T) new Sucursal(contrasena);
+                EncargadoS = new Sucursal(id_sucursal, contrasena);
                        
             }
         } catch (Exception e) {
@@ -33,16 +35,29 @@ public class ControllerSucursal<T extends Sucursal> implements SucursalRepositor
         }
         return EncargadoS;
     }
+    
+    
+    public LinkedList<Productos> mostrarAlmacen() {
+        LinkedList<Productos> producto = new LinkedList<>();
+        try {
+            PreparedStatement stmt = con.prepareStatement("SELECT * FROM producto");
+            ResultSet rs = stmt.executeQuery();
 
-	@Override
-	public void agregarEncargadoS(Sucursal EncargadoS) {
-		// TODO Auto-generated method stub
-		
-	}
+            while (rs.next()) {
+            	int id = rs.getInt("id_producto");
+                String nombre = rs.getString("nombre");
+                Double precio = rs.getDouble("precio");
+                int stock = rs.getInt("stock");
+               
+                Productos p = new Productos(nombre, precio, stock);
+                p.setIdProducto(id);
+                producto.add(p);
+                        
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return producto;
+    }
 
-	@Override
-	public List<Sucursal> mostrarEncargadoS() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

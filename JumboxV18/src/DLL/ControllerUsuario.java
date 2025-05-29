@@ -7,9 +7,7 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
-import jumbox.Carrito;
 import jumbox.Cliente;
-import jumbox.Productos;
 import repository.UsuarioRepository;
 
 public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
@@ -29,10 +27,11 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
+                int id = rs.getInt("id_cliente");
                 int telefono = rs.getInt("telefono");
                 String direccion = rs.getString("direccion");
 
-                usuario = (T) new Cliente(nombre, direccion, telefono, contrasena);
+                usuario = (T) new Cliente(id, nombre, direccion, telefono, contrasena);
                        
             }
         } catch (Exception e) {
@@ -101,5 +100,4 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
 		}
 		
 	}
-	
 }

@@ -13,11 +13,12 @@ public class Productos {
 	private int categoria;
 	private int idProducto;
 	
-	public Productos(String nombre, double precio, int stock, int categoria) {
+	public Productos(String nombre, double precio, int stock, int categoria, int idProducto) {
 		this.nombre = nombre;
 		this.precio = precio;
 		this.stock = stock;
 		this.categoria = categoria;
+		this.idProducto = idProducto;
 	}
 	
 	public Productos(String nombre, double precio, int stock) {
@@ -64,7 +65,7 @@ public class Productos {
 		this.idProducto = idProducto;
 	}
 	
-	public static void crearProducto(String nombre, double precio, int stock, int categoria) {
+	public static void crearProducto(String nombre, double precio, int stock, int categoria, int idProducto) {
 		ControllerProducto controller = new ControllerProducto();
 		
         while (nombre.isEmpty()) {
@@ -94,7 +95,7 @@ public class Productos {
 
             
         
-         Productos producto = new Productos(nombre, precio, stock, fk_categoria);
+         Productos producto = new Productos(nombre, precio, stock, fk_categoria, idProducto);
         controller.agregarProducto(producto);
 	}
 

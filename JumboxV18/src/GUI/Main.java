@@ -1,18 +1,24 @@
 package GUI;
 
 
+import java.util.LinkedList;
+
 import javax.swing.JOptionPane;
 
 import DLL.Conexion;
+import DLL.ControllerCarrito;
 import DLL.ControllerDeposito;
+import DLL.ControllerPedidoSucursal;
 import DLL.ControllerProducto;
 import DLL.ControllerSucursal;
 import DLL.ControllerUsuario;
+import jumbox.Carrito;
+import jumbox.Categorias;
 import jumbox.Cliente;
 import jumbox.Deposito;
 import jumbox.OpcionesCliente;
 import jumbox.OpcionesDeposito;
-import jumbox.OpcionesSucursal;
+import jumbox.OpcionesSucursales;
 import jumbox.Productos;
 import jumbox.Registro;
 import jumbox.Sucursal;
@@ -26,7 +32,8 @@ public class Main {
 		ControllerDeposito controllerD = new ControllerDeposito();
 		ControllerSucursal controllerS = new ControllerSucursal();
 		ControllerProducto controllerP = new ControllerProducto();
-		
+		ControllerPedidoSucursal controllerPS = new ControllerPedidoSucursal();
+		ControllerCarrito controllerC = new ControllerCarrito();
 		
 		Conexion.getInstance();
 		int opcion = 0;
@@ -56,13 +63,45 @@ public class Main {
 	                        }
 	                    }
 
-	                    Cliente usuario = controller.login(nombre, contrasenia);
-	                    if (usuario != null) {
-	                    	JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
-	                       // Ir a menu de cliente
-	                       Cliente comprador = (Cliente)usuario;
-	                       
-	                       
+						Cliente usuario = controller.login(nombre, contrasenia);
+						if (usuario != null) {
+
+							JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
+							Cliente comprador = (Cliente)usuario;
+
+							LinkedList<Productos> listaProductos = controllerP.mostrarProducto();
+
+							int opciones = 0;
+							do {
+
+								opciones = JOptionPane.showOptionDialog(null, "¿Qué deseas hacer?", "Menú Cliente", 0, 0, null,
+									OpcionesCliente.values(), OpcionesCliente.values());
+								
+								switch (opciones) {
+									case 0: // COMPRAR
+										controllerC.compras(listaProductos, comprador);
+										break;
+
+									case 1: // VER_CARRITO
+										controllerC.verCarrito();
+										//controllerC.realizarCompra(carrito, comprador);
+										//carrito.clear();
+										break;
+
+									case 2: // EDITAR CARRITO
+										controllerC.editarCarrito();
+										break;
+										
+									case 3: // MI COMPRA
+										controllerC.verCompra();
+
+									case 4: // SALIR 
+										
+										JOptionPane.showMessageDialog(null, "Saliendo...");
+										break;
+										
+								}
+							} while (opciones != 4);
 	                        
 	                    } else {
 	                        JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
@@ -127,10 +166,10 @@ public class Main {
                        opciones2 = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesDeposito.values(), OpcionesDeposito.values());
                        		switch (opciones2) {
                        		case 0: //Armar Envio
-                       			
+                       			controllerP.procesarPedidosPendientes();
                        			break;
                        		case 1: //Crear Producto
-                       			Productos.crearProducto("", 0, -1, 0);
+                       			Productos.crearProducto("", 0, -1, 0, 0);
                        			break; 
                        		case 2: //Editar Producto
                        			controllerP.editar();
@@ -153,6 +192,12 @@ public class Main {
 					
 					
 				case 2: //Encargado Sucursal
+					
+					OpcionesSucursales opcionesSucursales = (OpcionesSucursales) JOptionPane.showInputDialog(null, "¿A que Sucursal quieres acceder?", "Jumbox", JOptionPane.QUESTION_MESSAGE, null,OpcionesSucursales.values(), OpcionesSucursales.values()[0]);
+
+			        int id_sucursal = opcionesSucursales.getId();
+
+					
 					String contraseniaS = "";
                     while (contraseniaS.isEmpty()) {
                         contraseniaS = JOptionPane.showInputDialog("Ingrese contraseña");
@@ -161,20 +206,20 @@ public class Main {
                         }
                     }
                     
-                    Sucursal usuario2 = controllerS.loginSucursal(contraseniaS);
+                    Sucursal usuario2 = controllerS.loginSucursal(id_sucursal, contraseniaS);
                     if (usuario2 != null) {
                      JOptionPane.showMessageDialog(null, "Bienvenido a la Sucursal");
                        // Ir a menu de la sucursal
                      Sucursal encargadoS = (Sucursal)usuario2; 
                      int opciones3 = 0;
                      do {
-                    	 opciones3 = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesSucursal.values(), OpcionesSucursal.values());
+                    	 opciones3 = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesSucursales.values(), OpcionesSucursales.values());
                     	 
                     	 switch (opciones3) {
 						case 0: //Consultar los productos
-							
+								controllerPS.generarPedido(usuario2);
 							break;
-
+								
 						case 1: //Gestionar pedidos
 							
 							break;
