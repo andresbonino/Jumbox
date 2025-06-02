@@ -11,7 +11,7 @@ public class Productos {
 	private double precio;
 	private int stock;
 	private int categoria;
-	private int idProducto;
+	private int id_producto;
 	private int fk_categoria;
 	
 	public Productos(String nombre, double precio, int stock, int categoria) {
@@ -34,7 +34,7 @@ public class Productos {
 		this.precio = precio;
 		this.stock = stock;
 		this.categoria = categoria;
-		this.idProducto = idProducto;
+		this.id_producto = idProducto;
 		this.fk_categoria = fk_categoria;
 	}
 
@@ -111,11 +111,11 @@ public class Productos {
 	public void setCategoria(int categoria) {
 		this.categoria = categoria;
 	}
-	public int getIdProducto() {
-		return idProducto;
+	public int getId_producto() {
+		return id_producto;
 	}
-	public void setIdProducto(int idProducto) {
-		this.idProducto = idProducto;
+	public void setId_producto(int id_producto) {
+		this.id_producto = id_producto;
 	}
 	
 	public static void crearProducto(String nombre, double precio, int stock, int categoria) {

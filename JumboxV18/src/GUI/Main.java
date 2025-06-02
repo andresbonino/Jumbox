@@ -33,9 +33,11 @@ public class Main {
 		Conexion.getInstance();
 		int opcion = 0;
 
+;
 		do {
 			opcion = JOptionPane.showOptionDialog(null, "¿Quien Eres?", "Jumbox", 0, 0, null, Usuarios.values(), Usuarios.values());
 
+			
 			switch (opcion) {
 				case 0: //Cliente
 					int opcionR = 0;
@@ -63,10 +65,10 @@ public class Main {
 							
 							Cliente comprador = (Cliente)usuario;
 							LinkedList<Carrito> carrito = new LinkedList<>();
-							controllerC.cargarCarritoDesdeBD(carrito, comprador);
-							LinkedList<Productos> listaProductos = controllerP.mostrarProducto();
+							
 							
 							controllerC.cargarCarritoDesdeBD(carrito, comprador);
+							LinkedList<Productos> listaProductos = controllerP.mostrarProducto();
 
 							int opciones = 0;
 							do {
@@ -88,7 +90,6 @@ public class Main {
 										
 									case 3: // REALIZAR COMPRA
 										controllerC.realizarCompra(carrito, comprador);
-										carrito.clear();
 
 									case 4: // SALIR
 										

@@ -41,8 +41,8 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
     public void agregarUsuario(Cliente usuario) {
         try {
             PreparedStatement statement = con.prepareStatement(
-            		"INSERT INTO cliente (nombre, direccion, telefono, contrasena) VALUES (?, ?, ?, ?)",
-            	    PreparedStatement.RETURN_GENERATED_KEYS
+                "INSERT INTO cliente (nombre, direccion, telefono, contrasena) VALUES (?, ?, ?, ?)",
+                PreparedStatement.RETURN_GENERATED_KEYS
             );
             statement.setString(1, usuario.getNombre());
             statement.setString(2, usuario.getDireccion());
@@ -51,27 +51,26 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
 
             int filas = statement.executeUpdate();
             if (filas > 0) {
-            	
-            	ResultSet rs = statement.getGeneratedKeys();
-            	int idCliente = usuario.getTelefono();
-            	if (rs.next()) {
-            		idCliente = rs.getInt(1);
-				}
-            	
-            	
-            	PreparedStatement stmtCarrito = con.prepareStatement("INSERT INTO carrito (fk_cliente) VALUES (?)");
-            	
-            	
-            	stmtCarrito.setInt(1, idCliente);
-            	stmtCarrito.executeUpdate();
-            	
+                ResultSet rs = statement.getGeneratedKeys();
+                if (rs.next()) {
+                    int idCliente = rs.getInt(1);
+                    usuario.setId_cliente(idCliente); // Asegura que el objeto Cliente tenga su ID real
+
+                    // Crear carrito asociado al cliente
+                    PreparedStatement stmtCarrito = con.prepareStatement("INSERT INTO carrito (fk_cliente) VALUES (?)");
+                    stmtCarrito.setInt(1, idCliente);
+                    stmtCarrito.executeUpdate();
+                }
+
                 JOptionPane.showMessageDialog(null, "Usuario agregado correctamente.");
             } else {
                 JOptionPane.showMessageDialog(null, "No se pudo agregar el usuario.");
             }
         } catch (Exception e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al registrar usuario.");
         }
+
     }
 
     @Override
