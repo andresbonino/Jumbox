@@ -5,10 +5,19 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import DLL.ControllerUsuario;
+import jumbox.Cliente;
+import jumbox.Deposito;
+import jumbox.Usuarios;
+
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
@@ -19,6 +28,7 @@ public class LoginCliente extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private JPasswordField passwordField;
+	ControllerUsuario controllerU = new ControllerUsuario();
 
 	/**
 	 * Launch the application.
@@ -68,27 +78,50 @@ public class LoginCliente extends JFrame {
 		JLabel lblNewLabel_2_1 = new JLabel("Contraseña");
 		lblNewLabel_2_1.setFont(new Font("Swis721 Blk BT", Font.PLAIN, 20));
 		lblNewLabel_2.setFont(new Font("Swis721 Blk BT", Font.PLAIN, 20));
-		lblNewLabel_2_1.setBounds(98, 183, 167, 32);
+		lblNewLabel_2_1.setBounds(97, 183, 167, 32);
 		contentPane.add(lblNewLabel_2_1);
 		
-		textField = new JTextField();
-		textField.setBounds(97, 146, 288, 26);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		JTextField txtUsuario = new JTextField();
+		txtUsuario.setBounds(97, 146, 288, 26);
+		txtUsuario.setFont(new Font("Arial", Font.PLAIN, 18));
+		txtUsuario.setColumns(10);
+		contentPane.add(txtUsuario);
 		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(97, 212, 288, 26);
-		contentPane.add(passwordField);
+		JPasswordField txtContrasena = new JPasswordField();
+		txtContrasena.setBounds(96, 210, 288, 34);
+		txtContrasena.setFont(new Font("Arial", Font.PLAIN, 18));
+		contentPane.add(txtContrasena);
 		
 		JButton btnNewButton = new JButton("Iniciar Sesion");
 		btnNewButton.setFont(new Font("Swis721 Blk BT", Font.PLAIN, 30));
 		btnNewButton.setBounds(98, 273, 287, 50);
 		contentPane.add(btnNewButton);
 		
-		JLabel LblError = new JLabel("Error");
+		JLabel LblError = new JLabel("");
 		LblError.setForeground(new Color(255, 0, 0));
 		LblError.setFont(new Font("Arial", Font.PLAIN, 15));
-		LblError.setBounds(98, 249, 46, 14);
+		LblError.setBounds(142, 208, 354, 14);
 		contentPane.add(LblError);
+		
+		btnNewButton.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	String usu = new String(txtUsuario.getName()).trim();
+		    	String contrasena = new String(txtContrasena.getPassword()).trim();
+		        LblError.setText("");
+
+		        if (contrasena.isEmpty() || usu.isEmpty()) {
+		            LblError.setText("Campo vacío");
+		        } else {
+		            Cliente usuario = controllerU.login(usu, contrasena);
+		            if (usuario != null) {
+		            	dispose();
+		            	Cliente.LoginCliente(usu, contrasena);
+		            } else {
+		                LblError.setText("Contraseña o usuario incorrecto");
+		            }
+		        }
+		    }
+		});
+
 	}
 }
