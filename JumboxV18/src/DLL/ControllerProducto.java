@@ -38,7 +38,7 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 
     @Override
     public LinkedList<Productos> mostrarProducto() {
-    	LinkedList<Productos> lista = new LinkedList<>();
+    	LinkedList<Productos> productos = new LinkedList<>();
         try {
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM producto");
             ResultSet rs = stmt.executeQuery();
@@ -47,15 +47,14 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
                     rs.getString("nombre"),
                     rs.getDouble("precio"),
                     rs.getInt("stock"),
-                    0
+                    rs.getInt("fk_categoria")
                 );
-                p.setIdProducto(rs.getInt("id_producto")); // <-- Aca está el punto CLAVE
-                lista.add(p);
+                
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return lista;
+        return productos;
     }
     
     @Override

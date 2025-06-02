@@ -63,6 +63,7 @@ public class Main {
 							
 							Cliente comprador = (Cliente)usuario;
 							LinkedList<Carrito> carrito = new LinkedList<>();
+							controllerC.cargarCarritoDesdeBD(carrito, comprador);
 							LinkedList<Productos> listaProductos = controllerP.mostrarProducto();
 							
 							controllerC.cargarCarritoDesdeBD(carrito, comprador);

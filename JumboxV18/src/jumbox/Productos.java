@@ -12,6 +12,7 @@ public class Productos {
 	private int stock;
 	private int categoria;
 	private int idProducto;
+	private int fk_categoria;
 	
 	public Productos(String nombre, double precio, int stock, int categoria) {
 		this.nombre = nombre;
@@ -22,21 +23,63 @@ public class Productos {
 	
 	
 
-	public Productos(String nombre, double precio, int stock, int categoria, int idProducto) {
+	
+
+	
+	
+	
+	public Productos(String nombre, double precio, int stock, int categoria, int idProducto, int fk_categoria) {
 		super();
 		this.nombre = nombre;
 		this.precio = precio;
 		this.stock = stock;
 		this.categoria = categoria;
 		this.idProducto = idProducto;
+		this.fk_categoria = fk_categoria;
 	}
 
 
 	
+	
 
-	
-	
-	
+
+
+
+
+
+	public Productos() {
+		super();
+	}
+
+
+
+
+
+
+
+
+	public int getFk_categoria() {
+		return fk_categoria;
+	}
+
+
+
+
+
+
+
+
+	public void setFk_categoria(int fk_categoria) {
+		this.fk_categoria = fk_categoria;
+	}
+
+
+
+
+
+
+
+
 	public String getNombre() {
 		return nombre;
 	}
