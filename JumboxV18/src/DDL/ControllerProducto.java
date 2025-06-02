@@ -46,6 +46,34 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
             e.printStackTrace();
         }
     }
+    
+    
+    public void eliminarProducto(Productos producto) { //ARREGLAR ELIMINAR PRODUCTO
+        try {
+            PreparedStatement statement = con.prepareStatement(
+            	"DELETE FROM producto WHERE `id_producto` = ?",
+            	Statement.RETURN_GENERATED_KEYS
+            );
+            statement.setString(1, producto.getNombre());
+            statement.setDouble(2, producto.getPrecio());
+            statement.setInt(3, producto.getStock());
+            statement.setInt(4, producto.getCategoria());
+
+            int filas = statement.executeUpdate();
+            if (filas > 0) {
+                ResultSet rs = statement.getGeneratedKeys();
+                if (rs.next()) {
+                    producto.getIdProducto();
+                    System.out.println("Producto eliminado correctamente");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    
 
     public static LinkedList<Productos> mostrarProducto2() {
         LinkedList<Productos> producto = new LinkedList<>();
