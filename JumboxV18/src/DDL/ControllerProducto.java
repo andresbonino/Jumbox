@@ -48,29 +48,42 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
     }
     
     
-    public void eliminarProducto(Productos producto) { //ARREGLAR ELIMINAR PRODUCTO
+    public void eliminarProducto(Productos producto) {
         try {
-            PreparedStatement statement = con.prepareStatement(
-            	"DELETE FROM producto WHERE `id_producto` = ?",
-            	Statement.RETURN_GENERATED_KEYS
+            // Primero eliminamos de detalle_pedido_reposicion los registros que tengan ese producto
+            PreparedStatement ps0 = con.prepareStatement(
+                "DELETE FROM detalle_pedido_reposicion WHERE fk_producto = ?"
             );
-            statement.setString(1, producto.getNombre());
-            statement.setDouble(2, producto.getPrecio());
-            statement.setInt(3, producto.getStock());
-            statement.setInt(4, producto.getCategoria());
+            ps0.setInt(1, producto.getIdProducto());
+            ps0.executeUpdate();
 
-            int filas = statement.executeUpdate();
+            // Luego eliminamos de almacen_sucursal los registros que tengan ese producto
+            PreparedStatement ps1 = con.prepareStatement(
+                "DELETE FROM almacen_sucursal WHERE fk_producto = ?"
+            );
+            ps1.setInt(1, producto.getIdProducto());
+            ps1.executeUpdate();
+
+            // Finalmente eliminamos el producto de la tabla producto
+            PreparedStatement ps2 = con.prepareStatement(
+                "DELETE FROM producto WHERE id_producto = ?"
+            );
+            ps2.setInt(1, producto.getIdProducto());
+            int filas = ps2.executeUpdate();
+
             if (filas > 0) {
-                ResultSet rs = statement.getGeneratedKeys();
-                if (rs.next()) {
-                    producto.getIdProducto();
-                    System.out.println("Producto eliminado correctamente");
-                }
+                System.out.println("Producto eliminado correctamente");
+            } else {
+                System.out.println("No se encontró el producto para eliminar");
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+
+
     
     
     

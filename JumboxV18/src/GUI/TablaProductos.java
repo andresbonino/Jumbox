@@ -16,6 +16,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.awt.event.ActionEvent;
@@ -84,13 +86,16 @@ public class TablaProductos extends JFrame {
 		btnEditar.setBounds(107, 195, 89, 33);
 		contentPane.add(btnEditar);
 		
-		JButton btnEliminar = new JButton("Eliminar"); //ARREGLAR ELIMINAR
+		JButton btnEliminar = new JButton("Eliminar");
 		btnEliminar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ControllerProducto eliminarP = new ControllerProducto();
-				eliminarP.eliminarProducto(productoSeleccionado);
-				//eliminarP.setVisible(true);
-			}
+		    public void actionPerformed(ActionEvent e) {
+		        if (productoSeleccionado != null && productoSeleccionado.getIdProducto() > 0) {
+		            ControllerProducto eliminarP = new ControllerProducto();
+		            eliminarP.eliminarProducto(productoSeleccionado);
+		        } else {
+		            JOptionPane.showMessageDialog(null, "Seleccioná un producto válido para eliminar.");
+		        }
+		    }
 		});
 		btnEliminar.setBounds(206, 195, 89, 33);
 		contentPane.add(btnEliminar);
@@ -113,7 +118,7 @@ public class TablaProductos extends JFrame {
 		lblNewLabel_1.setBackground(new Color(0, 128, 0));
 		lblNewLabel_1.setForeground(new Color(0, 128, 0));
 		lblNewLabel_1.setFont(new Font("Swis721 Blk BT", Font.BOLD, 50));
-		lblNewLabel_1.setBounds(111, -22, 505, 80);
+		lblNewLabel_1.setBounds(87, -20, 505, 80);
 		contentPane.add(lblNewLabel_1);
 		
 
