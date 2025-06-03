@@ -171,7 +171,7 @@ public class Main {
                        			Productos.crearProducto("", 0, -1, 0, 0);
                        			break; 
                        		case 2: //Editar Producto
-                       			controllerP.editar();
+                       			controllerP.editar(null);
                        			break; 
                        		case 3: //Ver Stock
                        			controllerP.verStock();	

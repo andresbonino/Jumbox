@@ -62,12 +62,10 @@ public class TablaProductos extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btnAgregar = new JButton("Agregar"); //ARREGLAR AGREGAR
+		JButton btnAgregar = new JButton("Agregar");
 		btnAgregar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ControllerProducto agregarP = new ControllerProducto();
-				//agregarP.agregarProducto(productoSeleccionado);
-				//agregarP.setVisible(true);
+				Productos.crearProducto("", 0, 0, 0, 0);
 			}
 		});
 		btnAgregar.setBounds(10, 195, 89, 33);
@@ -75,12 +73,15 @@ public class TablaProductos extends JFrame {
 		
 		
 		
-		JButton btnEditar = new JButton("Editar"); //ARREGLAR EDITAR
+		JButton btnEditar = new JButton("Editar");
 		btnEditar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ControllerProducto editarP = new ControllerProducto();
-				editarP.editarProducto(productoSeleccionado);
-				// editarP.setVisible(true);
+				if (productoSeleccionado != null) {
+					ControllerProducto controller = new ControllerProducto();
+					controller.editar(productoSeleccionado);
+				} else {
+					JOptionPane.showMessageDialog(null, "Seleccione un producto para editar.");
+				}
 			}
 		});
 		btnEditar.setBounds(107, 195, 89, 33);
@@ -93,7 +94,7 @@ public class TablaProductos extends JFrame {
 		            ControllerProducto eliminarP = new ControllerProducto();
 		            eliminarP.eliminarProducto(productoSeleccionado);
 		        } else {
-		            JOptionPane.showMessageDialog(null, "Seleccioná un producto válido para eliminar.");
+		            JOptionPane.showMessageDialog(null, "Seleccione un producto para eliminar.");
 		        }
 		    }
 		});
@@ -177,6 +178,11 @@ public class TablaProductos extends JFrame {
   		JLabel lblNewLabel = new JLabel("Filtro");
   		lblNewLabel.setBounds(374, 184, 46, 14);
   		contentPane.add(lblNewLabel);
+  		
+  		JLabel lblNewLabel_2 = new JLabel("* selecciona Flitrar para actualizar.");
+  		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 10));
+  		lblNewLabel_2.setBounds(74, 231, 208, 14);
+  		contentPane.add(lblNewLabel_2);
 		  cargarTabla();
 	}
 	
@@ -215,5 +221,4 @@ public class TablaProductos extends JFrame {
 			
         }
     }
-    
 }
