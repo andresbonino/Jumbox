@@ -7,11 +7,12 @@ import javax.swing.JOptionPane;
 import DLL.ControllerCarrito;
 import DLL.ControllerProducto;
 import DLL.ControllerUsuario;
+import GUI.MenuCliente;
 
 public class Cliente{
 
 	private int id_cliente;
-	private String nombre;
+	private static String nombre;
 	private String direccion;
 	private int telefono;
 	private String contrasena;
@@ -32,7 +33,7 @@ public class Cliente{
 		this.id_cliente = id_cliente;
 	}
 
-	public String getNombre() {
+	public static String getNombre() {
 		return nombre;
 	}
 
@@ -75,41 +76,43 @@ public class Cliente{
 	public static void LoginCliente(String nombre, String contrasena) {
 		 Cliente usuario = controller.login(nombre, contrasena);
 	        if (usuario != null) {
-	         JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
+	        	MenuCliente menu = new MenuCliente();
+	        	menu.setVisible(true);
+	         //JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
 	           // Ir a menu de cliente
-	         ControllerProducto<Productos> controllerProducto = new ControllerProducto<>();
-	         LinkedList<Productos> producto = controllerProducto.mostrarProducto();  
-	         LinkedList<Carrito> carrito = new LinkedList<>();
-	           int opciones = 0;
-               do {
-            	   opciones = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesCliente.values(), OpcionesCliente.values());
-            	   
-            	   switch (opciones) {
-				case 0: //Comprar
-					controllerCarr.compras(producto, usuario);
-					break;
-
-				case 1: //Ver el carrito
-					controllerCarr.verCarrito();
-					break;
-				
-				case 2: //Editar carrito
-					controllerCarr.editarCarrito();
-					break;
-					
-				case 3: //Estado de la compra
-					
-					break;
-
-				case 4: //Salir
-					JOptionPane.showMessageDialog(null, "Saliendo...");
-					break;
-
-				}
-               } while (opciones!=4);
-	            
-	        } else {
-	            JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
+	         //ControllerProducto<Productos> controllerProducto = new ControllerProducto<>();
+	         //LinkedList<Productos> producto = controllerProducto.mostrarProducto();  
+	         //LinkedList<Carrito> carrito = new LinkedList<>();
+	         //  int opciones = 0;
+             //  do {
+            //	   opciones = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesCliente.values(), OpcionesCliente.values());
+            //	   
+            //	   switch (opciones) {
+			//	case 0: //Comprar
+			//		controllerCarr.compras(producto, usuario);
+			//		break;
+//
+			//	case 1: //Ver el carrito
+			//		controllerCarr.verCarrito();
+			//		break;
+			//	
+			//	case 2: //Editar carrito
+			//		controllerCarr.editarCarrito();
+			//		break;
+			//		
+			//	case 3: //Estado de la compra
+			//		
+			//		break;
+//
+			//	case 4: //Salir
+			//		JOptionPane.showMessageDialog(null, "Saliendo...");
+			//		break;
+//
+			//	}
+            //   } while (opciones!=4);
+	        //    
+	        //} else {
+	          //  JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
 	        }
 		}
 	
