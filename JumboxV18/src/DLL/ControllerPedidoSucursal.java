@@ -11,6 +11,7 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 import jumbox.Almacen_Sucursal;
+import jumbox.OpcionesSucursales;
 import jumbox.Productos;
 import jumbox.Sucursal;
 import repository.ProductoRepository;
@@ -250,6 +251,13 @@ public class ControllerPedidoSucursal<T extends Sucursal> implements ProductoRep
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void editar(Productos Producto) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 	@Override
 	public void editar() {

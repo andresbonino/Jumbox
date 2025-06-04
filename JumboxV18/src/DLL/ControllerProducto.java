@@ -379,6 +379,12 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 	    }
 	}
 
+	@Override
+	public void editar(Productos Producto) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 
 

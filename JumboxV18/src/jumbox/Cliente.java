@@ -73,24 +73,7 @@ public class Cliente{
 	}
 	
 	public static void LoginCliente(String nombre, String contrasena) {
-		 //Iniciar Sesion
-			nombre = "";
-	        while (nombre.isEmpty()) {
-	            nombre = JOptionPane.showInputDialog("Ingrese nombre");
-	            if (nombre.isEmpty()) {
-	                JOptionPane.showMessageDialog(null, "Error: campo vacío");
-	            }
-	        }
-
-	        String contrasenia = "";
-	        while (contrasenia.isEmpty()) {
-	            contrasenia = JOptionPane.showInputDialog("Ingrese contraseña");
-	            if (contrasenia.isEmpty()) {
-	                JOptionPane.showMessageDialog(null, "Error: campo vacío");
-	            }
-	        }
-
-	        Cliente usuario = controller.login(nombre, contrasenia);
+		 Cliente usuario = controller.login(nombre, contrasena);
 	        if (usuario != null) {
 	         JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
 	           // Ir a menu de cliente
@@ -131,41 +114,10 @@ public class Cliente{
 		}
 	
 	
-	public static void RegistroCliente(String nombre, String contrasena, String direccion, int telefono) {
-		//Registrarse
-		 nombre = "";
-	    while (nombre.isEmpty()) {
-	        nombre = JOptionPane.showInputDialog("Ingrese nombre");
-	        if (nombre.isEmpty()) {
-	            JOptionPane.showMessageDialog(null, "Error: campo vacío");
-	        }
-	    }
-	    
-	     direccion = "";
-	    while (direccion.isEmpty()) {
-	    	direccion = JOptionPane.showInputDialog("Ingrese su direccion");
-	        if (direccion.isEmpty()) {
-	            JOptionPane.showMessageDialog(null, "Error: campo vacío");
-	        }
-	    }
-	    
-	     telefono = 0;
-	    while (telefono<=0) {
-	    	telefono = Integer.parseInt(JOptionPane.showInputDialog("Ingrese su telefono"));
-	        if (telefono<=0) {
-	            JOptionPane.showMessageDialog(null, "Error: campo = 0");
-	        }
-	    }
-	    
-	     contrasena = "";
-	    while (contrasena.isEmpty()) {
-	        contrasena = JOptionPane.showInputDialog("Ingrese contraseña");
-	        if (contrasena.isEmpty()) {
-	            JOptionPane.showMessageDialog(null, "Error: campo vacío");
-	        }
-	    }
+	public static Cliente RegistroCliente(String nombre, String contrasena, String direccion, int telefono) {
 	    Cliente usuario = new Cliente(nombre, direccion, telefono, contrasena);
 	    controller.verificarUsuario(usuario);
+		return usuario;
 		}
 	
 }

@@ -88,24 +88,24 @@ public class LoginCliente extends JFrame {
 		contentPane.add(txtUsuario);
 		
 		JPasswordField txtContrasena = new JPasswordField();
-		txtContrasena.setBounds(96, 210, 288, 34);
+		txtContrasena.setBounds(97, 217, 288, 34);
 		txtContrasena.setFont(new Font("Arial", Font.PLAIN, 18));
 		contentPane.add(txtContrasena);
 		
 		JButton btnNewButton = new JButton("Iniciar Sesion");
 		btnNewButton.setFont(new Font("Swis721 Blk BT", Font.PLAIN, 30));
-		btnNewButton.setBounds(98, 273, 287, 50);
+		btnNewButton.setBounds(98, 287, 287, 50);
 		contentPane.add(btnNewButton);
 		
 		JLabel LblError = new JLabel("");
 		LblError.setForeground(new Color(255, 0, 0));
 		LblError.setFont(new Font("Arial", Font.PLAIN, 15));
-		LblError.setBounds(142, 208, 354, 14);
+		LblError.setBounds(97, 262, 354, 14);
 		contentPane.add(LblError);
 		
 		btnNewButton.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		    	String usu = new String(txtUsuario.getName()).trim();
+		    	String usu = txtUsuario.getText().trim();
 		    	String contrasena = new String(txtContrasena.getPassword()).trim();
 		        LblError.setText("");
 
