@@ -1,5 +1,12 @@
+package jumbox;
+
 import java.time.LocalDate;
 import java.util.LinkedList;
+
+import javax.swing.JOptionPane;
+
+import DLL.ControllerProducto;
+import DLL.ControllerUsuario;
 
 public class Pedido {
 
@@ -68,9 +75,9 @@ public class Pedido {
 	public void setCarrito(LinkedList<Productos> carrito) {
 		Carrito = carrito;
 	}
+	
+	
 
-	
-	
 	
 	
 }
