@@ -261,14 +261,14 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	            idPedido = rs.getInt(1);
 	        }
 
-	        // INSERTAR PRODUCTOS EN CARRITO
+	        // INSERTAR PRODUCTOS EN PEDIDO
 	        for (Carrito item : carrito) {
 	            PreparedStatement psDetalle = con.prepareStatement(
-	                "INSERT INTO detalles_pedido (fk_pedido, fk_producto, cantidad) VALUES (?, ?, ?)"
+	                "INSERT INTO detalles_pedido (cantidad, fk_producto, fk_pedido) VALUES (?, ?, ?)"
 	            );
-	            psDetalle.setInt(1, idPedido);
+	            psDetalle.setInt(1, item.getCantidad());
 	            psDetalle.setInt(2, item.getProducto().getIdProducto());
-	            psDetalle.setInt(3, item.getCantidad());
+	            psDetalle.setInt(3, idPedido);
 	            psDetalle.executeUpdate();
 	        }
 
@@ -283,11 +283,11 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	        	psBorrar.executeUpdate();
 
 
-	        JOptionPane.showMessageDialog(null, "Compra realizada. Pedido enviado a la sucursal.");
+	        JOptionPane.showMessageDialog(null, "Compra realizada con exito");
 
 	    } catch (Exception e) {
 	        e.printStackTrace();
-	        JOptionPane.showMessageDialog(null, "Error al confirmar la compra.");
+	        JOptionPane.showMessageDialog(null, "Error al realizar la compra.");
 	    }
 	}
 
