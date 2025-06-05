@@ -155,7 +155,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
                 "INSERT INTO pedido (fecha, estado, fk_cliente) VALUES (?, 'pendiente', ?)"
             );
             stmtPedido.setString(1, fecha.toString());
-            stmtPedido.setInt(2, cliente.getTelefono()); // Usamos teléfono como identificador
+            stmtPedido.setInt(2, cliente.getId());
             stmtPedido.executeUpdate();
 
             // Obtener id del pedido
@@ -163,7 +163,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
                 "SELECT id_pedido FROM pedido WHERE fecha = ? AND fk_cliente = ? ORDER BY id_pedido DESC LIMIT 1"
             );
             buscarPedido.setString(1, fecha.toString());
-            buscarPedido.setInt(2, cliente.getTelefono());
+            buscarPedido.setInt(2, cliente.getId());
             ResultSet rs = buscarPedido.executeQuery();
 
             int idPedido = -1;
@@ -242,18 +242,19 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	
 	
 	private int obtenerIdCarrito(Cliente cliente) {
-        try {
-            PreparedStatement buscar = con.prepareStatement("SELECT id_carrito FROM carrito WHERE fk_cliente = ?");
-            buscar.setInt(1, cliente.getId());
-            ResultSet rs = buscar.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("id_carrito");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        	return -1;
-    	}
+	    try {
+	        PreparedStatement buscar = con.prepareStatement("SELECT id_carrito FROM carrito WHERE fk_cliente = ?");
+	        buscar.setInt(1, cliente.getId()); 
+	        ResultSet rs = buscar.executeQuery();
+	        if (rs.next()) {
+	            return rs.getInt("id_carrito");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	    return -1;
+	}
+
 
 
 
@@ -274,10 +275,10 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	        }
 
 	        PreparedStatement verificar = con.prepareStatement(
-	            "SELECT cantidad FROM producto_carrito WHERE fk_carrito = ? AND fk_producto = ?"
+	            "SELECT cantidad FROM producto_carrito WHERE fk_producto = ? AND fk_carrito = ?"
 	        );
-	        verificar.setInt(1, idCarrito);
-	        verificar.setInt(2, idProducto);
+	        verificar.setInt(1, idProducto);
+	        verificar.setInt(2, idCarrito);
 	        ResultSet rs = verificar.executeQuery();
 
 	        if (rs.next()) {
@@ -291,11 +292,10 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	            update.executeUpdate();
 	        } else {
 	            PreparedStatement insertar = con.prepareStatement(
-	                "INSERT INTO producto_carrito (fk_carrito, fk_producto, cantidad) VALUES (?, ?, ?)"
+	                "INSERT INTO producto_carrito (fk_producto, fk_carrito) VALUES (?, ?)"
 	            );
 	            insertar.setInt(1, idCarrito);
 	            insertar.setInt(2, idProducto);
-	            insertar.setInt(3, item.getCantidad());
 	            insertar.executeUpdate();
 	        }
 
@@ -305,10 +305,9 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	    }
 	}
 
-	@Override
-	public void compras(LinkedList<Productos> productos, LinkedList<Carrito> carrito, Cliente cliente) {
-		// TODO Auto-generated method stub
-		
-	}
+
+	
+
+	
 
 }

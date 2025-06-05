@@ -12,5 +12,5 @@ public interface CarritoRepository {
 	void verCarrito(LinkedList<Carrito> carrito);
 	void editarCarrito(LinkedList<Carrito> carrito);
 	void verCompra();
-	void compras(LinkedList<Productos> productos, LinkedList<Carrito> carrito, Cliente cliente);
 }
+

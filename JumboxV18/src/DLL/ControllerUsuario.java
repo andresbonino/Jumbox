@@ -28,13 +28,15 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
             if (rs.next()) {
                 String direccion = rs.getString("direccion");
                 int telefono = rs.getInt("telefono");
-                usuario = (T) new Cliente(nombre, direccion, telefono, contrasena);
+                int id = rs.getInt("id_cliente");  
+                usuario = (T) new Cliente(nombre, direccion, telefono, contrasena, id);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return usuario;
     }
+
 
     public void agregarUsuario(Cliente usuario) {
         try {

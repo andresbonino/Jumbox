@@ -62,7 +62,7 @@ public class Main {
 							JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
 							Cliente comprador = (Cliente)usuario;
 							LinkedList<Carrito> carrito = new LinkedList<>();
-							LinkedList<Productos> listaProductos = controllerP.mostrarProducto();
+							LinkedList<Productos> listaProductos = (LinkedList<Productos>) controllerP.mostrarProducto();
 
 							int opciones = 0;
 							do {
