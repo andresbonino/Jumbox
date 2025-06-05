@@ -82,7 +82,7 @@ public class Main {
 										break;
 
 									case 1: // VER_CARRITO
-										controllerC.verCarrito();
+										controllerC.verCarrito(comprador, null);
 										//controllerC.realizarCompra(carrito, comprador);
 										//carrito.clear();
 										break;

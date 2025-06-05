@@ -74,7 +74,7 @@ public class Cliente {
 	
 	
 	public static void LoginCliente(String nombre, String contrasena) {
-		 //Iniciar Sesion
+		 //INICIAR SESION
 			nombre = "";
 	        while (nombre.isEmpty()) {
 	            nombre = JOptionPane.showInputDialog("Ingrese nombre");
@@ -94,7 +94,7 @@ public class Cliente {
 	        Cliente usuario = controller.login(nombre, contrasenia);
 	        if (usuario != null) {
 	         JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
-	           // Ir a menu de cliente
+	           // IR A MENU CLIENTE
 	         ControllerProducto<Productos> controllerProducto = new ControllerProducto<>();
 	         LinkedList<Productos> producto = controllerProducto.mostrarProducto();  
 	         LinkedList<Carrito> carrito = new LinkedList<>();
@@ -103,23 +103,23 @@ public class Cliente {
                do {
             	   opciones = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesCliente.values(), OpcionesCliente.values());
             	   switch (opciones) {
-					case 0: //Comprar
+					case 0: //COMPRAR
 						controllerCarr.compras(producto,  usuario);
 						break;
 	
-					case 1: //Ver el carrito
-						controllerCarr.verCarrito();
+					case 1: //VER CARRITO
+						controllerCarr.verCarrito(usuario, null);
 						break;
 						
-					case 2: //Editar carrito
+					case 2: //EDITAR CARRITO
 						controllerCarr.editarCarrito();
 						break;
 						
-					case 3: //Estado de la compra
+					case 3: //ESTADO DE LA COMPRA
 						
 						break;
 						
-					case 4: //Salir
+					case 4: //SALIR
 						JOptionPane.showMessageDialog(null, "Saliendo...");
 						break;
 					}
@@ -132,7 +132,7 @@ public class Cliente {
 	
 	
 	public static void RegistroCliente(String nombre, String contrasena, String direccion, int telefono) {
-		//Registrarse
+		//REGISTRARSE
 		 nombre = "";
 	    while (nombre.isEmpty()) {
 	        nombre = JOptionPane.showInputDialog("Ingrese nombre");

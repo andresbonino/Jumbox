@@ -50,21 +50,21 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
     
     public void eliminarProducto(Productos producto) {
         try {
-            // Primero eliminamos de detalle_pedido_reposicion los registros que tengan ese producto
+            // ELIMINAR PEDIDO DE DETALLE_PEDIDO_REPOSICION
             PreparedStatement ps0 = con.prepareStatement(
                 "DELETE FROM detalle_pedido_reposicion WHERE fk_producto = ?"
             );
             ps0.setInt(1, producto.getIdProducto());
             ps0.executeUpdate();
 
-            // Luego eliminamos de almacen_sucursal los registros que tengan ese producto
+            // ELIMINAR PRODUCTO DE ALMACEN_SUCURSAL
             PreparedStatement ps1 = con.prepareStatement(
                 "DELETE FROM almacen_sucursal WHERE fk_producto = ?"
             );
             ps1.setInt(1, producto.getIdProducto());
             ps1.executeUpdate();
 
-            // Finalmente eliminamos el producto de la tabla producto
+            // ELIMINAR PRODUCTO DE LA TABLA PRODUCTO
             PreparedStatement ps2 = con.prepareStatement(
                 "DELETE FROM producto WHERE id_producto = ?"
             );
@@ -201,7 +201,7 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 			}
 		} while (nuevoStock.isEmpty() || nuevoS < 0);
 
-		// Obtener categoría actual del producto
+		// OBTENER CATEGORIA DEL PRODUCTO
 		Categorias categoriaActual = null;
 		for (Categorias cat : Categorias.values()) {
 			if (cat.getId() == seleccionado.getCategoria()) {
@@ -217,7 +217,7 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 			JOptionPane.QUESTION_MESSAGE,
 			null,
 			Categorias.values(),
-			categoriaActual // ← esta es la clave
+			categoriaActual
 		);
 
 		if (categoriaSeleccionada != null) {
@@ -294,7 +294,7 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 
 	public void armarEnvioASucursal(int idPedido) {
 	    try {
-	        // 1. Obtener todos los productos y cantidades del pedido
+	        // OBTENER LOS PRODUCTOS Y LAS CANTIDADES
 	        PreparedStatement stmt = con.prepareStatement(
 	            "SELECT d.fk_producto, d.cantidad, p.fk_sucursal " +
 	            "FROM detalle_pedido_reposicion d " +
@@ -312,13 +312,13 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 	        boolean stockInsuficiente = false;
 	        StringBuilder mensajeStock = new StringBuilder();
 
-	        // 2. Recorremos los productos para verificar stock
+	        // VERIFICAR STOCK DE PRODUCTOS
 	        while (rs.next()) {
 	            int idProducto = rs.getInt("fk_producto");
 	            int cantidad = rs.getInt("cantidad");
-	            idSucursal = rs.getInt("fk_sucursal"); // todos los productos van a la misma sucursal
+	            idSucursal = rs.getInt("fk_sucursal");
 
-	            // Consultar stock del depósito
+	            // CONSULTAR STOCK EN EL DEPOSITO
 	            PreparedStatement stockStmt = con.prepareStatement(
 	            		"SELECT nombre, stock FROM producto WHERE id_producto = ?"
 	            );
@@ -333,7 +333,7 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 
 	                if (stockActual < cantidad) {
 	                    stockInsuficiente = true;
-	                    mensajeStock.append("Pedido: ").append(idPedido) // si lo tenés disponible
+	                    mensajeStock.append("Pedido: ").append(idPedido)
 	                    .append(" | Producto: ").append(nombreProducto)
 	                    .append(" | Cantidad: ").append(cantidad)
 	                    .append(" | Stock: ").append(stockActual).append("\n");
@@ -346,7 +346,7 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 	            }
 	        }
 
-	        // 3. Si hay algún producto con stock insuficiente, mostrar mensaje y cancelar todo
+	        // SI NO HAY STOCK SUFICIENTE NO SE PROCESA EL PEDIDO
 	        if (stockInsuficiente) {
 	            JOptionPane.showMessageDialog(null,
 	                "No se pudo enviar el pedido porque hay productos sin stock suficiente:\n\n" +
@@ -354,12 +354,12 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 	            return;
 	        }
 
-	        // 4. Si todo el stock es suficiente, se procesa el pedido
+	        // SI HAY STOCK SUFICIENTE SE PROCESA EL PEDIDO
 	        for (int i = 0; i < productos.size(); i++) {
 	            int idProducto = productos.get(i);
 	            int cantidad = cantidades.get(i);
 
-	         // Verificar si ya existe el producto en el almacén de la sucursal
+	         // VER SI YA EXISTE EL PRODUCTO EN EL ALMACEN DE LA SUCURSAL
 	            PreparedStatement checkStmt = con.prepareStatement(
 	                "SELECT cantidad FROM almacen_sucursal WHERE fk_sucursal = ? AND fk_producto = ?"
 	            );
@@ -368,7 +368,7 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 	            ResultSet rsCheck = checkStmt.executeQuery();
 
 	            if (rsCheck.next()) {
-	                // Ya existe → actualizar stock
+	                // SI YA EXISTE, SE ACTUALIZA EL STOCK
 	                int cantidadActual = rsCheck.getInt("cantidad");
 	                int nuevaCantidad = cantidadActual + cantidad;
 
@@ -380,7 +380,7 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 	                updateStmt.setInt(3, idProducto);
 	                updateStmt.executeUpdate();
 	            } else {
-	                // No existe → insertar nuevo registro
+	                // SI NO EXISTE SE CREA UNO NUEVO
 	                PreparedStatement insertStmt = con.prepareStatement(
 	                    "INSERT INTO almacen_sucursal (fk_sucursal, fk_producto, cantidad) VALUES (?, ?, ?)"
 	                );
@@ -391,7 +391,7 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 	            }
 
 
-	            // Descontar del stock del depósito
+	            // DESCONTAR STOCK DEL DEPOSITO
 	            PreparedStatement updateStock = con.prepareStatement(
 	                "UPDATE producto SET stock = stock - ? WHERE id_producto = ?"
 	            );
@@ -400,7 +400,7 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 	            updateStock.executeUpdate();
 	        }
 
-	        // 5. Borrar los datos del pedido
+	        // BORRAR PEDIDO
 	        PreparedStatement deleteDetalles = con.prepareStatement(
 	            "DELETE FROM detalle_pedido_reposicion WHERE fk_pedido_reposicion = ?"
 	        );
