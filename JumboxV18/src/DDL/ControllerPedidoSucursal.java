@@ -23,7 +23,7 @@ public class ControllerPedidoSucursal<T extends Sucursal> implements ProductoRep
     
 	public void almacenSucursal(Sucursal almacen, Almacen_Sucursal almacenProducto) {
 	    try {
-	        // Verificar si ya existe ese producto en esa sucursal
+	        // VERIFICAR SI YA EXISTE EL PRODUCTO EN LA SUCURSAL
 	        PreparedStatement checkStmt = con.prepareStatement(
 	            "SELECT cantidad FROM almacen_sucursal WHERE fk_sucursal = ? AND fk_producto = ?"
 	        );
@@ -32,7 +32,7 @@ public class ControllerPedidoSucursal<T extends Sucursal> implements ProductoRep
 	        ResultSet rs = checkStmt.executeQuery();
 
 	        if (rs.next()) {
-	            // Ya existe, sumamos la cantidad
+	            // SI YA EXISTE, LO SUMAMOS A LA CANTIDAD
 	            int cantidadExistente = rs.getInt("cantidad");
 	            int nuevaCantidad = cantidadExistente + almacenProducto.getCantidad();
 
@@ -46,7 +46,7 @@ public class ControllerPedidoSucursal<T extends Sucursal> implements ProductoRep
 	            updateStmt.executeUpdate();
 	            System.out.println("Cantidad actualizada en Almacén Sucursal.");
 	        } else {
-	            // No existe, insertamos nuevo
+	            // SI NO EXISTE, LO CREAMOS
 	            PreparedStatement insertStmt = con.prepareStatement(
 	                "INSERT INTO almacen_sucursal (fk_sucursal, fk_producto, cantidad) VALUES (?, ?, ?)"
 	            );
@@ -91,10 +91,10 @@ public class ControllerPedidoSucursal<T extends Sucursal> implements ProductoRep
                 "SELECT a.id_almacen_sucursal, a.fk_sucursal, a.fk_producto, a.cantidad, p.nombre, p.precio " +
                 "FROM almacen_sucursal a " +
                 "JOIN producto p ON a.fk_producto = p.id_producto " +
-                "WHERE a.fk_sucursal = ?"  // si querés filtrar por sucursal específica
+                "WHERE a.fk_sucursal = ?"
             );
 
-            // Setear el id de la sucursal que querés mostrar
+            
             int idSucursal = sucursalActual.getId_Sucursal(); 
             stmt.setInt(1, idSucursal);
 
@@ -134,22 +134,22 @@ public class ControllerPedidoSucursal<T extends Sucursal> implements ProductoRep
         
         
 
-        // 2. Preguntar si quiere hacer pedido o salir
+        // OPCION DE HACER PEDIDO O SALIR
         int opcion = JOptionPane.showOptionDialog(null, "¿Desea realizar un pedido al depósito?", "Jumbox",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null,
                 new Object[]{"Hacer pedido", "Salir"}, "Hacer pedido");
 
         if (opcion != JOptionPane.YES_OPTION) {
-            return; // Si elige salir, no sigue con el pedido
+            return;
         }
 
-        // 3. Iniciar proceso de pedido
+        // INICIAR PROCESO DE PEDIDO
         List<Productos> pedidoFinal = new LinkedList<>();
         List<Integer> cantidadesFinales = new LinkedList<>();
 
         boolean seguir = true;
         while (seguir) {
-            // Mostrar productos para seleccionar
+            // MOSTRAR PRODUCTOS PARA SELECCIONAR
             String[] nombres = new String[productosDeposito.size()];
             for (int i = 0; i < productosDeposito.size(); i++) {
                 nombres[i] = productosDeposito.get(i).getNombre();
@@ -190,12 +190,12 @@ public class ControllerPedidoSucursal<T extends Sucursal> implements ProductoRep
         }
 
         try {
-            // 1. Insertar el pedido general
+            // INSERTAR EL PEDIDO
             PreparedStatement stmtPedido = con.prepareStatement(
                 "INSERT INTO pedido_reposicion (fecha, fk_sucursal) VALUES (?, ?)", PreparedStatement.RETURN_GENERATED_KEYS
             );
             stmtPedido.setDate(1, java.sql.Date.valueOf (LocalDate.now()));
-            stmtPedido.setInt(2, sucursalActual.getId_Sucursal()); // o la sucursal actual si tenés forma de pasarla
+            stmtPedido.setInt(2, sucursalActual.getId_Sucursal());
             stmtPedido.executeUpdate();
             
             ResultSet rs = stmtPedido.getGeneratedKeys();
@@ -204,7 +204,7 @@ public class ControllerPedidoSucursal<T extends Sucursal> implements ProductoRep
                 idPedido = rs.getInt(1);
             }
 
-            // 2. Insertar cada línea del pedido
+            
             for (int i = 0; i < pedidoFinal.size(); i++) {
                 Productos prod = pedidoFinal.get(i);
                 int cantidad = cantidadesFinales.get(i);
