@@ -42,14 +42,15 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
         try {
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM producto");
             ResultSet rs = stmt.executeQuery();
-
             while (rs.next()) {
-                String nombre = rs.getString("nombre");
-                Double precio = rs.getDouble("precio");
-                int stock = rs.getInt("stock");
-               
-                producto.add((T) new Productos(nombre, precio, stock));
-                        
+                Productos prod = new Productos(
+                    rs.getString("nombre"),
+                    rs.getDouble("precio"),
+                    rs.getInt("stock"),
+                    rs.getInt("fk_categoria"),
+                    rs.getInt("id_producto") // ¡Este campo es CLAVE!
+                );
+                producto.add(prod);
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -36,11 +36,11 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
         return usuario;
     }
 
-    @Override
     public void agregarUsuario(Cliente usuario) {
         try {
             PreparedStatement statement = con.prepareStatement(
-                "INSERT INTO cliente (nombre, direccion, telefono, contrasena) VALUES (?, ?, ?, ?)"
+                "INSERT INTO cliente (nombre, direccion, telefono, contrasena) VALUES (?, ?, ?, ?)",
+                PreparedStatement.RETURN_GENERATED_KEYS
             );
             statement.setString(1, usuario.getNombre());
             statement.setString(2, usuario.getDireccion());
@@ -49,14 +49,21 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
 
             int filas = statement.executeUpdate();
             if (filas > 0) {
-                JOptionPane.showMessageDialog(null, "Usuario agregado correctamente.");
-            } else {
-                JOptionPane.showMessageDialog(null, "No se pudo agregar el usuario.");
+                ResultSet rs = statement.getGeneratedKeys();
+                if (rs.next()) {
+                    int idCliente = rs.getInt(1);
+                    usuario.setId(idCliente);;
+
+                    PreparedStatement stmtCarrito = con.prepareStatement("INSERT INTO carrito (fk_cliente) VALUES (?)");
+                    stmtCarrito.setInt(1, idCliente);
+                    stmtCarrito.executeUpdate();
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public LinkedList<Cliente> mostrarUsuarios() {

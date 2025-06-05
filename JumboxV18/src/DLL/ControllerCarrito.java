@@ -239,4 +239,76 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
         }
 		
 	}
+	
+	
+	private int obtenerIdCarrito(Cliente cliente) {
+        try {
+            PreparedStatement buscar = con.prepareStatement("SELECT id_carrito FROM carrito WHERE fk_cliente = ?");
+            buscar.setInt(1, cliente.getId());
+            ResultSet rs = buscar.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id_carrito");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        	return -1;
+    	}
+
+
+
+	public void guardarProductoBD(Carrito item, Cliente cliente) {
+	    try {
+	        int idCarrito = obtenerIdCarrito(cliente);
+	        if (idCarrito == -1) {
+	            PreparedStatement crearCarrito = con.prepareStatement("INSERT INTO carrito (fk_cliente) VALUES (?)");
+	            crearCarrito.setInt(1, cliente.getId());
+	            crearCarrito.executeUpdate();
+	            idCarrito = obtenerIdCarrito(cliente);
+	        }
+
+	        int idProducto = item.getProducto().getIdProducto();
+	        if (idProducto <= 0) {
+	            JOptionPane.showMessageDialog(null, "ID del producto inválido.");
+	            return;
+	        }
+
+	        PreparedStatement verificar = con.prepareStatement(
+	            "SELECT cantidad FROM producto_carrito WHERE fk_carrito = ? AND fk_producto = ?"
+	        );
+	        verificar.setInt(1, idCarrito);
+	        verificar.setInt(2, idProducto);
+	        ResultSet rs = verificar.executeQuery();
+
+	        if (rs.next()) {
+	            int cantidadActual = rs.getInt("cantidad");
+	            PreparedStatement update = con.prepareStatement(
+	                "UPDATE producto_carrito SET cantidad = ? WHERE fk_carrito = ? AND fk_producto = ?"
+	            );
+	            update.setInt(1, cantidadActual + item.getCantidad());
+	            update.setInt(2, idCarrito);
+	            update.setInt(3, idProducto);
+	            update.executeUpdate();
+	        } else {
+	            PreparedStatement insertar = con.prepareStatement(
+	                "INSERT INTO producto_carrito (fk_carrito, fk_producto, cantidad) VALUES (?, ?, ?)"
+	            );
+	            insertar.setInt(1, idCarrito);
+	            insertar.setInt(2, idProducto);
+	            insertar.setInt(3, item.getCantidad());
+	            insertar.executeUpdate();
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(null, "Error al guardar producto en la base de datos.");
+	    }
+	}
+
+	@Override
+	public void compras(LinkedList<Productos> productos, LinkedList<Carrito> carrito, Cliente cliente) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
