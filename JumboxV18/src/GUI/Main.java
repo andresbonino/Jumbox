@@ -64,6 +64,7 @@ public class Main {
 							JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
 							
 							LinkedList<Carrito> carrito = new LinkedList<>();
+<<<<<<< HEAD
 
 			                ControllerCarrito controllerCarrito = new ControllerCarrito();
 			                ControllerProducto controllerProducto = new ControllerProducto();
@@ -76,6 +77,12 @@ public class Main {
 							
 							controllerC.cargarCarritoDesdeBD(carrito, comprador);
 							LinkedList<Productos> listaProductos1 = controllerP.mostrarProducto();
+=======
+							
+							
+							controllerC.cargarCarritoDesdeBD(carrito, comprador);
+							LinkedList<Productos> listaProductos = controllerP.mostrarProducto();
+>>>>>>> 18da00c31858eaba0c7ab70f96ea9509212ac361
 
 							int opciones = 0;
 							do {
