@@ -1,3 +1,9 @@
+/bin/
+/.classpath
+/.gitignore
+/.project
+/DLL.rar
+/GUI.rar
+/src/
 /DLL/
-/GUI/
-/jumbox/
+/repository/

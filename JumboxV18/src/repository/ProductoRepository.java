@@ -9,4 +9,5 @@ public interface ProductoRepository {
     void verStock();
     void editarProducto(Productos Producto);
     void editar();
+	void editar(Productos Producto);
 }

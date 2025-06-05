@@ -7,6 +7,8 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
+import com.mysql.jdbc.Statement;
+
 import jumbox.Categorias;
 import jumbox.Productos;
 import repository.ProductoRepository;
@@ -20,8 +22,8 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
     public void agregarProducto(Productos producto) {
         try {
             PreparedStatement statement = con.prepareStatement(
-            	"INSERT INTO producto (nombre, precio, stock, fk_categoria) VALUES (?, ?, ?, ?)",
-            	statement.RETURN_GENERATED_KEYS
+            		"INSERT INTO producto (nombre, precio, stock, fk_categoria) VALUES (?, ?, ?, ?)",
+                	Statement.RETURN_GENERATED_KEYS
             	
             );
             
@@ -160,6 +162,12 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 				}
 			}
 		}
+	}
+
+	@Override
+	public void editar(Productos Producto) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
