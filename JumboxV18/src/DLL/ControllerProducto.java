@@ -20,8 +20,11 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
     public void agregarProducto(Productos producto) {
         try {
             PreparedStatement statement = con.prepareStatement(
-            	"INSERT INTO producto (nombre, precio, stock, fk_categoria) VALUES (?, ?, ?, ?)"
+            	"INSERT INTO producto (nombre, precio, stock, fk_categoria) VALUES (?, ?, ?, ?)",
+            	statement.RETURN_GENERATED_KEYS
+            	
             );
+            
             statement.setString(1, producto.getNombre());
             statement.setDouble(2, producto.getPrecio());
             statement.setInt(3, producto.getStock());
@@ -29,7 +32,11 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 
             int filas = statement.executeUpdate();
             if (filas > 0) {
-                System.out.println("Producto agregado correctamente.");
+            	ResultSet generatedKeys = statement.getGeneratedKeys();
+            	if (generatedKeys.next()) {
+                    producto.setId_producto(generatedKeys.getInt(1)); // <- Guardás el ID
+                    System.out.println("Producto agregado con ID: " + producto.getId_producto());
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -38,24 +45,27 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 
     @Override
     public LinkedList<Productos> mostrarProducto() {
-    	LinkedList<Productos> productos = new LinkedList<>();
+        LinkedList<Productos> producto = new LinkedList<>();
         try {
             PreparedStatement stmt = con.prepareStatement("SELECT * FROM producto");
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
-                Productos p = new Productos(
+                Productos prod = new Productos(
                     rs.getString("nombre"),
                     rs.getDouble("precio"),
                     rs.getInt("stock"),
-                    rs.getInt("fk_categoria")
+                    rs.getInt("fk_categoria"),
+                    rs.getInt("id_producto") // ¡Este campo es CLAVE!
+                    ,0
                 );
-                
+                producto.add(prod);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return productos;
+        return producto;
     }
+
     
     @Override
     public void editarProducto(Productos producto) {

@@ -33,9 +33,11 @@ public class Main {
 		Conexion.getInstance();
 		int opcion = 0;
 
+;
 		do {
 			opcion = JOptionPane.showOptionDialog(null, "¿Quien Eres?", "Jumbox", 0, 0, null, Usuarios.values(), Usuarios.values());
 
+			
 			switch (opcion) {
 				case 0: //Cliente
 					int opcionR = 0;
@@ -61,25 +63,34 @@ public class Main {
 						if (usuario != null) {
 							JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
 							
-							Cliente comprador = (Cliente)usuario;
 							LinkedList<Carrito> carrito = new LinkedList<>();
+
+			                ControllerCarrito controllerCarrito = new ControllerCarrito();
+			                ControllerProducto controllerProducto = new ControllerProducto();
+			                controllerC.cargarCarritoDesdeBD(carrito, usuario);
+							
+							Cliente comprador = (Cliente)usuario;
 							controllerC.cargarCarritoDesdeBD(carrito, comprador);
 							LinkedList<Productos> listaProductos = controllerP.mostrarProducto();
+
 							
 							controllerC.cargarCarritoDesdeBD(carrito, comprador);
+							LinkedList<Productos> listaProductos1 = controllerP.mostrarProducto();
 
 							int opciones = 0;
 							do {
 								opciones = JOptionPane.showOptionDialog(null, "¿Qué deseas hacer?", "Menú Cliente", 0, 0, null,
 									OpcionesCliente.values(), OpcionesCliente.values());
 
+								LinkedList<Productos> productosActualizados = controllerProducto.mostrarProducto();	
+								
 								switch (opciones) {
 									case 0: // VER_CARRITO
 										controllerC.verCarrito(carrito);
 										break;
 
 									case 1: // AGREGAR_PRODUCTO
-										controllerC.compras(listaProductos, carrito, comprador);
+										controllerC.compras(listaProductos1, carrito, comprador);
 										break;
 
 									case 2: // EDITAR CARRITO
@@ -88,7 +99,6 @@ public class Main {
 										
 									case 3: // REALIZAR COMPRA
 										controllerC.realizarCompra(carrito, comprador);
-										carrito.clear();
 
 									case 4: // SALIR
 										

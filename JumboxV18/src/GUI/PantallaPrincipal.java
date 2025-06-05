@@ -8,6 +8,7 @@ import javax.swing.border.EmptyBorder;
 
 import jumbox.Cliente;
 import jumbox.Deposito;
+import jumbox.Productos;
 import jumbox.Registro;
 
 import javax.swing.JLabel;
@@ -75,6 +76,7 @@ public class PantallaPrincipal extends JFrame {
 				int opcionR = 0;
 				opcionR = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, Registro.values(), Registro.values());
 					if (opcionR==0) {
+
 						Cliente.LoginCliente("","");
 					
 					}else if (opcionR==1) {
