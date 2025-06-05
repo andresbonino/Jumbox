@@ -1,9 +1,2 @@
 /bin/
-/.classpath
-/.gitignore
-/.project
-/DLL.rar
-/GUI.rar
-/src/
-/DLL/
-/repository/
+/GUI/
