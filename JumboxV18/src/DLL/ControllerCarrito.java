@@ -261,12 +261,12 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	public void guardarProductoBD(Carrito item, Cliente cliente) {
 	    try {
 	        int idCarrito = obtenerIdCarrito(cliente);
-	        if (idCarrito == -1) {
+	        
 	            PreparedStatement crearCarrito = con.prepareStatement("INSERT INTO carrito (fk_cliente) VALUES (?)");
 	            crearCarrito.setInt(1, cliente.getId());
 	            crearCarrito.executeUpdate();
 	            idCarrito = obtenerIdCarrito(cliente);
-	        }
+	        
 
 	        int idProducto = item.getProducto().getIdProducto();
 	        if (idProducto <= 0) {
