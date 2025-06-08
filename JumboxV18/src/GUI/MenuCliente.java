@@ -50,7 +50,7 @@ public class MenuCliente extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("Bienvenido "+ Cliente.getNombre());
+		JLabel lblNewLabel = new JLabel("Bienvenido "/*+ Cliente.getNombre() ERROR ACA*/);
 		lblNewLabel.setBounds(51, 0, 768, 114);
 		lblNewLabel.setForeground(new Color(0, 128, 0));
 		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 90));

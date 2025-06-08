@@ -6,8 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import DDL.ControllerDeposito;
-import jumbox.Deposito;
+import DDL.ControllerSucursal;
 
 import javax.swing.JLabel;
 import javax.swing.ImageIcon;
@@ -18,13 +17,13 @@ import java.awt.Color;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 
-public class InicioDeposito extends JFrame {
+public class InicioSucursal extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	protected static final JLabel LblError = null;
 	private JPanel contentPane;
 	private JPasswordField passwordField;
-	ControllerDeposito controllerD = new ControllerDeposito();
+	ControllerSucursal controllerS = new ControllerSucursal();
 
 	/**
 	 * Launch the application.
@@ -33,7 +32,7 @@ public class InicioDeposito extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					InicioDeposito frame = new InicioDeposito();
+					InicioSucursal frame = new InicioSucursal();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -45,7 +44,7 @@ public class InicioDeposito extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public InicioDeposito() {
+	public InicioSucursal() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 654, 333);
 		contentPane = new JPanel();
@@ -59,7 +58,7 @@ public class InicioDeposito extends JFrame {
 		lblNewLabel.setBounds(0, 0, 133, 449);
 		contentPane.add(lblNewLabel);
 		
-		JLabel lblNewLabel_1 = new JLabel("Deposito");
+		JLabel lblNewLabel_1 = new JLabel("Sucursal");
 		lblNewLabel_1.setForeground(new Color(0, 128, 0));
 		lblNewLabel_1.setFont(new Font("Swis721 Blk BT", Font.BOLD, 90));
 		lblNewLabel_1.setBounds(120, -33, 538, 157);
@@ -93,20 +92,7 @@ public class InicioDeposito extends JFrame {
 
 		btnNewButton.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		        String contrasena = new String(txtContrasena.getPassword()).trim();
-		        LblError.setText("");
-
-		        if (contrasena.isEmpty()) {
-		            LblError.setText("Campo vacío");
-		        } else {
-		            Deposito usuario = controllerD.loginDeposito(contrasena);
-		            if (usuario != null) {
-		            	dispose();
-		            	Deposito.IngresoDeposito(contrasena);
-		            } else {
-		                LblError.setText("Contraseña incorrecta");
-		            }
-		        }
+		       
 		    }
 		});
 

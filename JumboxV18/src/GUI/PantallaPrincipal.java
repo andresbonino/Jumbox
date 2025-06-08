@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import jumbox.Cliente;
-import jumbox.Deposito;
 import jumbox.Registro;
 
 import javax.swing.JLabel;
@@ -15,9 +14,6 @@ import javax.swing.JOptionPane;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Window;
-
-import javax.swing.JTextField;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -72,8 +68,14 @@ public class PantallaPrincipal extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
-				EleccionCliente menuCli = new EleccionCliente();
-				menuCli.setVisible(true);
+				int opcionR = 0;
+				opcionR = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, Registro.values(), Registro.values());
+					if (opcionR==0) {
+						Cliente.LoginCliente("","");
+					
+					}else if (opcionR==1) {
+						Cliente.RegistroCliente("", "", "", 0);
+					}
 			}
 		});
 		btnNewButton.setBounds(41, 519, 190, 50);

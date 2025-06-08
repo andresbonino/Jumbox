@@ -2,8 +2,8 @@ package jumbox;
 
 import javax.swing.JOptionPane;
 
-import DLL.ControllerDeposito;
-import DLL.ControllerProducto;
+import DDL.ControllerDeposito;
+import DDL.ControllerProducto;
 import GUI.PantallaPrincipal;
 
 public class Deposito {
@@ -31,25 +31,25 @@ public class Deposito {
         Deposito usuario = controllerD.loginDeposito(contrasena);
         if (usuario != null) {
          JOptionPane.showMessageDialog(null, "Bienvenido al Deposito");
-           // Ir a menu del encargado del deposito
+           // MENU DEPOSITO
          Deposito encargadoD = (Deposito)usuario; 
            int opciones2 = 0;
            do {
            opciones2 = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesDeposito.values(), OpcionesDeposito.values());
            		switch (opciones2) {
-           		case 0: //Armar Envio
+           		case 0: //ARMAR ENVIO
            			
            			break;
-           		case 1: //Crear Producto
-           			Productos.crearProducto("", 0, -1, 0);
+           		case 1: //CREAR PRODUCTO
+           			Productos.crearProducto("", 0, -1, 0, 0);
            			break; 
-           		case 2: //Editar Producto
-           				controllerP.editar();
+           		case 2: //EDITAR PRODUCTO
+           				controllerP.editar(null);
            			break; 
-           		case 3: //Ver Stock
+           		case 3: //VER STOCK
            				controllerP.verStock();	
            			break;
-           		case 4: //Salir
+           		case 4: //SALIR
            			PantallaPrincipal menu = new PantallaPrincipal();
            	        menu.setVisible(true);
            			break;
