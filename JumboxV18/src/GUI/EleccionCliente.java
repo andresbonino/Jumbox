@@ -68,5 +68,20 @@ public class EleccionCliente extends JFrame {
 		btnNewButton_1.setBounds(118, 248, 370, 79);
 		contentPane.add(btnNewButton_1);
 		
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+				LoginCliente loginCliente = new LoginCliente();
+				loginCliente.setVisible(true);
+			}
+		});
+		
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				dispose();
+				RegistroCliente registroCliente = new RegistroCliente();
+				registroCliente.setVisible(true);
+			}
+		});
 	}
 }
