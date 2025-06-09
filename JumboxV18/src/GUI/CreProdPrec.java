@@ -10,7 +10,7 @@ import java.awt.Font;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 
-public class CreProdNom extends JFrame {
+public class CreProdPrec extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -23,7 +23,7 @@ public class CreProdNom extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					CreProdNom frame = new CreProdNom();
+					CreProdPrec frame = new CreProdPrec();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -35,33 +35,34 @@ public class CreProdNom extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public CreProdNom() {
+	public CreProdPrec() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 740, 436);
+		setBounds(100, 100, 710, 444);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNewLabel_2 = new JLabel("Ingrese nombre");
+		JLabel lblNewLabel_2 = new JLabel("Ingrese el precio del producto");
 		lblNewLabel_2.setFont(new Font("Leelawadee UI", Font.BOLD, 35));
-		lblNewLabel_2.setBounds(193, 87, 291, 77);
+		lblNewLabel_2.setBounds(80, 82, 516, 77);
 		contentPane.add(lblNewLabel_2);
 		
 		passwordField = new JPasswordField();
 		passwordField.setFont(new Font("Arial", Font.PLAIN, 18));
-		passwordField.setBounds(120, 189, 456, 53);
+		passwordField.setBounds(108, 191, 456, 53);
 		contentPane.add(passwordField);
 		
 		JButton btnAceptar = new JButton("Aceptar");
 		btnAceptar.setFont(new Font("Dialog", Font.PLAIN, 23));
-		btnAceptar.setBounds(167, 268, 178, 64);
+		btnAceptar.setBounds(149, 281, 178, 64);
 		contentPane.add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.setFont(new Font("Dialog", Font.PLAIN, 23));
-		btnCancelar.setBounds(355, 268, 178, 64);
+		btnCancelar.setBounds(352, 281, 178, 64);
 		contentPane.add(btnCancelar);
 	}
+
 }
