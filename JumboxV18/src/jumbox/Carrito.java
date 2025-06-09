@@ -28,15 +28,17 @@ public class Carrito{
         this.cantidad = cantidad;
     }
 
-    public double getTotal() {
-        return producto.getPrecio() * cantidad;
-    }
     public int getIdCarrito() {
         return id_carrito;
     }
 
     public void setIdCarrito(int id_carrito) {
         this.id_carrito = id_carrito;
+    }
+    
+    
+    public double getTotal() {
+        return producto.getPrecio() * cantidad;
     }
 
 }

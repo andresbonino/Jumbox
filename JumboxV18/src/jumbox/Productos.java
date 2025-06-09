@@ -2,8 +2,8 @@ package jumbox;
 
 import javax.swing.JOptionPane;
 
-import DLL.ControllerProducto;
-import DLL.ControllerUsuario;
+import DDL.ControllerProducto;
+import DDL.ControllerUsuario;
 
 public class Productos {
 
@@ -98,6 +98,8 @@ public class Productos {
          Productos producto = new Productos(idProducto, nombre, precio, stock, fk_categoria);
         controller.agregarProducto(producto);
 	}
+
+	
 
 	
 	

@@ -5,8 +5,8 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
-import DLL.ControllerProducto;
-import DLL.ControllerUsuario;
+import DDL.ControllerProducto;
+import DDL.ControllerUsuario;
 
 public class Pedido {
 

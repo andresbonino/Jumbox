@@ -1,17 +1,17 @@
 package GUI;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.Color;
 import javax.swing.JButton;
-import java.awt.FlowLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class EleccionCliente extends JFrame {
 
@@ -39,41 +39,34 @@ public class EleccionCliente extends JFrame {
 	 */
 	public EleccionCliente() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 787, 448);
+		setBounds(100, 100, 613, 427);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btnLoguearse = new JButton("Loguearse");
-		btnLoguearse.setBounds(77, 219, 248, 45);
-		btnLoguearse.setFont(new Font("Swis721 Blk BT", Font.PLAIN, 30));
-		btnLoguearse.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				dispose();
-				LoginCliente menuLog = new LoginCliente();
-				menuLog.setVisible(true);
-			}
-		});
-		contentPane.add(btnLoguearse);
+		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.setIcon(new ImageIcon("src\\img\\logo-chico.png"));
+		lblNewLabel.setBounds(10, 11, 109, 469);
+		contentPane.add(lblNewLabel);
 		
-		JLabel lblTitulo = new JLabel("Login");
-		lblTitulo.setBounds(220, 11, 283, 109);
-		lblTitulo.setForeground(new Color(0, 128, 0));
-		lblTitulo.setFont(new Font("Swis721 Blk BT", Font.BOLD, 90));
-		contentPane.add(lblTitulo);
+		JLabel lblNewLabel_1 = new JLabel("Cliente");
+		lblNewLabel_1.setBackground(new Color(0, 128, 0));
+		lblNewLabel_1.setForeground(new Color(0, 128, 0));
+		lblNewLabel_1.setFont(new Font("Swis721 Blk BT", Font.BOLD, 90));
+		lblNewLabel_1.setBounds(118, 10, 631, 109);
+		contentPane.add(lblNewLabel_1);
 		
-		JButton btnRegistrarse = new JButton("Registrarse");
-		btnRegistrarse.setFont(new Font("Swis721 Blk BT", Font.PLAIN, 30));
-		btnRegistrarse.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				dispose();
-				RegistroCliente menuReg = new RegistroCliente();
-				menuReg.setVisible(true);
-			}
-		});
-		btnRegistrarse.setBounds(413, 219, 248, 45);
-		contentPane.add(btnRegistrarse);
+		JButton btnNewButton = new JButton("Iniciar Sesion");
+		btnNewButton.setFont(new Font("Swis721 Blk BT", Font.PLAIN, 30));
+		btnNewButton.setBounds(118, 147, 370, 79);
+		contentPane.add(btnNewButton);
+		
+		JButton btnNewButton_1 = new JButton("Registrarse");
+		btnNewButton_1.setFont(new Font("Swis721 Blk BT", Font.PLAIN, 30));
+		btnNewButton_1.setBounds(118, 248, 370, 79);
+		contentPane.add(btnNewButton_1);
+		
 	}
 }

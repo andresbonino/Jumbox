@@ -2,11 +2,12 @@ package jumbox;
 
 
 public class Sucursal {
-	
+
 	private int id_sucursal;
 	private String contrasena;
 	
-	public Sucursal(int id_sucursal,String contrasena) {
+	public Sucursal(int id_sucursal, String contrasena) {
+		this.id_sucursal = id_sucursal;
 		this.contrasena = contrasena;
 	}
 
@@ -17,6 +18,7 @@ public class Sucursal {
 	public void setId_Sucursal(int id_sucursal) {
 		this.id_sucursal = id_sucursal;
 	}
+	
 	
 	public String getContrasena() {
 		return contrasena;

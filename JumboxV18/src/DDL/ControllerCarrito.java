@@ -1,4 +1,4 @@
-package DLL;
+package DDL;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
-import com.mysql.jdbc.Statement;
+import java.sql.Statement;
 
 import java.sql.PreparedStatement;
 
@@ -17,6 +17,7 @@ import jumbox.Carrito;
 import jumbox.Cliente;
 import jumbox.OpcionesSucursales;
 import jumbox.Productos;
+import jumbox.Sucursal;
 import repository.CarritoRepository;
 
 public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
@@ -28,12 +29,13 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 
         LinkedList<Carrito> carritoRecuperado = new LinkedList<>();
 
+        private int idCarritoActual;
 
 
 	public void compras(LinkedList<Productos> productos, Cliente cliente) {
 		
 	    try {
-	    	// Crear el carrito una sola vez
+	    	// CREAR CARRITO
 	    	PreparedStatement stmtCarrito = con.prepareStatement(
 	    	    "INSERT INTO `carrito`(`fk_cliente`) VALUES (?)", Statement.RETURN_GENERATED_KEYS
 	    	);
@@ -45,8 +47,10 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	    	if (generatedKeys.next()) {
 	    	    idCarrito = generatedKeys.getInt(1);
 	    	}
+	    	idCarritoActual = idCarrito;
 
-	        // 1. Elegir sucursal
+
+	        // ELEGIR SUCURSAL
 	        OpcionesSucursales opcionesSucursales = (OpcionesSucursales) JOptionPane.showInputDialog(
 	            null,
 	            "¿En que sucursal quieres comprar?",
@@ -61,7 +65,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 
 	        int idSucursal = opcionesSucursales.getId();
 
-	        // 2. Buscar productos de esa sucursal
+	        // BUSCAR PRODUCTOS DE LA SUCURSAL SELECCIONADA
 	        PreparedStatement stmt = Conexion.getInstance().getConnection().prepareStatement(
 	            "SELECT a.fk_producto, a.cantidad, p.nombre, p.precio " +
 	            "FROM almacen_sucursal a " +
@@ -97,7 +101,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	            return;
 	        }
 
-	        // 3. Mostrar opciones para elegir producto
+	        // MOSTRAR PRODUCTOS PARA ELEGIR
 	        String[] nombres = new String[productosSucursal.size()];
 	        for (int i = 0; i < productosSucursal.size(); i++) {
 	            nombres[i] = productosSucursal.get(i).getNombre();
@@ -125,7 +129,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 
 	        if (productoElegido != null) {
 	        	
-	        	// Verificar si ya está en el carrito
+	        	// VERIFICAR SI YA ESTA EN EL CARRITO
 	        	boolean yaEnCarrito = false;
 	        	for (Carrito item : carrito) {
 	        	    if (item.getProducto().getNombre().equals(productoElegido.getNombre())) {
@@ -158,7 +162,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	                        JOptionPane.showMessageDialog(null, "Producto agregado al carrito.");
 
 	                        
-	                     // Traer id_producto desde la base de datos según el nombre
+	                     
 	                        PreparedStatement stmtProductoId = con.prepareStatement(
 	                            "SELECT id_producto FROM producto WHERE nombre = ?"
 	                        );
@@ -198,7 +202,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 
 
 	@Override
-	public void verCarrito() {
+	public void verCarrito(Cliente cliente, Sucursal sucursal) {
 	    if (carrito.isEmpty()) {
 	        JOptionPane.showMessageDialog(null, "El carrito está vacío.");
 	        return;
@@ -218,7 +222,24 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	    }
 
 	    resumen.append("\nTOTAL: $").append(total);
-	    JOptionPane.showMessageDialog(null, resumen.toString());
+
+	    String[] opciones = {"Confirmar compra", "Salir"};
+	    int seleccion = JOptionPane.showOptionDialog(
+	        null,
+	        resumen.toString() + "\n\n¿Desea realizar la compra?",
+	        "Carrito",
+	        JOptionPane.DEFAULT_OPTION,
+	        JOptionPane.QUESTION_MESSAGE,
+	        null,
+	        opciones,
+	        opciones[0]
+	    );
+
+	    if (seleccion == 0) {
+	        realizarCompra(carrito, cliente, sucursal, idCarritoActual);
+	    } else {
+	        
+	    }
 	}
 
 
@@ -281,47 +302,51 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	}
 	
 	
-	public void realizarCompra(LinkedList<Carrito> carrito, Cliente cliente) {
-        try {
-            // Insertar pedido
-            LocalDate fecha = LocalDate.now();
-            PreparedStatement stmtPedido = (PreparedStatement) con.prepareStatement(
-                "INSERT INTO pedido (fecha, estado, fk_cliente) VALUES (?, 'pendiente', ?)"
-            );
-            stmtPedido.setString(1, fecha.toString());
-            stmtPedido.setInt(2, cliente.getTelefono());
-            stmtPedido.executeUpdate();
+	public void realizarCompra(LinkedList<Carrito> carrito, Cliente cliente, Sucursal sucursal, int idCarritoActual) {
+	    try {
+	        // INSERTAR PEDIDO
+	        PreparedStatement psPedido = con.prepareStatement(
+	            "INSERT INTO pedido (fecha, estado, fk_cliente, fk_sucursal) VALUES (?, ?, ?, ?)",
+	            Statement.RETURN_GENERATED_KEYS
+	        );
+	        psPedido.setDate(1, new java.sql.Date(System.currentTimeMillis()));
+	        psPedido.setString(2, "pendiente");
+	        psPedido.setInt(3, cliente.getIdCliente());
+	        psPedido.setInt(4, sucursal.getId_Sucursal());
+	        psPedido.executeUpdate();
 
-            // Obtener id del pedido
-            PreparedStatement buscarPedido = (PreparedStatement) con.prepareStatement(
-                "SELECT id_pedido FROM pedido WHERE fecha = ? AND fk_cliente = ? ORDER BY id_pedido DESC LIMIT 1"
-            );
-            buscarPedido.setString(1, fecha.toString());
-            buscarPedido.setInt(2, cliente.getTelefono());
-            ResultSet rs = buscarPedido.executeQuery();
+	        ResultSet rs = psPedido.getGeneratedKeys();
+	        int idPedido = 0;
+	        if (rs.next()) {
+	            idPedido = rs.getInt(1);
+	        }
 
-            int idPedido = -1;
-            if (rs.next()) {
-                idPedido = rs.getInt("id_pedido");
-            }
+	        // INSERTAR DETALLES
+	        for (Carrito item : carrito) {
+	            PreparedStatement psDetalle = con.prepareStatement(
+	                "INSERT INTO detalles_pedido (cantidad, fk_producto, fk_pedido) VALUES (?, ?, ?)"
+	            );
+	            psDetalle.setInt(1, item.getCantidad());
+	            psDetalle.setInt(2, item.getProducto().getIdProducto());
+	            psDetalle.setInt(3, idPedido);
+	            psDetalle.executeUpdate();
+	        }
 
-            // Insertar detalles
-            for (Carrito item : carrito) {
-                PreparedStatement stmtDetalle = (PreparedStatement) con.prepareStatement(
-                    "INSERT INTO detalles_pedido (cantidad, fk_producto, fk_pedido) VALUES (?, ?, ?)"
-                );
-                stmtDetalle.setInt(1, item.getCantidad());
-                stmtDetalle.setInt(2, item.getProducto().getIdProducto());
-                stmtDetalle.setInt(3, idPedido);
-                stmtDetalle.executeUpdate();
-            }
+	        // BORRAR DEL CARRITO EN BD
+	        PreparedStatement psBorrar = con.prepareStatement(
+	            "DELETE FROM producto_carrito WHERE fk_carrito = ?"
+	        );
+	        psBorrar.setInt(1, idCarritoActual);
+	        psBorrar.executeUpdate();
 
-            JOptionPane.showMessageDialog(null, "compra realizada con éxito.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "error al realizar la compra.");
-        }
-    }
+	        carrito.clear();
+	        JOptionPane.showMessageDialog(null, "Compra realizada con éxito.");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(null, "Error al realizar la compra.");
+	    }
+	}
+
 
 	@Override
 	public void verCompra() {

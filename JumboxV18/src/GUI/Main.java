@@ -5,19 +5,18 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
-import DLL.Conexion;
-import DLL.ControllerCarrito;
-import DLL.ControllerDeposito;
-import DLL.ControllerPedidoSucursal;
-import DLL.ControllerProducto;
-import DLL.ControllerSucursal;
-import DLL.ControllerUsuario;
-import jumbox.Carrito;
-import jumbox.Categorias;
+import DDL.Conexion;
+import DDL.ControllerCarrito;
+import DDL.ControllerDeposito;
+import DDL.ControllerPedidoSucursal;
+import DDL.ControllerProducto;
+import DDL.ControllerSucursal;
+import DDL.ControllerUsuario;
 import jumbox.Cliente;
 import jumbox.Deposito;
 import jumbox.OpcionesCliente;
 import jumbox.OpcionesDeposito;
+import jumbox.OpcionesSucursal;
 import jumbox.OpcionesSucursales;
 import jumbox.Productos;
 import jumbox.Registro;
@@ -43,10 +42,10 @@ public class Main {
 			opcion = JOptionPane.showOptionDialog(null, "¿Quien Eres?", "Jumbox", 0, 0, null, Usuarios.values(), Usuarios.values());
 
 			switch (opcion) {
-				case 0: //Cliente
+				case 0: //CLIENTE
 					int opcionR = 0;
 					opcionR = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, Registro.values(), Registro.values());
-					if (opcionR==0) { //Iniciar Sesion
+					if (opcionR==0) { //INICIAR SESION
 						String nombre = "";
 	                    while (nombre.isEmpty()) {
 	                        nombre = JOptionPane.showInputDialog("Ingrese nombre");
@@ -83,9 +82,9 @@ public class Main {
 										break;
 
 									case 1: // VER_CARRITO
-										controllerC.verCarrito();
-										//controllerC.realizarCompra(carrito, comprador);
-										//carrito.clear();
+										Sucursal idSucursal = new Sucursal(0, "");
+										idSucursal.getId_Sucursal();
+										controllerC.verCarrito(comprador, idSucursal);
 										break;
 
 									case 2: // EDITAR CARRITO
@@ -106,7 +105,7 @@ public class Main {
 	                    } else {
 	                        JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
 	                    }
-					} else { //Registrarse
+					} else { //REGISTRARSE
 						String nombre = "";
 	                    while (nombre.isEmpty()) {
 	                        nombre = JOptionPane.showInputDialog("Ingrese nombre");
@@ -147,7 +146,7 @@ public class Main {
 					
 					
 					
-				case 1: //Encargado Deposito
+				case 1: //ENCARGADO DEPOSITO
 					String contrasenia = "";
                     while (contrasenia.isEmpty()) {
                         contrasenia = JOptionPane.showInputDialog("Ingrese contraseña");
@@ -159,25 +158,25 @@ public class Main {
                     Deposito usuario = controllerD.loginDeposito(contrasenia);
                     if (usuario != null) {
                      JOptionPane.showMessageDialog(null, "Bienvenido al Deposito");
-                       // Ir a menu del encargado del deposito
+                       // MENU DEPOSITO
                      Deposito encargadoD = (Deposito)usuario; 
                        int opciones2 = 0;
                        do {
                        opciones2 = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesDeposito.values(), OpcionesDeposito.values());
                        		switch (opciones2) {
-                       		case 0: //Armar Envio
+                       		case 0: //ARMAR ENVIO
                        			controllerP.procesarPedidosPendientes();
                        			break;
-                       		case 1: //Crear Producto
+                       		case 1: //CREAR PRODUCTO
                        			Productos.crearProducto("", 0, -1, 0, 0);
                        			break; 
-                       		case 2: //Editar Producto
-                       			controllerP.editar();
+                       		case 2: //EDITAR PRODUCTO
+                       			controllerP.editar(null);
                        			break; 
-                       		case 3: //Ver Stock
+                       		case 3: //VER STOCK
                        			controllerP.verStock();	
                        			break;
-                       		case 4: //Salir
+                       		case 4: //SALIR
                        			JOptionPane.showMessageDialog(null, "Saliendo del depósito...");
                        			break;
                        		default:
@@ -191,7 +190,7 @@ public class Main {
 					
 					
 					
-				case 2: //Encargado Sucursal
+				case 2: //ENCARGADO SUCURSAL
 					
 					OpcionesSucursales opcionesSucursales = (OpcionesSucursales) JOptionPane.showInputDialog(null, "¿A que Sucursal quieres acceder?", "Jumbox", JOptionPane.QUESTION_MESSAGE, null,OpcionesSucursales.values(), OpcionesSucursales.values()[0]);
 
@@ -209,18 +208,18 @@ public class Main {
                     Sucursal usuario2 = controllerS.loginSucursal(id_sucursal, contraseniaS);
                     if (usuario2 != null) {
                      JOptionPane.showMessageDialog(null, "Bienvenido a la Sucursal");
-                       // Ir a menu de la sucursal
+                       // MENU SUCURSAL
                      Sucursal encargadoS = (Sucursal)usuario2; 
                      int opciones3 = 0;
                      do {
-                    	 opciones3 = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesSucursales.values(), OpcionesSucursales.values());
+                    	 opciones3 = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesSucursal.values(), OpcionesSucursal.values());
                     	 
                     	 switch (opciones3) {
-						case 0: //Consultar los productos
+						case 0: //CONSULTAR PRODUCTOS
 								controllerPS.generarPedido(usuario2);
 							break;
 								
-						case 1: //Gestionar pedidos
+						case 1: //GESTIONAR PEDIDOS
 							
 							break;
 							
@@ -237,7 +236,7 @@ public class Main {
 					
 					
 					
-				case 3: //Salir
+				case 3: //SALIR
 					JOptionPane.showMessageDialog(null, "Saliendo de la app...");
 					break;
 				default:

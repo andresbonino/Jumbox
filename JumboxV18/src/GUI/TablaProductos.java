@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-import DLL.ControllerProducto;
+import DDL.ControllerProducto;
 import jumbox.Productos;
 
 import java.awt.Color;
@@ -16,6 +16,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.awt.event.ActionEvent;
@@ -61,14 +63,41 @@ public class TablaProductos extends JFrame {
 		contentPane.setLayout(null);
 		
 		JButton btnAgregar = new JButton("Agregar");
+		btnAgregar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Productos.crearProducto("", 0, 0, 0, 0);
+			}
+		});
 		btnAgregar.setBounds(10, 195, 89, 33);
 		contentPane.add(btnAgregar);
 		
+		
+		
 		JButton btnEditar = new JButton("Editar");
+		btnEditar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (productoSeleccionado != null) {
+					ControllerProducto controller = new ControllerProducto();
+					controller.editar(productoSeleccionado);
+				} else {
+					JOptionPane.showMessageDialog(null, "Seleccione un producto para editar.");
+				}
+			}
+		});
 		btnEditar.setBounds(107, 195, 89, 33);
 		contentPane.add(btnEditar);
 		
 		JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        if (productoSeleccionado != null && productoSeleccionado.getIdProducto() > 0) {
+		            ControllerProducto eliminarP = new ControllerProducto();
+		            eliminarP.eliminarProducto(productoSeleccionado);
+		        } else {
+		            JOptionPane.showMessageDialog(null, "Seleccione un producto para eliminar.");
+		        }
+		    }
+		});
 		btnEliminar.setBounds(206, 195, 89, 33);
 		contentPane.add(btnEliminar);
 		
@@ -90,7 +119,7 @@ public class TablaProductos extends JFrame {
 		lblNewLabel_1.setBackground(new Color(0, 128, 0));
 		lblNewLabel_1.setForeground(new Color(0, 128, 0));
 		lblNewLabel_1.setFont(new Font("Swis721 Blk BT", Font.BOLD, 50));
-		lblNewLabel_1.setBounds(79, -19, 505, 80);
+		lblNewLabel_1.setBounds(87, -20, 505, 80);
 		contentPane.add(lblNewLabel_1);
 		
 
@@ -124,30 +153,36 @@ public class TablaProductos extends JFrame {
 	                            + ", Stock:" + productoSeleccionado.getStock()
 	                            + ", Categoria:" + productoSeleccionado.getCategoria());
 	                    
-	                    inpFiltro = new JTextField();
-	                    inpFiltro.setBounds(10, 347, 118, 40);
-	                    contentPane.add(inpFiltro);
-	                    inpFiltro.setColumns(10);
-	                    inpFiltro.setVisible(true);
-	                    JButton btnNewButton = new JButton("Filtrar");
-	                    btnNewButton.setVisible(true);
-	            		btnNewButton.addActionListener(new ActionListener() {
-	            			public void actionPerformed(ActionEvent e) {
-	            				cargarTablaFiltrada(inpFiltro.getText());
-	            			}
-	            		});
-	            		btnNewButton.setBounds(374, 221, 89, 23);
-	            		contentPane.add(btnNewButton);
-	                    
-	                    
-	                    
-	            		JLabel lblNewLabel = new JLabel("Filtro");
-	            		lblNewLabel.setBounds(374, 184, 46, 14);
-	            		contentPane.add(lblNewLabel);
+	                   
 	            	
 	                }
 	            }
 	        });
+		  inpFiltro = new JTextField();
+          inpFiltro.setBounds(10, 347, 118, 40);
+          contentPane.add(inpFiltro);
+          inpFiltro.setColumns(10);
+          inpFiltro.setVisible(true);
+          JButton btnNewButton = new JButton("Filtrar");
+          btnNewButton.setVisible(true);
+          btnNewButton.addActionListener(new ActionListener() {
+  			public void actionPerformed(ActionEvent e) {
+  				cargarTablaFiltrada(textField.getText());
+  			}
+  		});
+  		btnNewButton.setBounds(374, 221, 89, 23);
+  		contentPane.add(btnNewButton);
+          
+          
+          
+  		JLabel lblNewLabel = new JLabel("Filtro");
+  		lblNewLabel.setBounds(374, 184, 46, 14);
+  		contentPane.add(lblNewLabel);
+  		
+  		JLabel lblNewLabel_2 = new JLabel("* selecciona Flitrar para actualizar.");
+  		lblNewLabel_2.setFont(new Font("Tahoma", Font.PLAIN, 10));
+  		lblNewLabel_2.setBounds(74, 231, 208, 14);
+  		contentPane.add(lblNewLabel_2);
 		  cargarTabla();
 	}
 	
@@ -155,7 +190,7 @@ public class TablaProductos extends JFrame {
         model.setRowCount(0);
         LinkedList<Productos> productos = ControllerProducto.mostrarProducto2();
         for (Productos u : productos) {
-        	if (u.getNombre().startsWith(filtro)) {
+        	if (u.getNombre().toLowerCase() .startsWith(filtro.toLowerCase())) {
 		
             model.addRow(
             		new Object[]{
@@ -186,5 +221,4 @@ public class TablaProductos extends JFrame {
 			
         }
     }
-    
 }
