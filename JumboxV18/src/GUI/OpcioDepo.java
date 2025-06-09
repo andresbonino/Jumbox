@@ -56,27 +56,27 @@ public class OpcioDepo extends JFrame {
 		
 		JButton btnArmarenvio = new JButton("Armar_Envio");
 		btnArmarenvio.setBounds(25, 261, 178, 64);
-		btnArmarenvio.setFont(new Font("Dialog", Font.PLAIN, 23));
+		btnArmarenvio.setFont(new Font("Dialog", Font.PLAIN, 22));
 		contentPane.add(btnArmarenvio);
 		
 		JButton btnCrearproducto = new JButton("Crear_Producto");
 		btnCrearproducto.setBounds(213, 261, 198, 64);
-		btnCrearproducto.setFont(new Font("Dialog", Font.PLAIN, 23));
+		btnCrearproducto.setFont(new Font("Dialog", Font.PLAIN, 22));
 		contentPane.add(btnCrearproducto);
 		
 		JButton btnEditarproducto = new JButton("Editar_Producto");
 		btnEditarproducto.setBounds(421, 261, 198, 64);
-		btnEditarproducto.setFont(new Font("Dialog", Font.PLAIN, 23));
+		btnEditarproducto.setFont(new Font("Dialog", Font.PLAIN, 22));
 		contentPane.add(btnEditarproducto);
 		
 		JButton btnVerstock = new JButton("Ver_Stock");
 		btnVerstock.setBounds(629, 261, 153, 64);
-		btnVerstock.setFont(new Font("Dialog", Font.PLAIN, 23));
+		btnVerstock.setFont(new Font("Dialog", Font.PLAIN, 22));
 		contentPane.add(btnVerstock);
 		
 		JButton btnSalir = new JButton("Salir");
-		btnSalir.setFont(new Font("Dialog", Font.PLAIN, 23));
-		btnSalir.setBounds(325, 363, 153, 75);
+		btnSalir.setFont(new Font("Dialog", Font.PLAIN, 22));
+		btnSalir.setBounds(335, 363, 124, 69);
 		contentPane.add(btnSalir);
 	}
 
