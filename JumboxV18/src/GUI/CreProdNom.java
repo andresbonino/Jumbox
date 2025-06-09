@@ -45,7 +45,7 @@ public class CreProdNom extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblNewLabel_2 = new JLabel("Ingrese nombre");
-		lblNewLabel_2.setFont(new Font("Leelawadee UI", Font.BOLD, 35));
+		lblNewLabel_2.setFont(new Font("Leelawadee UI", Font.BOLD, 33));
 		lblNewLabel_2.setBounds(193, 87, 291, 77);
 		contentPane.add(lblNewLabel_2);
 		
@@ -55,13 +55,13 @@ public class CreProdNom extends JFrame {
 		contentPane.add(passwordField);
 		
 		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setFont(new Font("Dialog", Font.PLAIN, 23));
-		btnAceptar.setBounds(167, 268, 178, 64);
+		btnAceptar.setFont(new Font("Dialog", Font.PLAIN, 22));
+		btnAceptar.setBounds(170, 268, 163, 64);
 		contentPane.add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setFont(new Font("Dialog", Font.PLAIN, 23));
-		btnCancelar.setBounds(355, 268, 178, 64);
+		btnCancelar.setFont(new Font("Dialog", Font.PLAIN, 22));
+		btnCancelar.setBounds(355, 268, 163, 64);
 		contentPane.add(btnCancelar);
 	}
 }
