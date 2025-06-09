@@ -59,5 +59,9 @@ public class ControllerSucursal{
         }
         return producto;
     }
+    
+    public void gestionarPedidos(){
+
+    }
 
 }
