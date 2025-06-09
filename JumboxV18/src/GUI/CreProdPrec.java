@@ -45,23 +45,23 @@ public class CreProdPrec extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblNewLabel_2 = new JLabel("Ingrese el precio del producto");
-		lblNewLabel_2.setFont(new Font("Leelawadee UI", Font.BOLD, 35));
-		lblNewLabel_2.setBounds(80, 82, 516, 77);
+		lblNewLabel_2.setFont(new Font("Leelawadee UI", Font.BOLD, 32));
+		lblNewLabel_2.setBounds(101, 84, 516, 77);
 		contentPane.add(lblNewLabel_2);
 		
 		passwordField = new JPasswordField();
 		passwordField.setFont(new Font("Arial", Font.PLAIN, 18));
-		passwordField.setBounds(108, 191, 456, 53);
+		passwordField.setBounds(120, 191, 427, 53);
 		contentPane.add(passwordField);
 		
 		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setFont(new Font("Dialog", Font.PLAIN, 23));
-		btnAceptar.setBounds(149, 281, 178, 64);
+		btnAceptar.setFont(new Font("Dialog", Font.PLAIN, 22));
+		btnAceptar.setBounds(160, 281, 167, 64);
 		contentPane.add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setFont(new Font("Dialog", Font.PLAIN, 23));
-		btnCancelar.setBounds(352, 281, 178, 64);
+		btnCancelar.setFont(new Font("Dialog", Font.PLAIN, 22));
+		btnCancelar.setBounds(352, 281, 167, 64);
 		contentPane.add(btnCancelar);
 	}
 
