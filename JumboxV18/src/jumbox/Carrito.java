@@ -10,7 +10,6 @@ public class Carrito{
         this.producto = producto;
         this.cantidad = cantidad;
     }
-    
     public Carrito(Productos producto, int cantidad, int id_carrito) {
         this.producto = producto;
         this.cantidad = cantidad;

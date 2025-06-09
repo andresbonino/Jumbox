@@ -85,8 +85,6 @@ public class Main {
 										Sucursal idSucursal = new Sucursal(0, "");
 										idSucursal.getId_Sucursal();
 										controllerC.verCarrito(comprador, idSucursal);
-										//controllerC.realizarCompra(carrito, comprador);
-										//carrito.clear();
 										break;
 
 									case 2: // EDITAR CARRITO
