@@ -68,14 +68,8 @@ public class PantallaPrincipal extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
-				int opcionR = 0;
-				opcionR = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, Registro.values(), Registro.values());
-					if (opcionR==0) {
-						Cliente.LoginCliente("","");
-					
-					}else if (opcionR==1) {
-						Cliente.RegistroCliente("", "", "", 0);
-					}
+				ClienteEleccion menuLog = new ClienteEleccion();
+				menuLog.setVisible(true);
 			}
 		});
 		btnNewButton.setBounds(41, 519, 190, 50);
