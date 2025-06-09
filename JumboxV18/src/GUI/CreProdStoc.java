@@ -46,22 +46,22 @@ public class CreProdStoc extends JFrame {
 		
 		JLabel lblNewLabel_2 = new JLabel("Ingrese el stock del producto");
 		lblNewLabel_2.setFont(new Font("Leelawadee UI", Font.BOLD, 35));
-		lblNewLabel_2.setBounds(120, 96, 516, 77);
+		lblNewLabel_2.setBounds(120, 106, 516, 77);
 		contentPane.add(lblNewLabel_2);
 		
 		passwordField = new JPasswordField();
 		passwordField.setFont(new Font("Arial", Font.PLAIN, 18));
-		passwordField.setBounds(143, 214, 456, 53);
+		passwordField.setBounds(143, 217, 456, 50);
 		contentPane.add(passwordField);
 		
 		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setFont(new Font("Dialog", Font.PLAIN, 23));
-		btnAceptar.setBounds(189, 312, 178, 64);
+		btnAceptar.setFont(new Font("Dialog", Font.PLAIN, 22));
+		btnAceptar.setBounds(204, 312, 158, 64);
 		contentPane.add(btnAceptar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setFont(new Font("Dialog", Font.PLAIN, 23));
-		btnCancelar.setBounds(396, 312, 178, 64);
+		btnCancelar.setFont(new Font("Dialog", Font.PLAIN, 22));
+		btnCancelar.setBounds(396, 312, 164, 64);
 		contentPane.add(btnCancelar);
 	}
 
