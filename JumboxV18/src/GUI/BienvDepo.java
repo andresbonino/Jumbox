@@ -48,8 +48,8 @@ public class BienvDepo extends JFrame {
 		contentPane.add(lblNewLabel_2);
 		
 		JButton btnAceptar = new JButton("Aceptar");
-		btnAceptar.setBounds(223, 239, 281, 50);
-		btnAceptar.setFont(new Font("Dialog", Font.PLAIN, 30));
+		btnAceptar.setBounds(258, 239, 178, 50);
+		btnAceptar.setFont(new Font("Dialog", Font.PLAIN, 25));
 		contentPane.add(btnAceptar);
 	}
 }
