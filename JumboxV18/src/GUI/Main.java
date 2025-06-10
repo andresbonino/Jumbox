@@ -220,7 +220,7 @@ public class Main {
 							break;
 								
 						case 1: //GESTIONAR PEDIDOS
-							
+								controllerS.gestionarPedidos(id_sucursal);
 							break;
 							
 						case 2:
