@@ -73,7 +73,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 
 	        // BUSCAR PRODUCTOS DE LA SUCURSAL SELECCIONADA
 	        PreparedStatement stmt = Conexion.getInstance().getConnection().prepareStatement(
-	            "SELECT a.fk_producto, a.cantidad, p.nombre, p.precio " +
+	            "SELECT a.fk_producto, a.cantidad, p.nombre, p.precio, p.id_producto "+
 	            "FROM almacen_sucursal a " +
 	            "JOIN producto p ON a.fk_producto = p.id_producto " +
 	            "WHERE a.fk_sucursal = ? AND a.cantidad > 0"
@@ -93,6 +93,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 
 	            Productos prod = new Productos(nombre, precio, stock);
 	            productosSucursal.add(prod);
+	            prod.setIdProducto(idProducto);
 
 	            sb.append("- ").append(nombre)
 	              .append(" | Precio: $").append(precio)
