@@ -348,6 +348,14 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	        psBorrar.executeUpdate();
 
 	        carrito.clear();
+	        
+	     // BORRAR EL CARRITO EN SI
+	        PreparedStatement psBorrarCarrito = con.prepareStatement(
+	            "DELETE FROM carrito WHERE id_carrito = ?"
+	        );
+	        psBorrarCarrito.setInt(1, idCarritoActual);
+	        psBorrarCarrito.executeUpdate();
+
 	        JOptionPane.showMessageDialog(null, "Compra realizada con éxito.");
 	    } catch (Exception e) {
 	        e.printStackTrace();
