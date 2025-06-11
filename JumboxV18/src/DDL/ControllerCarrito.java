@@ -87,6 +87,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 
 	            Productos prod = new Productos(nombre, precio, stock);
 	            productosSucursal.add(prod);
+	            prod.setIdProducto(idProducto);
 
 	            sb.append("- ").append(nombre)
 	              .append(" | Precio: $").append(precio)
@@ -340,6 +341,12 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	        psBorrar.executeUpdate();
 
 	        carrito.clear();
+	     // BORRAR EL CARRITO EN SI
+	        PreparedStatement psBorrarCarrito = con.prepareStatement(
+	            "DELETE FROM carrito WHERE id_carrito = ?"
+	        );
+	        psBorrarCarrito.setInt(1, idCarritoActual);
+	        psBorrarCarrito.executeUpdate();
 	        JOptionPane.showMessageDialog(null, "Compra realizada con éxito.");
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -398,4 +405,5 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
         }
 		
 	}
+
 }

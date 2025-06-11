@@ -19,6 +19,7 @@ import jumbox.Cliente;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 
 public class ClienteEleccion extends JFrame {
@@ -222,7 +223,11 @@ public class ClienteEleccion extends JFrame {
 		        
 		        if (contrasena.isEmpty() || usu.isEmpty() || dire.isEmpty() || tel.isEmpty()) {
 		        	LblErrorRegis.setText("Campo vacío");
-		        } else {
+		        } else if(ValidarNombre(usu)==false) {
+		        	LblErrorRegis.setText("El usuario no cumple con lo pedido");
+		        }else if(ValidarDire(dire)==false) {
+		        	LblErrorRegis.setText("La direccion no cumple con lo pedido");
+		        }else {
 		            Cliente usuario = Cliente.RegistroCliente(usu, contrasena, dire, tele);
 		            if (usuario != null) {
 		            	dispose();
@@ -234,5 +239,45 @@ public class ClienteEleccion extends JFrame {
 		        }
 		    }
 		});
+		
+		
+	}
+	
+	//Validaciones
+	public static boolean ValidarNombre(String usuario) {
+		boolean numero = false;
+		if (usuario.isEmpty()) {
+			return false;
+		} else {
+			for (int i = 0; i < usuario.length(); i++) {
+				if (Character.isDigit(usuario.charAt(i))) {
+					numero=true;
+				}
+			}
+			if (numero==true) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+	}
+	
+	public static boolean ValidarDire(String direccion) {
+		boolean minus = false;
+		boolean num = false;
+		
+		for (int i = 0; i < direccion.length(); i++) {
+			if (Character.isLowerCase(direccion.charAt(i))) {
+				minus=true;
+			}
+			if (Character.isDigit(direccion.charAt(i))) {
+				num=true;
+			}
+			}
+		if (minus && num) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

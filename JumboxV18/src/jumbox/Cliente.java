@@ -9,7 +9,7 @@ import DDL.ControllerProducto;
 
 public class Cliente {
 
-	private int id_cliente;
+	private static int id_cliente;
 	private static String nombre;
 	private String direccion;
 	private int telefono;
@@ -64,7 +64,7 @@ public class Cliente {
 		this.contrasena = contrasena;
 	}
 	
-	public int getIdCliente() {
+	public static int getIdCliente() {
 		return id_cliente;
 	}
 
@@ -77,7 +77,7 @@ public class Cliente {
 
 	        Cliente usuario = controller.login(nombre, contrasena);
 	        if (usuario != null) {
-	        	MenuCliente menu = new MenuCliente();
+	        	MenuCliente menu = new MenuCliente(null, null);
 	        	menu.setVisible(true);
 	        // JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
 	           // IR A MENU CLIENTE
