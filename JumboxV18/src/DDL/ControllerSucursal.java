@@ -63,7 +63,7 @@ public class ControllerSucursal{
     
     public void gestionarPedidos(int idSucursal) {
         try {
-            // 1. Buscar pedidos pendientes
+            // BUSCAR PEDIDOS PENDIENTES
             PreparedStatement psPedidos = con.prepareStatement(
                 "SELECT p.id_pedido, c.nombre, p.fecha FROM pedido p " +
                 "JOIN cliente c ON p.fk_cliente = c.id_cliente " +
@@ -145,7 +145,7 @@ public class ControllerSucursal{
             int indexSeleccionado = opciones.indexOf(seleccion);
             int idPedidoSeleccionado = idsPedidos.get(indexSeleccionado);
 
-            // Validar stock antes de continuar
+            // VALIDAR STOCK ANTES DE ENVIAR
             PreparedStatement psDetallesFinal = con.prepareStatement(
                 "SELECT cantidad, fk_producto FROM detalles_pedido WHERE fk_pedido = ?"
             );
@@ -174,7 +174,7 @@ public class ControllerSucursal{
                 if (stock < cantidad) {
                     stockSuficiente = false;
 
-                    // Obtener nombre producto
+                    
                     PreparedStatement psNombre = con.prepareStatement("SELECT nombre FROM producto WHERE id_producto = ?");
                     psNombre.setInt(1, idProducto);
                     ResultSet rsNombre = psNombre.executeQuery();
@@ -190,7 +190,7 @@ public class ControllerSucursal{
                 return;
             }
 
-            // Confirmación final
+            
             int confirmar = JOptionPane.showConfirmDialog(
                 null,
                 resumenes.get(indexSeleccionado) + "\n¿Desea enviar este pedido?",
@@ -199,8 +199,8 @@ public class ControllerSucursal{
             );
             if (confirmar != JOptionPane.YES_OPTION) return;
 
-            // Ejecutar descuento
-            rsFinal.beforeFirst(); // volver al inicio del ResultSet
+            // DESCONTAR STOCK EN EL ALMACEN SUCURSAL
+            rsFinal.beforeFirst();
             while (rsFinal.next()) {
                 int cantidad = rsFinal.getInt("cantidad");
                 int idProducto = rsFinal.getInt("fk_producto");
@@ -214,7 +214,7 @@ public class ControllerSucursal{
                 psDescontar.executeUpdate();
             }
 
-            // Marcar como enviado
+            // CAMBIAR ESTADO
             PreparedStatement psActualizar = con.prepareStatement(
                 "UPDATE pedido SET estado = 'enviado' WHERE id_pedido = ?"
             );

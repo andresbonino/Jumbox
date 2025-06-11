@@ -66,6 +66,7 @@ public class Main {
 						if (usuario != null) {
 
 							JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
+							usuario.verificarPedidosEnviados();
 							Cliente comprador = (Cliente)usuario;
 
 							LinkedList<Productos> listaProductos = controllerP.mostrarProducto();

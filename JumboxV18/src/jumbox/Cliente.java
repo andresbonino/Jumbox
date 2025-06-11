@@ -1,13 +1,19 @@
 package jumbox;
 
 import javax.swing.JOptionPane;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.LinkedList;
 import DDL.ControllerUsuario;
-
+import DDL.Conexion;
 import DDL.ControllerCarrito;
 import DDL.ControllerProducto;
 
 public class Cliente {
+    private static Connection con = Conexion.getInstance().getConnection();
 
 	private int id_cliente;
 	private String nombre;
@@ -94,6 +100,7 @@ public class Cliente {
 	        Cliente usuario = controller.login(nombre, contrasenia);
 	        if (usuario != null) {
 	         JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
+	         usuario.verificarPedidosEnviados();
 	           // IR A MENU CLIENTE
 	         ControllerProducto<Productos> controllerProducto = new ControllerProducto<>();
 	         LinkedList<Productos> producto = controllerProducto.mostrarProducto();  
@@ -167,5 +174,60 @@ public class Cliente {
 	    Cliente usuario = new Cliente(nombre, direccion, telefono, contrasena);
 	    controller.verificarUsuario(usuario);
 		}
+	
+	
+	public void verificarPedidosEnviados() {
+	    try {
+	        PreparedStatement ps = con.prepareStatement(
+	            "SELECT p.id_pedido, p.fecha, p.fk_sucursal AS sucursal " +
+	            "FROM pedido p JOIN sucursal s ON p.fk_sucursal = s.id_sucursal " +
+	            "WHERE p.fk_cliente = ? AND p.estado = 'enviado'"
+	        );
+	        ps.setInt(1, this.getIdCliente()); 
+
+	        ResultSet rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	            int idPedido = rs.getInt("id_pedido");
+	            Date fecha = rs.getDate("fecha");
+	            String sucursal = rs.getString("sucursal");
+
+	            StringBuilder mensaje = new StringBuilder("¡Tu pedido #" + idPedido + " fue enviado!\n");
+	            mensaje.append("Fecha: ").append(fecha).append("\n");
+	            mensaje.append("Sucursal: ").append(sucursal).append("\n");
+	            mensaje.append("Productos:\n");
+
+	            
+	            PreparedStatement psDetalle = con.prepareStatement(
+	                "SELECT dp.cantidad, p.nombre FROM detalles_pedido dp " +
+	                "JOIN producto p ON dp.fk_producto = p.id_producto " +
+	                "WHERE dp.fk_pedido = ?"
+	            );
+	            psDetalle.setInt(1, idPedido);
+	            ResultSet rsDetalle = psDetalle.executeQuery();
+
+	            while (rsDetalle.next()) {
+	                int cantidad = rsDetalle.getInt("cantidad"); 
+	                String nombre = rsDetalle.getString("nombre");
+	                mensaje.append(" - ").append(nombre).append(" x").append(cantidad).append("\n");
+	            }
+
+	            JOptionPane.showMessageDialog(null, mensaje.toString(), "Pedido En Camino", JOptionPane.INFORMATION_MESSAGE);
+	            
+	         // MARCAR PEDIDO COMO NOTIFICADO
+	            PreparedStatement psActualizar = con.prepareStatement(
+	                "UPDATE pedido SET estado = 'notificado' WHERE id_pedido = ?"
+	            );
+	            psActualizar.setInt(1, idPedido);
+	            psActualizar.executeUpdate();
+
+
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+
+
 	
 }
