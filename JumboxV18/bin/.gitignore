@@ -1,2 +1,10 @@
 /bin/
+/.classpath
+/.gitignore
+/.project
+/DLL/
 /GUI/
+/img/
+/jumbox/
+/repository/
+/DDL/
