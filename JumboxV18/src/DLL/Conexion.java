@@ -1,12 +1,7 @@
-<<<<<<< Updated upstream:JumboxV18/src/DLL/Conexion.java
+
 package DLL;
-=======
-package DDL;
 
 
-
-
->>>>>>> Stashed changes:JumboxV18/src/DDL/Conexion.java
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
