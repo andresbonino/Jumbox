@@ -2,7 +2,6 @@ package DDL;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.time.LocalDate;
 import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
@@ -30,6 +29,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
         LinkedList<Carrito> carritoRecuperado = new LinkedList<>();
 
         private int idCarritoActual;
+        private Sucursal sucursalSeleccionada;
 
 
 	public void compras(LinkedList<Productos> productos, Cliente cliente) {
@@ -50,24 +50,29 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	    	idCarritoActual = idCarrito;
 
 
-	        // ELEGIR SUCURSAL
-	        OpcionesSucursales opcionesSucursales = (OpcionesSucursales) JOptionPane.showInputDialog(
-	            null,
-	            "¿En que sucursal quieres comprar?",
-	            "Jumbox",
-	            JOptionPane.QUESTION_MESSAGE,
-	            null,
-	            OpcionesSucursales.values(),
-	            OpcionesSucursales.values()[0]
-	        );
+	    	// ELEGIR SUCURSAL
+	    	OpcionesSucursales opcionSeleccionada = (OpcionesSucursales) JOptionPane.showInputDialog(
+	    	    null,
+	    	    "¿En qué sucursal querés comprar?",
+	    	    "Jumbox",
+	    	    JOptionPane.QUESTION_MESSAGE,
+	    	    null,
+	    	    OpcionesSucursales.values(),
+	    	    OpcionesSucursales.values()[0]
+	    	);
 
-	        if (opcionesSucursales == null) return;
+	    	// Validar si se seleccionó una opción
+	    	if (opcionSeleccionada == null) return;
 
-	        int idSucursal = opcionesSucursales.getId();
+	    	// Crear la sucursal con el ID correspondiente y contraseña null (o lo que uses)
+	    	this.sucursalSeleccionada = new Sucursal(opcionSeleccionada.getId(), null);
+
+
+	        int idSucursal = opcionSeleccionada.getId();
 
 	        // BUSCAR PRODUCTOS DE LA SUCURSAL SELECCIONADA
 	        PreparedStatement stmt = Conexion.getInstance().getConnection().prepareStatement(
-	            "SELECT a.fk_producto, a.cantidad, p.nombre, p.precio " +
+	            "SELECT a.fk_producto, a.cantidad, p.nombre, p.precio, p.id_producto "+
 	            "FROM almacen_sucursal a " +
 	            "JOIN producto p ON a.fk_producto = p.id_producto " +
 	            "WHERE a.fk_sucursal = ? AND a.cantidad > 0"
@@ -77,7 +82,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	        ResultSet rs = stmt.executeQuery();
 
 	        LinkedList<Productos> productosSucursal = new LinkedList<>();
-	        StringBuilder sb = new StringBuilder("Productos disponibles en la " + opcionesSucursales + " Sucursal:\n");
+	        StringBuilder sb = new StringBuilder("Productos disponibles en la " + opcionSeleccionada + " Sucursal:\n");
 
 	        while (rs.next()) {
 	            int idProducto = rs.getInt("fk_producto");
@@ -237,7 +242,8 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	    );
 
 	    if (seleccion == 0) {
-	        realizarCompra(carrito, cliente, sucursal, idCarritoActual);
+	    	realizarCompra(carrito, cliente, sucursalSeleccionada, idCarritoActual);
+
 	    } else {
 	        
 	    }
@@ -341,12 +347,14 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	        psBorrar.executeUpdate();
 
 	        carrito.clear();
+	        
 	     // BORRAR EL CARRITO EN SI
 	        PreparedStatement psBorrarCarrito = con.prepareStatement(
 	            "DELETE FROM carrito WHERE id_carrito = ?"
 	        );
 	        psBorrarCarrito.setInt(1, idCarritoActual);
 	        psBorrarCarrito.executeUpdate();
+
 	        JOptionPane.showMessageDialog(null, "Compra realizada con éxito.");
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -366,7 +374,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
                     "JOIN detalles_pedido d ON p.id_pedido = d.fk_pedido " +
                     "JOIN producto prod ON d.fk_producto = prod.id_producto " +
                     "JOIN cliente c ON p.fk_cliente = c.id_cliente " +
-                    "WHERE c.telefono = ?");
+                    "WHERE c.telefono = ? AND p.estado != 'notificado'");
 
             stmt.setInt(1, telefono);
             ResultSet rs = stmt.executeQuery();
@@ -405,5 +413,4 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
         }
 		
 	}
-
 }
