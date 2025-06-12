@@ -138,7 +138,7 @@ public class Cliente {
 		}
 	
 	
-	public static void RegistroCliente(String nombre, String contrasena, String direccion, int telefono) {
+	public static Cliente RegistroCliente(String nombre, String contrasena, String direccion, int telefono) {
 		//REGISTRARSE
 		 nombre = "";
 	    while (nombre.isEmpty()) {
@@ -173,6 +173,7 @@ public class Cliente {
 	    }
 	    Cliente usuario = new Cliente(nombre, direccion, telefono, contrasena);
 	    controller.verificarUsuario(usuario);
+		return usuario;
 		}
 	
 	
