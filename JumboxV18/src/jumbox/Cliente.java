@@ -2,22 +2,20 @@ package jumbox;
 
 import javax.swing.JOptionPane;
 
-import com.mysql.jdbc.Connection;
-
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.LinkedList;
 import DDL.ControllerUsuario;
-import GUI.MenuCliente;
 import DDL.Conexion;
 import DDL.ControllerCarrito;
 import DDL.ControllerProducto;
 
 public class Cliente {
-	
-	private static Connection con = Conexion.getInstance().getConnection();
-	private static int id_cliente;
+    private static Connection con = Conexion.getInstance().getConnection();
+
+	private int id_cliente;
 	private static String nombre;
 	private String direccion;
 	private int telefono;
@@ -72,7 +70,7 @@ public class Cliente {
 		this.contrasena = contrasena;
 	}
 	
-	public static int getIdCliente() {
+	public int getIdCliente() {
 		return id_cliente;
 	}
 
@@ -81,12 +79,26 @@ public class Cliente {
 	}
 	
 	
-	public static void LoginCliente(String nombre, String contrasena) {		
+	public static void LoginCliente(String nombre, String contrasena) {
+		 //INICIAR SESION
+			nombre = "";
+	        while (nombre.isEmpty()) {
+	            nombre = JOptionPane.showInputDialog("Ingrese nombre");
+	            if (nombre.isEmpty()) {
+	                JOptionPane.showMessageDialog(null, "Error: campo vacío");
+	            }
+	        }
 
-	        Cliente usuario = controller.login(nombre, contrasena);
+	        String contrasenia = "";
+	        while (contrasenia.isEmpty()) {
+	            contrasenia = JOptionPane.showInputDialog("Ingrese contraseña");
+	            if (contrasenia.isEmpty()) {
+	                JOptionPane.showMessageDialog(null, "Error: campo vacío");
+	            }
+	        }
+
+	        Cliente usuario = controller.login(nombre, contrasenia);
 	        if (usuario != null) {
-	        	//MenuCliente menu = new MenuCliente(null, null);
-	        	//menu.setVisible(true);
 	         JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
 	         usuario.verificarPedidosEnviados();
 	           // IR A MENU CLIENTE
@@ -126,12 +138,43 @@ public class Cliente {
 		}
 	
 	
-	public static Cliente RegistroCliente(String nombre, String contrasena, String direccion, int telefono) {
-		 	Cliente usuario = new Cliente(nombre, direccion, telefono, contrasena);
-		    controller.verificarUsuario(usuario);
-			return usuario;
-			
-	}
+	public static void RegistroCliente(String nombre, String contrasena, String direccion, int telefono) {
+		//REGISTRARSE
+		 nombre = "";
+	    while (nombre.isEmpty()) {
+	        nombre = JOptionPane.showInputDialog("Ingrese nombre");
+	        if (nombre.isEmpty()) {
+	            JOptionPane.showMessageDialog(null, "Error: campo vacío");
+	        }
+	    }
+	    
+	     direccion = "";
+	    while (direccion.isEmpty()) {
+	    	direccion = JOptionPane.showInputDialog("Ingrese su direccion");
+	        if (direccion.isEmpty()) {
+	            JOptionPane.showMessageDialog(null, "Error: campo vacío");
+	        }
+	    }
+	    
+	     telefono = 0;
+	    while (telefono<=0) {
+	    	telefono = Integer.parseInt(JOptionPane.showInputDialog("Ingrese su telefono"));
+	        if (telefono<=0) {
+	            JOptionPane.showMessageDialog(null, "Error: campo = 0");
+	        }
+	    }
+	    
+	     contrasena = "";
+	    while (contrasena.isEmpty()) {
+	        contrasena = JOptionPane.showInputDialog("Ingrese contraseña");
+	        if (contrasena.isEmpty()) {
+	            JOptionPane.showMessageDialog(null, "Error: campo vacío");
+	        }
+	    }
+	    Cliente usuario = new Cliente(nombre, direccion, telefono, contrasena);
+	    controller.verificarUsuario(usuario);
+		}
+	
 	
 	public void verificarPedidosEnviados() {
 	    try {
@@ -184,5 +227,7 @@ public class Cliente {
 	        e.printStackTrace();
 	    }
 	}
+
+
 	
 }

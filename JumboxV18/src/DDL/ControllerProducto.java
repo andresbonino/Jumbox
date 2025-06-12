@@ -178,6 +178,11 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 
 	@Override
 	public void editar(Productos seleccionado) {
+		if (seleccionado == null) {
+			JOptionPane.showMessageDialog(null, "No hay producto seleccionado.");
+			return;
+		}
+
 		String nuevoPrecio, nuevoStock;
 		Double nuevoP = null;
 		int nuevoS = 0;
@@ -226,6 +231,7 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 		JOptionPane.showMessageDialog(null, "Producto actualizado.");
 	}
 
+	
 	public void procesarPedidosPendientes() {
 	    try {
 	        PreparedStatement stmt = con.prepareStatement(
@@ -414,6 +420,9 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 	        JOptionPane.showMessageDialog(null, "Error al preparar el envío.");
 	    }
 	}
+
+
+
 
 
 }
