@@ -374,7 +374,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
                     "JOIN detalles_pedido d ON p.id_pedido = d.fk_pedido " +
                     "JOIN producto prod ON d.fk_producto = prod.id_producto " +
                     "JOIN cliente c ON p.fk_cliente = c.id_cliente " +
-                    "WHERE c.telefono = ?");
+                    "WHERE c.telefono = ? AND p.estado != 'notificado'");
 
             stmt.setInt(1, telefono);
             ResultSet rs = stmt.executeQuery();
