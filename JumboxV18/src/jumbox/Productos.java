@@ -99,6 +99,11 @@ public class Productos {
         controller.agregarProducto(producto);
 	}
 
+	@Override
+	public String toString() {
+		return nombre;
+	}
+
 	
 
 	

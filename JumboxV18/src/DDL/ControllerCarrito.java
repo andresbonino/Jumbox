@@ -30,6 +30,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
         LinkedList<Carrito> carritoRecuperado = new LinkedList<>();
 
         private int idCarritoActual;
+        private Sucursal sucursalSeleccionada;
 
 
 	public void compras(LinkedList<Productos> productos, Cliente cliente) {
@@ -51,19 +52,24 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 
 
 	        // ELEGIR SUCURSAL
-	        OpcionesSucursales opcionesSucursales = (OpcionesSucursales) JOptionPane.showInputDialog(
-	            null,
-	            "¿En que sucursal quieres comprar?",
-	            "Jumbox",
-	            JOptionPane.QUESTION_MESSAGE,
-	            null,
-	            OpcionesSucursales.values(),
-	            OpcionesSucursales.values()[0]
-	        );
+	        // ELEGIR SUCURSAL
+	    	OpcionesSucursales opcionSeleccionada = (OpcionesSucursales) JOptionPane.showInputDialog(
+		    	    null,
+		    	    "¿En qué sucursal querés comprar?",
+		    	    "Jumbox",
+		    	    JOptionPane.QUESTION_MESSAGE,
+		    	    null,
+		    	    OpcionesSucursales.values(),
+		    	    OpcionesSucursales.values()[0]
+		    	);
 
-	        if (opcionesSucursales == null) return;
+		    	// Validar si se seleccionó una opción
+		    	if (opcionSeleccionada == null) return;
 
-	        int idSucursal = opcionesSucursales.getId();
+		    	// Crear la sucursal con el ID correspondiente y contraseña null (o lo que uses)
+		    	this.sucursalSeleccionada = new Sucursal(opcionSeleccionada.getId(), null);
+
+		    	int idSucursal = opcionSeleccionada.getId();
 
 	        // BUSCAR PRODUCTOS DE LA SUCURSAL SELECCIONADA
 	        PreparedStatement stmt = Conexion.getInstance().getConnection().prepareStatement(
@@ -77,7 +83,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	        ResultSet rs = stmt.executeQuery();
 
 	        LinkedList<Productos> productosSucursal = new LinkedList<>();
-	        StringBuilder sb = new StringBuilder("Productos disponibles en la " + opcionesSucursales + " Sucursal:\n");
+	        StringBuilder sb = new StringBuilder("Productos disponibles en la " + opcionSeleccionada  + " Sucursal:\n");
 
 	        while (rs.next()) {
 	            int idProducto = rs.getInt("fk_producto");
@@ -237,7 +243,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	    );
 
 	    if (seleccion == 0) {
-	        realizarCompra(carrito, cliente, sucursal, idCarritoActual);
+	    	realizarCompra(carrito, cliente, sucursalSeleccionada, idCarritoActual);
 	    } else {
 	        
 	    }
@@ -366,7 +372,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
                     "JOIN detalles_pedido d ON p.id_pedido = d.fk_pedido " +
                     "JOIN producto prod ON d.fk_producto = prod.id_producto " +
                     "JOIN cliente c ON p.fk_cliente = c.id_cliente " +
-                    "WHERE c.telefono = ?");
+            		"WHERE c.telefono = ? AND p.estado != 'notificado'");
 
             stmt.setInt(1, telefono);
             ResultSet rs = stmt.executeQuery();
