@@ -228,14 +228,14 @@ public class ClienteEleccion extends JFrame {
 		        }else if(ValidarDire(dire)==false) {
 		        	LblErrorRegis.setText("La direccion no cumple con lo pedido");
 		        }else {
-		            //Cliente usuario = Cliente.RegistroCliente(usu, contrasena, dire, tele);
-		            //if (usuario != null) {
-		            //	dispose();
-		            //	ClienteEleccion menuLog = new ClienteEleccion();
-					//	menuLog.setVisible(true);
-		            //} else {
-		            //	LblErrorRegis.setText("Datos ingresados incorrectos, vuelva a intentarlo");
-		            //}
+		            Cliente usuario = Cliente.RegistroCliente(usu, contrasena, dire, tele);
+		            if (usuario != null) {
+		            	dispose();
+		            	ClienteEleccion menuLog = new ClienteEleccion();
+						menuLog.setVisible(true);
+		            } else {
+		            	LblErrorRegis.setText("Datos ingresados incorrectos, vuelva a intentarlo");
+		            }
 		        }
 		    }
 		});
