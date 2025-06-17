@@ -92,6 +92,14 @@ public class PantallaPrincipal extends JFrame {
 		btnSucursal.setBounds(481, 519, 190, 50);
 		contentPane.add(btnSucursal);
 		
+		btnSucursal.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        dispose();
+		        InicioSucursal sucursal = new InicioSucursal();
+		        sucursal.setVisible(true);
+		    }
+		});
+		
 		JButton btnSalir = new JButton("Salir");
 		btnSalir.setFont(new Font("Swis721 Blk BT", Font.PLAIN, 30));
 		btnSalir.setBounds(261, 599, 190, 50);
