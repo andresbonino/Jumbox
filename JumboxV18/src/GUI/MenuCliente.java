@@ -115,10 +115,26 @@ public class MenuCliente extends JFrame {
 		btnEdiCarrito.setBounds(559, 531, 225, 50);
 		contentPane.add(btnEdiCarrito);
 		
+		btnEdiCarrito.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controlador.editarCarrito();
+				
+			}
+		});
+		
+		
 		JButton btnEstadoCompra = new JButton("Estado de la compra");
 		btnEstadoCompra.setFont(new Font("Dialog", Font.PLAIN, 30));
 		btnEstadoCompra.setBounds(143, 636, 334, 50);
 		contentPane.add(btnEstadoCompra);
+		
+		btnEstadoCompra.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controlador.verCompra();
+				
+			}
+		});
+		
 		
 		JButton btnSalir = new JButton("Salir");
 		btnSalir.setFont(new Font("Dialog", Font.PLAIN, 30));
