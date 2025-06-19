@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 
 import DDL.Conexion;
 import DDL.ControllerCarrito;
+import DDL.ControllerProducto;
 import jumbox.Carrito;
 import jumbox.Cliente;
 import jumbox.OpcionesSucursales;
@@ -55,7 +56,9 @@ public class MenuCliente extends JFrame {
 	 * Create the frame.
 	 */
 	private Cliente cliente;
-
+	ControllerCarrito controlador = new ControllerCarrito();
+	ControllerProducto controllerP = new ControllerProducto();
+	LinkedList<Productos> listaProductos = controllerP.mostrarProducto();
 
 	public MenuCliente(LinkedList<Productos> productos,Cliente cliente) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -87,8 +90,7 @@ public class MenuCliente extends JFrame {
 		
 		btnComprar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ControllerCarrito controlador = new ControllerCarrito();
-		        controlador.compras(productos,cliente);
+		        controlador.compras(listaProductos,cliente);
 				
 			}
 		});
@@ -99,7 +101,14 @@ public class MenuCliente extends JFrame {
 		btnVerCarrito.setBounds(315, 531, 207, 50);
 		contentPane.add(btnVerCarrito);
 
-		
+		btnVerCarrito.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Sucursal idSucursal = new Sucursal(0, "");
+				idSucursal.getId_Sucursal();
+		        controlador.verCarrito(cliente, idSucursal);
+				
+			}
+		});
 		
 		JButton btnEdiCarrito = new JButton("Editar Carrito");
 		btnEdiCarrito.setFont(new Font("Dialog", Font.PLAIN, 30));
