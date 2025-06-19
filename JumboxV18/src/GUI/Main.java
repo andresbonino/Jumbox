@@ -172,8 +172,18 @@ public class Main {
                        			Productos.crearProducto("", 0, -1, 0, 0);
                        			break; 
                        		case 2: //EDITAR PRODUCTO
-                       			controllerP.editar(null);
-                       			break; 
+                       			LinkedList<Productos> listaProductos = controllerP.mostrarProducto();
+                       		    if (!listaProductos.isEmpty()) {
+                       		        Productos productoSeleccionado = (Productos) JOptionPane.showInputDialog(null,"Selecciona el producto a editar", "Seleccionar Producto",JOptionPane.QUESTION_MESSAGE,null,listaProductos.toArray(),null);
+                       		        if (productoSeleccionado != null) {
+                       		            controllerP.editar(productoSeleccionado);
+                       		        } else {
+                       		            JOptionPane.showMessageDialog(null, "No se seleccionó ningún producto.");
+                       		        }
+                       		    } else {
+                       		        JOptionPane.showMessageDialog(null, "No hay productos disponibles para editar.");
+                       		    }
+                       		    break;
                        		case 3: //VER STOCK
                        			controllerP.verStock();	
                        			break;
@@ -221,7 +231,7 @@ public class Main {
 							break;
 								
 						case 1: //GESTIONAR PEDIDOS
-								controllerS.gestionarPedidos(id_sucursal);
+							controllerS.gestionarPedidos(id_sucursal);
 							break;
 							
 						case 2:

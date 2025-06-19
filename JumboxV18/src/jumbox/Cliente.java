@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.LinkedList;
 import DDL.ControllerUsuario;
+import GUI.MenuCliente;
 import DDL.Conexion;
 import DDL.ControllerCarrito;
 import DDL.ControllerProducto;
@@ -16,7 +17,7 @@ public class Cliente {
     private static Connection con = Conexion.getInstance().getConnection();
 
 	private int id_cliente;
-	private String nombre;
+	private static String nombre;
 	private String direccion;
 	private int telefono;
 	private String contrasena;
@@ -38,7 +39,7 @@ public class Cliente {
 		this.id_cliente = id_cliente;
 	}
 
-	public String getNombre() {
+	public static String getNombre() {
 		return nombre;
 	}
 
@@ -80,57 +81,42 @@ public class Cliente {
 	
 	
 	public static void LoginCliente(String nombre, String contrasena) {
-		 //INICIAR SESION
-			nombre = "";
-	        while (nombre.isEmpty()) {
-	            nombre = JOptionPane.showInputDialog("Ingrese nombre");
-	            if (nombre.isEmpty()) {
-	                JOptionPane.showMessageDialog(null, "Error: campo vacío");
-	            }
-	        }
 
-	        String contrasenia = "";
-	        while (contrasenia.isEmpty()) {
-	            contrasenia = JOptionPane.showInputDialog("Ingrese contraseña");
-	            if (contrasenia.isEmpty()) {
-	                JOptionPane.showMessageDialog(null, "Error: campo vacío");
-	            }
-	        }
-
-	        Cliente usuario = controller.login(nombre, contrasenia);
+	        Cliente usuario = controller.login(nombre, contrasena);
 	        if (usuario != null) {
-	         JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
-	         usuario.verificarPedidosEnviados();
-	           // IR A MENU CLIENTE
-	         ControllerProducto<Productos> controllerProducto = new ControllerProducto<>();
-	         LinkedList<Productos> producto = controllerProducto.mostrarProducto();  
-	         LinkedList<Carrito> carrito = new LinkedList<>();
-	           int opciones = 0;        	   
-	           
-               do {
-            	   opciones = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesCliente.values(), OpcionesCliente.values());
-            	   switch (opciones) {
-					case 0: //COMPRAR
-						controllerCarr.compras(producto,  usuario);
-						break;
-	
-					case 1: //VER CARRITO
-						controllerCarr.verCarrito(usuario, null);
-						break;
-						
-					case 2: //EDITAR CARRITO
-						controllerCarr.editarCarrito();
-						break;
-						
-					case 3: //ESTADO DE LA COMPRA
-						
-						break;
-						
-					case 4: //SALIR
-						JOptionPane.showMessageDialog(null, "Saliendo...");
-						break;
-					}
-			} while (opciones!=4);
+	        	MenuCliente menu = new MenuCliente(null, usuario);
+	        	menu.setVisible(true);
+	        	// JOptionPane.showMessageDialog(null, "Bienvenido " + usuario.getNombre());
+		           // IR A MENU CLIENTE
+		        // ControllerProducto<Productos> controllerProducto = new ControllerProducto<>();
+		        // LinkedList<Productos> producto = controllerProducto.mostrarProducto();  
+		        // LinkedList<Carrito> carrito = new LinkedList<>();
+		        //   int opciones = 0;        	   
+		        //   
+	            //   do {
+	           // 	   opciones = JOptionPane.showOptionDialog(null, "¿Que Quieres Hacer?", "Jumbox", 0, 0, null, OpcionesCliente.values(), OpcionesCliente.values());
+	           // 	   switch (opciones) {
+				//		case 0: //COMPRAR
+				//			controllerCarr.compras(producto,  usuario);
+				//			break;
+		//
+				//		case 1: //VER CARRITO
+				//			controllerCarr.verCarrito(usuario, null);
+				//			break;
+				//			
+				//		case 2: //EDITAR CARRITO
+				//			controllerCarr.editarCarrito();
+				//			break;
+				//			
+				//		case 3: //ESTADO DE LA COMPRA
+				//			
+				//			break;
+				//			
+				//		case 4: //SALIR
+				//			JOptionPane.showMessageDialog(null, "Saliendo...");
+				//			break;
+				//		}
+				//} while (opciones!=4);
 	            
 	        } else {
 	            JOptionPane.showMessageDialog(null, "Usuario o contraseña incorrectos");
@@ -138,42 +124,12 @@ public class Cliente {
 		}
 	
 	
-	public static void RegistroCliente(String nombre, String contrasena, String direccion, int telefono) {
-		//REGISTRARSE
-		 nombre = "";
-	    while (nombre.isEmpty()) {
-	        nombre = JOptionPane.showInputDialog("Ingrese nombre");
-	        if (nombre.isEmpty()) {
-	            JOptionPane.showMessageDialog(null, "Error: campo vacío");
-	        }
-	    }
-	    
-	     direccion = "";
-	    while (direccion.isEmpty()) {
-	    	direccion = JOptionPane.showInputDialog("Ingrese su direccion");
-	        if (direccion.isEmpty()) {
-	            JOptionPane.showMessageDialog(null, "Error: campo vacío");
-	        }
-	    }
-	    
-	     telefono = 0;
-	    while (telefono<=0) {
-	    	telefono = Integer.parseInt(JOptionPane.showInputDialog("Ingrese su telefono"));
-	        if (telefono<=0) {
-	            JOptionPane.showMessageDialog(null, "Error: campo = 0");
-	        }
-	    }
-	    
-	     contrasena = "";
-	    while (contrasena.isEmpty()) {
-	        contrasena = JOptionPane.showInputDialog("Ingrese contraseña");
-	        if (contrasena.isEmpty()) {
-	            JOptionPane.showMessageDialog(null, "Error: campo vacío");
-	        }
-	    }
-	    Cliente usuario = new Cliente(nombre, direccion, telefono, contrasena);
+	public static Cliente RegistroCliente(String nombre, String contrasena, String direccion, int telefono) {
+	 	Cliente usuario = new Cliente(nombre, direccion, telefono, contrasena);
 	    controller.verificarUsuario(usuario);
-		}
+		return usuario;
+		
+}
 	
 	
 	public void verificarPedidosEnviados() {
