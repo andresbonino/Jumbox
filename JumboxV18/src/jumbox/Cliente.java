@@ -17,7 +17,7 @@ public class Cliente {
     private static Connection con = Conexion.getInstance().getConnection();
 
 	private int id_cliente;
-	private static String nombre;
+	private String nombre;
 	private String direccion;
 	private int telefono;
 	private String contrasena;
@@ -39,7 +39,7 @@ public class Cliente {
 		this.id_cliente = id_cliente;
 	}
 
-	public static String getNombre() {
+	public String getNombre() {
 		return nombre;
 	}
 
