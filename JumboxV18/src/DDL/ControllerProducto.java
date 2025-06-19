@@ -11,6 +11,8 @@ import javax.swing.JOptionPane;
 
 import com.mysql.jdbc.Statement;
 
+import GUI.AgregarProducto;
+import GUI.EditarProducto;
 import jumbox.Categorias;
 import jumbox.OpcionesSucursal;
 import jumbox.Productos;
@@ -182,7 +184,10 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 			JOptionPane.showMessageDialog(null, "No hay producto seleccionado.");
 			return;
 		}
-
+		ControllerProducto controller = new ControllerProducto();
+		EditarProducto menu = new EditarProducto();
+    	menu.setVisible(true);
+    	
 		String nuevoPrecio, nuevoStock;
 		Double nuevoP = null;
 		int nuevoS = 0;
