@@ -68,8 +68,8 @@ public class PantallaPrincipal extends JFrame {
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				dispose();
-				EleccionCliente eleccion = new EleccionCliente();
-				eleccion.setVisible(true);
+				ClienteEleccion menuLog = new ClienteEleccion();
+				menuLog.setVisible(true);
 			}
 		});
 		btnNewButton.setBounds(41, 519, 190, 50);
@@ -91,6 +91,14 @@ public class PantallaPrincipal extends JFrame {
 		btnSucursal.setFont(new Font("Swis721 Blk BT", Font.PLAIN, 30));
 		btnSucursal.setBounds(481, 519, 190, 50);
 		contentPane.add(btnSucursal);
+		
+		btnSucursal.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        dispose();
+		        InicioSucursal sucursal = new InicioSucursal();
+		        sucursal.setVisible(true);
+		    }
+		});
 		
 		JButton btnSalir = new JButton("Salir");
 		btnSalir.setFont(new Font("Swis721 Blk BT", Font.PLAIN, 30));
