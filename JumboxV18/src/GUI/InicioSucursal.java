@@ -100,6 +100,7 @@ public class InicioSucursal extends JFrame {
                     menu.setVisible(true);
                 } else {
                     lblError.setText("Contraseña incorrecta.");
+                   
                 }
             }
         });
