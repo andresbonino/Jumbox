@@ -53,7 +53,8 @@ public class EleccionCarrito extends JFrame {
 		this.itemSeleccionado = itemSeleccionado;
 	    this.carrito = carrito;
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// Editar cantidad de productos en el carrito
+	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 690, 494);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -107,14 +108,12 @@ public class EleccionCarrito extends JFrame {
 		                LblError.setText("Debe ingresar una cantidad");
 		                return;
 		            }
-
 		            int nuevaCantidad = Integer.parseInt(texto);
 		            
 		            if (nuevaCantidad <= 0) {
 		                LblError.setText("La cantidad debe ser mayor a cero");
 		                return;
 		            }
-
 		            if (nuevaCantidad > itemSeleccionado.getProducto().getStock()) {
 		                LblError.setText("No hay suficiente stock");
 		                return;
@@ -122,7 +121,7 @@ public class EleccionCarrito extends JFrame {
 
 		            itemSeleccionado.setCantidad(nuevaCantidad);
 		            LblError.setText("Cantidad actualizada correctamente");
-		            dispose(); // Cierra esta ventana si querés
+		            dispose();
 
 		        } catch (NumberFormatException e) {
 		            LblError.setText("Debe ingresar un número válido");
@@ -146,7 +145,7 @@ public class EleccionCarrito extends JFrame {
 		lblNewLabel_1_1.setBounds(38, 11, 556, 80);
 		panel_1.add(lblNewLabel_1_1);
 		
-		JLabel lblNewLabel_2 = new JLabel("¿Estas seguro de que querés \r\nborrar este producto?");
+		JLabel lblNewLabel_2 = new JLabel("¿Estas seguro de que querés borrar este producto?");
 		lblNewLabel_2.setFont(new Font("Swis721 Blk BT", Font.PLAIN, 15));
 		lblNewLabel_2.setBounds(133, 115, 359, 60);
 		panel_1.add(lblNewLabel_2);
@@ -159,7 +158,7 @@ public class EleccionCarrito extends JFrame {
 		btnBorrar.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		    	carrito.remove(itemSeleccionado);
-                JOptionPane.showMessageDialog(null, "Producto eliminado del carrito.");
+                JOptionPane.showMessageDialog(null, "Producto eliminado del carrito");
                 dispose();
 		    }
 		});
