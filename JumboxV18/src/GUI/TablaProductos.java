@@ -9,7 +9,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import DDL.ControllerProducto;
+import jumbox.Cliente;
 import jumbox.Productos;
+import jumbox.Usuarios;
 
 import java.awt.Color;
 import javax.swing.ImageIcon;
@@ -91,8 +93,15 @@ public class TablaProductos extends JFrame {
 		btnEliminar.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
 		        if (productoSeleccionado != null && productoSeleccionado.getIdProducto() > 0) {
-		            ControllerProducto eliminarP = new ControllerProducto();
-		            eliminarP.eliminarProducto(productoSeleccionado);
+		        	String[] confirmar = {"Cancelar","Confirmar"};
+		        	int confirmacion = 0;
+		        	confirmacion = JOptionPane.showOptionDialog(null, "ESTAS SEGURO QUE DESEAS ELIMINAR EL PRODUCTO", "Jumbox", 0, 0, null, confirmar, confirmar);
+		            if (confirmacion==1) {
+		            	ControllerProducto eliminarP = new ControllerProducto();
+			            eliminarP.eliminarProducto(productoSeleccionado);
+					} else {
+
+					}
 		        } else {
 		            JOptionPane.showMessageDialog(null, "Seleccione un producto para eliminar.");
 		        }
