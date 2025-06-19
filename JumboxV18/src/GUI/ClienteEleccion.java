@@ -75,7 +75,7 @@ public class ClienteEleccion extends JFrame {
 		lblNewLabel_1.setBounds(268, 11, 324, 80);
 		lblNewLabel_1.setBackground(new Color(0, 128, 0));
 		lblNewLabel_1.setForeground(new Color(0, 128, 0));
-		lblNewLabel_1.setFont(new Font("Swis721 Blk BT", Font.BOLD, 90));
+		lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD, 90));
 		panel.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("Nombre");
@@ -90,13 +90,13 @@ public class ClienteEleccion extends JFrame {
 		panel.add(lblNewLabel_2_1);
 		
 		JTextField txtUsuario = new JTextField();
-		txtUsuario.setBounds(268, 168, 313, 26);
+		txtUsuario.setBounds(268, 162, 313, 32);
 		txtUsuario.setFont(new Font("Arial", Font.PLAIN, 18));
 		txtUsuario.setColumns(10);
 		panel.add(txtUsuario);
 		
 		JPasswordField txtContrasena = new JPasswordField();
-		txtContrasena.setBounds(268, 271, 313, 34);
+		txtContrasena.setBounds(268, 256, 313, 34);
 		txtContrasena.setFont(new Font("Arial", Font.PLAIN, 18));
 		panel.add(txtContrasena);
 		
@@ -106,7 +106,7 @@ public class ClienteEleccion extends JFrame {
 		panel.add(btnNewButton);
 		
 		JLabel LblError = new JLabel("");
-		LblError.setBounds(269, 316, 312, 14);
+		LblError.setBounds(268, 311, 312, 14);
 		LblError.setForeground(new Color(255, 0, 0));
 		LblError.setFont(new Font("Arial", Font.PLAIN, 15));
 		panel.add(LblError);
@@ -191,12 +191,12 @@ public class ClienteEleccion extends JFrame {
 		panel_1.add(lblNewLabel_1_1);
 		
 		JLabel lblNewLabel_2_1_1 = new JLabel("Contraseña");
-		lblNewLabel_2_1_1.setFont(new Font("Dialog", Font.PLAIN, 20));
+		lblNewLabel_2_1_1.setFont(new Font("Swis721 Blk BT", Font.PLAIN, 20));
 		lblNewLabel_2_1_1.setBounds(278, 326, 167, 32);
 		panel_1.add(lblNewLabel_2_1_1);
 		
 		JLabel lblNewLabel_2_4 = new JLabel("Nombre");
-		lblNewLabel_2_4.setFont(new Font("Dialog", Font.PLAIN, 20));
+		lblNewLabel_2_4.setFont(new Font("Swis721 Blk BT", Font.PLAIN, 20));
 		lblNewLabel_2_4.setBounds(278, 115, 167, 26);
 		panel_1.add(lblNewLabel_2_4);
 		
@@ -214,12 +214,7 @@ public class ClienteEleccion extends JFrame {
 		    	LblErrorRegis.setText("");
 		        
 		        int tele;
-		        try {
-		        	tele = Integer.parseInt(txtTel.getText().trim());
-		        } catch (NumberFormatException e1) {
-		        	LblErrorRegis.setText("El teléfono es incorrecto");
-		            return;
-		        }
+		        
 		        
 		        if (contrasena.isEmpty() || usu.isEmpty() || dire.isEmpty() || tel.isEmpty()) {
 		        	LblErrorRegis.setText("Campo vacío");
@@ -228,6 +223,12 @@ public class ClienteEleccion extends JFrame {
 		        }else if(ValidarDire(dire)==false) {
 		        	LblErrorRegis.setText("La direccion no cumple con lo pedido");
 		        }else {
+		        	try {
+			        	tele = Integer.parseInt(txtTel.getText().trim());
+			        } catch (NumberFormatException e1) {
+			        	LblErrorRegis.setText("El teléfono es incorrecto");
+			            return;
+			        }
 		            Cliente usuario = Cliente.RegistroCliente(usu, contrasena, dire, tele);
 		            if (usuario != null) {
 		            	dispose();
