@@ -6,6 +6,8 @@ import javax.swing.JOptionPane;
 
 import DDL.ControllerProducto;
 import DDL.ControllerUsuario;
+import GUI.AgregarProducto;
+import GUI.MenuCliente;
 
 public class Productos {
 
@@ -69,6 +71,8 @@ public class Productos {
 	
 	public static void crearProducto(String nombre, double precio, int stock, int categoria, int idProducto) {
 		ControllerProducto controller = new ControllerProducto();
+		AgregarProducto menu = new AgregarProducto();
+    	menu.setVisible(true);
 		
         while (nombre.isEmpty()) {
             nombre = JOptionPane.showInputDialog("Ingrese el nombre del producto");
