@@ -67,17 +67,17 @@ public class MenuCliente extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("Bienvenido "+ Cliente.getNombre());
-		lblNewLabel.setBounds(51, 0, 768, 114);
+		JLabel lblNewLabel = new JLabel("Bienvenido "+cliente.getNombre());
+		lblNewLabel.setBounds(20, 0, 867, 114);
 		lblNewLabel.setForeground(new Color(0, 128, 0));
-		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 90));
+		lblNewLabel.setFont(new Font("Dialog", Font.BOLD, 80));
 		contentPane.add(lblNewLabel);
 		
 		JLabel lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setForeground(new Color(255, 255, 255));
 		lblNewLabel_1.setBackground(new Color(255, 255, 255));
 		lblNewLabel_1.setIcon(new ImageIcon("src\\img\\logo.png"));
-		lblNewLabel_1.setBounds(225, 118, 440, 402);
+		lblNewLabel_1.setBounds(213, 118, 440, 402);
 		contentPane.add(lblNewLabel_1);
 		
 		JButton btnComprar = new JButton("Comprar");
