@@ -67,7 +67,7 @@ public class EleccionCarrito extends JFrame {
 		contentPane.add(tabbedPane);
 		
 		JPanel CambiarCantidad = new JPanel();
-		tabbedPane.addTab("New tab", null, CambiarCantidad, null);
+		tabbedPane.addTab("Editar", null, CambiarCantidad, null);
 		CambiarCantidad.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Nueva cantidad");
@@ -135,7 +135,7 @@ public class EleccionCarrito extends JFrame {
 		//Borrar carrito
 		
 		JPanel panel_1 = new JPanel();
-		tabbedPane.addTab("New tab", null, panel_1, null);
+		tabbedPane.addTab("Eliminar", null, panel_1, null);
 		panel_1.setLayout(null);
 		
 		JLabel lblNewLabel_1_1 = new JLabel("Borrar Producto");
@@ -145,9 +145,9 @@ public class EleccionCarrito extends JFrame {
 		lblNewLabel_1_1.setBounds(38, 11, 556, 80);
 		panel_1.add(lblNewLabel_1_1);
 		
-		JLabel lblNewLabel_2 = new JLabel("¿Estas seguro de que querés borrar este producto?");
+		JLabel lblNewLabel_2 = new JLabel("¿Estas seguro de que quieres eliminar este producto del carrito?");
 		lblNewLabel_2.setFont(new Font("Swis721 Blk BT", Font.PLAIN, 15));
-		lblNewLabel_2.setBounds(133, 115, 359, 60);
+		lblNewLabel_2.setBounds(48, 111, 615, 60);
 		panel_1.add(lblNewLabel_2);
 		
 		JButton btnBorrar = new JButton("Borrar");

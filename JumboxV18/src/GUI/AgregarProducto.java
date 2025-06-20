@@ -71,6 +71,20 @@ public class AgregarProducto extends JFrame {
 		
 		JComboBox comboBox = new JComboBox();
 		comboBox.setBounds(55, 300, 307, 22);
+		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		comboBox.addItem("Mueble");
+		comboBox.addItem("Electrodomestico");
+		comboBox.addItem("Alimento");
+		comboBox.addItem("Limpieza");
+		comboBox.addItem("Higiene_Personal");
+		comboBox.addItem("Farmacia");
+		comboBox.addItem("Mascotas");
+		comboBox.addItem("Hogar");
+		comboBox.addItem("Ferreteria");
+		comboBox.addItem("Jugueteria");
+		comboBox.addItem("Libreria");
+		comboBox.addItem("Bebidas");
+		comboBox.addItem("Despensa");
 		contentPane.add(comboBox);
 		
 		textField_2 = new JTextField();

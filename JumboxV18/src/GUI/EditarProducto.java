@@ -26,7 +26,7 @@ public class EditarProducto extends JFrame {
 	 */
 	public EditarProducto() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(0, -39, 450, 396);
+		setBounds(100, 100, 450, 393);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -62,6 +62,20 @@ public class EditarProducto extends JFrame {
 		
 		JComboBox comboBox = new JComboBox();
 		comboBox.setBounds(53, 243, 307, 22);
+		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		comboBox.addItem("Mueble");
+		comboBox.addItem("Electrodomestico");
+		comboBox.addItem("Alimento");
+		comboBox.addItem("Limpieza");
+		comboBox.addItem("Higiene_Personal");
+		comboBox.addItem("Farmacia");
+		comboBox.addItem("Mascotas");
+		comboBox.addItem("Hogar");
+		comboBox.addItem("Ferreteria");
+		comboBox.addItem("Jugueteria");
+		comboBox.addItem("Libreria");
+		comboBox.addItem("Bebidas");
+		comboBox.addItem("Despensa");
 		contentPane.add(comboBox);
 		
 		textField_2 = new JTextField();

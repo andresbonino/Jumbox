@@ -102,7 +102,8 @@ public class InicioDeposito extends JFrame {
 		            Deposito usuario = controllerD.loginDeposito(contrasena);
 		            if (usuario != null) {
 		            	dispose();
-		            	Deposito.IngresoDeposito(contrasena);
+						MenuDeposito menu = new MenuDeposito();
+						menu.setVisible(true);
 		            } else {
 		                LblError.setText("Contraseña incorrecta");
 		            }

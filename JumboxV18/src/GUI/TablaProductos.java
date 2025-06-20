@@ -119,6 +119,9 @@ public class TablaProductos extends JFrame {
 		JButton btnSalir = new JButton("Salir");
 		btnSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				dispose();
+				MenuDeposito menu = new MenuDeposito();
+				menu.setVisible(true);
 			}
 		});
 		btnSalir.setBounds(10, 256, 89, 23);
