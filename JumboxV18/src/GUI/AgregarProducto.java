@@ -83,6 +83,7 @@ public class AgregarProducto extends JFrame {
 		JComboBox comboBox = new JComboBox();
 		comboBox.setBounds(55, 300, 307, 22);
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		comboBox.addItem("Refrigerado");
 		comboBox.addItem("Mueble");
 		comboBox.addItem("Electrodomestico");
 		comboBox.addItem("Alimento");

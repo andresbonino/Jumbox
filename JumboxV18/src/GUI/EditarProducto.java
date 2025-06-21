@@ -77,6 +77,7 @@ public class EditarProducto extends JFrame {
 		JComboBox comboBox = new JComboBox();
 		comboBox.setBounds(53, 243, 307, 22);
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		comboBox.addItem("Refrigerado");
 		comboBox.addItem("Mueble");
 		comboBox.addItem("Electrodomestico");
 		comboBox.addItem("Alimento");
