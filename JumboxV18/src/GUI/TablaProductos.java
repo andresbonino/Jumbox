@@ -67,7 +67,7 @@ public class TablaProductos extends JFrame {
 		JButton btnAgregar = new JButton("Agregar");
 		btnAgregar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Productos.crearProducto("", 0, 0, 0, 0);
+				Productos.crearProducto();
 			}
 		});
 		btnAgregar.setBounds(10, 195, 89, 33);
@@ -147,7 +147,7 @@ public class TablaProductos extends JFrame {
 		scrollPane.setBounds(10, 67, 453, 103);
 		contentPane.add(scrollPane);;
 		
-        // Acción al seleccionar fila
+        
 		  table.getSelectionModel().addListSelectionListener(e -> {
 	            if (!e.getValueIsAdjusting()) {
 	                int row = table.getSelectedRow();

@@ -136,12 +136,12 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
     public void editarProducto(Productos producto) {
         try {
             PreparedStatement stmt = con.prepareStatement(
-                "UPDATE producto SET precio = ?, stock = ?, fk_categoria = ? WHERE nombre = ?"
+                "UPDATE producto SET precio = ?, stock = ?, fk_categoria = ? WHERE id_producto = ?"
             );
             stmt.setDouble(1, producto.getPrecio());
             stmt.setInt(2, producto.getStock());
             stmt.setInt(3, producto.getCategoria());
-            stmt.setString(4, producto.getNombre());
+            stmt.setInt(4, producto.getIdProducto());
 
             int filas = stmt.executeUpdate();
             if (filas > 0) {
@@ -153,6 +153,7 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
             e.printStackTrace();
         }
     }
+
 
 	@Override
 	public void verStock() {
@@ -184,56 +185,9 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
 			JOptionPane.showMessageDialog(null, "No hay producto seleccionado.");
 			return;
 		}
-		ControllerProducto controller = new ControllerProducto();
-		EditarProducto menu = new EditarProducto();
-    	menu.setVisible(true);
-    	
-		String nuevoPrecio, nuevoStock;
-		Double nuevoP = null;
-		int nuevoS = 0;
-
-		do {
-			nuevoPrecio = JOptionPane.showInputDialog("Nuevo precio:", seleccionado.getPrecio());
-			if (!nuevoPrecio.isEmpty()) {
-				nuevoP = Double.parseDouble(nuevoPrecio);
-			}
-		} while (nuevoPrecio.isEmpty() || nuevoP <= 0);
-
-		do {
-			nuevoStock = JOptionPane.showInputDialog("Nuevo stock:", seleccionado.getStock());
-			if (!nuevoStock.isEmpty()) {
-				nuevoS = Integer.parseInt(nuevoStock);
-			}
-		} while (nuevoStock.isEmpty() || nuevoS < 0);
-
-		// OBTENER CATEGORIA DEL PRODUCTO
-		Categorias categoriaActual = null;
-		for (Categorias cat : Categorias.values()) {
-			if (cat.getId() == seleccionado.getCategoria()) {
-				categoriaActual = cat;
-				break;
-			}
-		}
-
-		Categorias categoriaSeleccionada = (Categorias) JOptionPane.showInputDialog(
-			null,
-			"Cambie la categoría de su producto",
-			"Jumbox",
-			JOptionPane.QUESTION_MESSAGE,
-			null,
-			Categorias.values(),
-			categoriaActual
-		);
-
-		if (categoriaSeleccionada != null) {
-			seleccionado.setCategoria(categoriaSeleccionada.getId());
-		}
-
-		seleccionado.setPrecio(nuevoP);
-		seleccionado.setStock(nuevoS);
-
-		editarProducto(seleccionado);
-		JOptionPane.showMessageDialog(null, "Producto actualizado.");
+		EditarProducto editar = new EditarProducto(seleccionado);
+		editar.setVisible(true);
+    
 	}
 
 	

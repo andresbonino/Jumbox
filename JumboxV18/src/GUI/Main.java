@@ -169,7 +169,7 @@ public class Main {
                        			controllerP.procesarPedidosPendientes();
                        			break;
                        		case 1: //CREAR PRODUCTO
-                       			Productos.crearProducto("", 0, -1, 0, 0);
+                       			Productos.crearProducto();
                        			break; 
                        		case 2: //EDITAR PRODUCTO
                        			LinkedList<Productos> listaProductos = controllerP.mostrarProducto();
