@@ -1,8 +1,5 @@
 /bin/
-/.classpath
-/.gitignore
-/.project
-/DLL/
 /GUI/
+/DLL/
 /jumbox/
 /repository/

@@ -84,13 +84,13 @@ public class OpcCreProd extends JFrame {
 		contentPane.add(btnAceptar);
 		
 		JLabel lblNewLabel_1 = new JLabel("Deposito");
-		lblNewLabel_1.setBounds(76, 20, 431, 157);
+		lblNewLabel_1.setBounds(105, 20, 431, 157);
 		lblNewLabel_1.setForeground(new Color(0, 128, 0));
 		lblNewLabel_1.setFont(new Font("Dialog", Font.BOLD, 90));
 		contentPane.add(lblNewLabel_1);
 		
 		JComboBox comboBox = new JComboBox();
-		comboBox.setBounds(241, 695, 155, 55);
+		comboBox.setBounds(242, 700, 155, 55);
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 21));
 		comboBox.addItem("Mueble");
 		comboBox.addItem("Electrodomestico");

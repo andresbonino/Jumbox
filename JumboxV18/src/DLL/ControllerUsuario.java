@@ -23,13 +23,16 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
             );
             stmt.setString(1, nombre);
             stmt.setString(2, contrasena);
+            
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-            	int id = rs.getInt("id_cliente");
-                String direccion = rs.getString("direccion");
+                int id = rs.getInt("id_cliente");
                 int telefono = rs.getInt("telefono");
-                usuario = (T) new Cliente(nombre, direccion, telefono, contrasena, id);
+                String direccion = rs.getString("direccion");
+
+                usuario = (T) new Cliente(id, nombre, direccion, telefono, contrasena);
+                       
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -41,8 +44,7 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
     public void agregarUsuario(Cliente usuario) {
         try {
             PreparedStatement statement = con.prepareStatement(
-                "INSERT INTO cliente (nombre, direccion, telefono, contrasena) VALUES (?, ?, ?, ?)",
-                PreparedStatement.RETURN_GENERATED_KEYS
+                "INSERT INTO cliente (nombre, direccion, telefono, contrasena) VALUES (?, ?, ?, ?)"
             );
             statement.setString(1, usuario.getNombre());
             statement.setString(2, usuario.getDireccion());
@@ -51,26 +53,11 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
 
             int filas = statement.executeUpdate();
             if (filas > 0) {
-                ResultSet rs = statement.getGeneratedKeys();
-                if (rs.next()) {
-                    int idCliente = rs.getInt(1);
-                    usuario.setId_cliente(idCliente); // Asegura que el objeto Cliente tenga su ID real
-
-                    // Crear carrito asociado al cliente
-                    PreparedStatement stmtCarrito = con.prepareStatement("INSERT INTO carrito (fk_cliente) VALUES (?)");
-                    stmtCarrito.setInt(1, idCliente);
-                    stmtCarrito.executeUpdate();
-                }
-
-                JOptionPane.showMessageDialog(null, "Usuario agregado correctamente.");
-            } else {
-                JOptionPane.showMessageDialog(null, "No se pudo agregar el usuario.");
+                System.out.println("Usuario agregado correctamente.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error al registrar usuario.");
         }
-
     }
 
     @Override
@@ -85,30 +72,32 @@ public class ControllerUsuario<T extends Cliente> implements UsuarioRepository {
                 String direccion = rs.getString("direccion");
                 int telefono = rs.getInt("telefono");
                 String contrasena = rs.getString("contrasena");
-                int id = rs.getInt("id_cliente");
 
-                usuarios.add((T) new Cliente(nombre, direccion, telefono, contrasena, id));
+               
+                usuarios.add((T) new Cliente(nombre, direccion, telefono, contrasena));
+                        
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return usuarios;
     }
-
+    
     @Override
-    public void verificarUsuario(Cliente usuario) {
-        LinkedList<Cliente> existentes = mostrarUsuarios();
-        boolean flag = true;
-        for (Cliente existente : existentes) {
-            if (existente.getTelefono() == usuario.getTelefono()) {
-                flag = false;
-                break;
-            }
-        }
-        if (flag) {
-            agregarUsuario(usuario);
-        } else {
-            JOptionPane.showMessageDialog(null, "El usuario se registró anteriormente");
-        }
-    }
+	public void verificarUsuario(Cliente usuario) {
+		LinkedList<Cliente> existentes = mostrarUsuarios();
+    	boolean flag = true;
+    	for (Cliente existente : existentes) {
+			if (existente.getTelefono()==usuario.getTelefono()) {
+				flag = false;
+				break;
+			}
+		}
+    	if (flag) {
+    		agregarUsuario(usuario);
+		}else {
+			JOptionPane.showMessageDialog(null, "El usuario se registró anteriormente");
+		}
+		
+	}
 }

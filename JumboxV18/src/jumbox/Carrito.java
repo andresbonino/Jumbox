@@ -4,45 +4,19 @@ public class Carrito{
 	
 	private Productos producto;
     private int cantidad;
-    private Cliente cliente;
-    
+    private int id_carrito;
 
     public Carrito(Productos producto, int cantidad) {
         this.producto = producto;
         this.cantidad = cantidad;
     }
-    
-    
+    public Carrito(Productos producto, int cantidad, int id_carrito) {
+        this.producto = producto;
+        this.cantidad = cantidad;
+        this.id_carrito = id_carrito;
+    }
 
-    public Carrito(Productos producto, int cantidad, Cliente cliente) {
-		super();
-		this.producto = producto;
-		this.cantidad = cantidad;
-		this.cliente = cliente;
-	}
-
-    
-
-
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-
-
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
-
-
-
-	public void setProducto(Productos producto) {
-		this.producto = producto;
-	}
-
-
-
-	public Productos getProducto() {
+    public Productos getProducto() {
         return producto;
     }
 
@@ -54,6 +28,15 @@ public class Carrito{
         this.cantidad = cantidad;
     }
 
+    public int getIdCarrito() {
+        return id_carrito;
+    }
+
+    public void setIdCarrito(int id_carrito) {
+        this.id_carrito = id_carrito;
+    }
+    
+    
     public double getTotal() {
         return producto.getPrecio() * cantidad;
     }

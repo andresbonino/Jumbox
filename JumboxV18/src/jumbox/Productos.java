@@ -1,9 +1,13 @@
 package jumbox;
 
+
+
 import javax.swing.JOptionPane;
 
 import DLL.ControllerProducto;
 import DLL.ControllerUsuario;
+import GUI.AgregarProducto;
+import GUI.MenuCliente;
 
 public class Productos {
 
@@ -11,74 +15,21 @@ public class Productos {
 	private double precio;
 	private int stock;
 	private int categoria;
-	private int id_producto;
-	private int fk_categoria;
+	private int idProducto;
 	
-	public Productos(String nombre, double precio, int stock, int categoria) {
+	public Productos(int idProducto, String nombre, double precio, int stock, int categoria) {
 		this.nombre = nombre;
 		this.precio = precio;
 		this.stock = stock;
 		this.categoria = categoria;
+		this.idProducto = idProducto;
 	}
 	
-	
-
-	
-
-	
-	
-	
-	public Productos(String nombre, double precio, int stock, int categoria, int idProducto, int fk_categoria) {
-		super();
+	public Productos(String nombre, double precio, int stock) {
 		this.nombre = nombre;
 		this.precio = precio;
 		this.stock = stock;
-		this.categoria = categoria;
-		this.id_producto = idProducto;
-		this.fk_categoria = fk_categoria;
 	}
-
-
-	
-	
-
-
-
-
-
-
-	public Productos() {
-		super();
-	}
-
-
-
-
-
-
-
-
-	public int getFk_categoria() {
-		return fk_categoria;
-	}
-
-
-
-
-
-
-
-
-	public void setFk_categoria(int fk_categoria) {
-		this.fk_categoria = fk_categoria;
-	}
-
-
-
-
-
-
-
 
 	public String getNombre() {
 		return nombre;
@@ -111,46 +62,20 @@ public class Productos {
 	public void setCategoria(int categoria) {
 		this.categoria = categoria;
 	}
-	public int getId_producto() {
-		return id_producto;
+	public int getIdProducto() {
+		return idProducto;
 	}
-	public void setId_producto(int id_producto) {
-		this.id_producto = id_producto;
+	public void setIdProducto(int idProducto) {
+		this.idProducto = idProducto;
 	}
 	
-	public static void crearProducto(String nombre, double precio, int stock, int categoria) {
-		ControllerProducto controller = new ControllerProducto();
-		
-        while (nombre.isEmpty()) {
-            nombre = JOptionPane.showInputDialog("Ingrese el nombre del producto");
-            if (nombre.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Error: campo vacío");
-            }
-        }
-           
-        while (precio<=0) {
-        	 precio = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el precio del producto"));
-        	 if (precio<=0) {
-                JOptionPane.showMessageDialog(null, "Error");
-                }
-            }
-         
-         while (stock<0) {
-        	 stock = Integer.parseInt(JOptionPane.showInputDialog("Ingrese el stock del producto"));
-             if (stock<0) {
-                JOptionPane.showMessageDialog(null, "Error");
-                }
-            }
-         
-         Categorias categoriaSeleccionada = (Categorias) JOptionPane.showInputDialog(null, "¿En qué categoría entra tu producto?", "Jumbox", JOptionPane.QUESTION_MESSAGE, null,Categorias.values(), Categorias.values()[0]);
-
-         int fk_categoria = categoriaSeleccionada.getId();
-
-            
-        
-         Productos producto = new Productos(nombre, precio, stock, fk_categoria);
-        controller.agregarProducto(producto);
+	public static void crearProducto() {
+	    AgregarProducto menu = new AgregarProducto();
+	    menu.setVisible(true);
 	}
+
+
+	
 
 	
 	

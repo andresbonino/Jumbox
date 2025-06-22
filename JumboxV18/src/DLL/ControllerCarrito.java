@@ -2,10 +2,14 @@ package DLL;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.time.LocalDate;
 import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
+
+import GUI.EleccionCarrito;
+import GUI.PantallaPrincipal;
+
+import java.sql.Statement;
 
 import java.sql.PreparedStatement;
 
@@ -13,97 +17,244 @@ import java.sql.PreparedStatement;
 
 import jumbox.Carrito;
 import jumbox.Cliente;
+import jumbox.OpcionesSucursales;
 import jumbox.Productos;
+import jumbox.Sucursal;
 import repository.CarritoRepository;
-
 
 public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	
 	static ControllerUsuario controller = new ControllerUsuario();
 	
 	private static Connection con = Conexion.getInstance().getConnection();
-	
-	@Override
-	public void compras(LinkedList<Productos> productos, LinkedList<Carrito> carrito, Cliente cliente) {
-	    if (productos.isEmpty()) {
-	        JOptionPane.showMessageDialog(null, "No hay productos disponibles.");
-	        return;
-	    }
+    private LinkedList<Carrito> carrito = new LinkedList<>();
 
-	    // Mostrar los nombres de los productos para que el usuario elija
-	    String[] nombres = new String[productos.size()];
-	    for (int i = 0; i < productos.size(); i++) {
-	        nombres[i] = productos.get(i).getNombre();
-	    }
+        LinkedList<Carrito> carritoRecuperado = new LinkedList<>();
 
-	    String seleccion = (String) JOptionPane.showInputDialog(
-	        null, "Seleccione producto:", "Agregar al carrito",
-	        JOptionPane.QUESTION_MESSAGE, null, nombres, nombres[0]
-	    );
+        private int idCarritoActual;
+        private Sucursal sucursalSeleccionada;
 
-	    if (seleccion == null) return; // usuario canceló
 
-	    Productos productoElegido = null;
-	    for (Productos p : productos) {
-	        if (p.getNombre().equals(seleccion)) {
-	            productoElegido = p;
-	            break;
+	public void compras(LinkedList<Productos> productos, Cliente cliente) {
+		
+	    try {
+	    	// CREAR CARRITO
+	    	PreparedStatement stmtCarrito = con.prepareStatement(
+	    	    "INSERT INTO `carrito`(`fk_cliente`) VALUES (?)", Statement.RETURN_GENERATED_KEYS
+	    	);
+	    	stmtCarrito.setInt(1, cliente.getIdCliente());
+	    	stmtCarrito.executeUpdate();
+
+	    	ResultSet generatedKeys = stmtCarrito.getGeneratedKeys();
+	    	int idCarrito = -1;
+	    	if (generatedKeys.next()) {
+	    	    idCarrito = generatedKeys.getInt(1);
+	    	}
+	    	idCarritoActual = idCarrito;
+
+
+	    	// ELEGIR SUCURSAL
+	    	OpcionesSucursales opcionSeleccionada = (OpcionesSucursales) JOptionPane.showInputDialog(
+	    	    null,
+	    	    "¿En qué sucursal querés comprar?",
+	    	    "Jumbox",
+	    	    JOptionPane.QUESTION_MESSAGE,
+	    	    null,
+	    	    OpcionesSucursales.values(),
+	    	    OpcionesSucursales.values()[0]
+	    	);
+
+	    	// Validar si se seleccionó una opción
+	    	if (opcionSeleccionada == null) return;
+
+	    	// Crear la sucursal con el ID correspondiente y contraseña null (o lo que uses)
+	    	this.sucursalSeleccionada = new Sucursal(opcionSeleccionada.getId(), null);
+
+
+	        int idSucursal = opcionSeleccionada.getId();
+
+	        // BUSCAR PRODUCTOS DE LA SUCURSAL SELECCIONADA
+	        PreparedStatement stmt = Conexion.getInstance().getConnection().prepareStatement(
+	            "SELECT a.fk_producto, a.cantidad, p.nombre, p.precio, p.id_producto "+
+	            "FROM almacen_sucursal a " +
+	            "JOIN producto p ON a.fk_producto = p.id_producto " +
+	            "WHERE a.fk_sucursal = ? AND a.cantidad > 0"
+	        );
+
+	        stmt.setInt(1, idSucursal);
+	        ResultSet rs = stmt.executeQuery();
+
+	        LinkedList<Productos> productosSucursal = new LinkedList<>();
+	        StringBuilder sb = new StringBuilder("Productos disponibles en la " + opcionSeleccionada + " Sucursal:\n");
+
+	        while (rs.next()) {
+	            int idProducto = rs.getInt("fk_producto");
+	            String nombre = rs.getString("nombre");
+	            double precio = rs.getDouble("precio");
+	            int stock = rs.getInt("cantidad");
+
+	            Productos prod = new Productos(nombre, precio, stock);
+	            productosSucursal.add(prod);
+	            prod.setIdProducto(idProducto);
+
+	            sb.append("- ").append(nombre)
+	              .append(" | Precio: $").append(precio)
+	              .append(" | Stock: ").append(stock)
+	              .append("\n");
 	        }
-	    }
+	        
+	        sb.append("\nSeleccione un producto:");
 
-	    if (productoElegido != null) {
-	        // 🚨 SETEAR ID DEL PRODUCTO desde la base de datos
-	        int idProducto = obtenerIdProductoPorNombre(productoElegido.getNombre());
-	        productoElegido.setId_producto(idProducto);
-
-	        if (idProducto <= 0) {
-	            JOptionPane.showMessageDialog(null, "Error al obtener ID del producto.");
+	        if (productosSucursal.isEmpty()) {
+	            JOptionPane.showMessageDialog(null, "No hay productos disponibles en esta sucursal.");
 	            return;
 	        }
 
-	        int Cant = 0;
-	        String cantidad;
-	        do {
-	            cantidad = JOptionPane.showInputDialog("Cantidad:");
-	            if (cantidad != null && !cantidad.isEmpty()) {
-	                Cant = Integer.parseInt(cantidad);
-	                if (Cant <= 0 || Cant > productoElegido.getStock()) {
-	                    JOptionPane.showMessageDialog(null, "Cantidad inválida.");
-	                } else {
-	                    Carrito nuevo = new Carrito(productoElegido, Cant, cliente);
-	                    carrito.add(nuevo);
-	                    guardarProductoBD(nuevo, cliente);
-	                    JOptionPane.showMessageDialog(null, "Producto agregado al carrito.");
-	                    break;
-	                }
+	        // MOSTRAR PRODUCTOS PARA ELEGIR
+	        String[] nombres = new String[productosSucursal.size()];
+	        for (int i = 0; i < productosSucursal.size(); i++) {
+	            nombres[i] = productosSucursal.get(i).getNombre();
+	        }
+
+	        String seleccion = (String) JOptionPane.showInputDialog(
+	            null,
+	            sb.toString(),
+	            "Agregar al carrito",
+	            JOptionPane.QUESTION_MESSAGE,
+	            null,
+	            nombres,
+	            nombres[0]
+	        );
+
+	        if (seleccion == null) return;
+
+	        Productos productoElegido = null;
+	        for (Productos p : productosSucursal) {
+	            if (p.getNombre().equals(seleccion)) {
+	                productoElegido = p;
+	                break;
 	            }
-	        } while (cantidad == null || cantidad.isEmpty() || Cant <= 0 || Cant > productoElegido.getStock());
+	        }
+
+	        if (productoElegido != null) {
+	        	
+	        	// VERIFICAR SI YA ESTA EN EL CARRITO
+	        	boolean yaEnCarrito = false;
+	        	for (Carrito item : carrito) {
+	        	    if (item.getProducto().getNombre().equals(productoElegido.getNombre())) {
+	        	        yaEnCarrito = true;
+	        	        break;
+	        	    }
+	        	}
+
+	        	if (yaEnCarrito) {
+	        	    JOptionPane.showMessageDialog(null, "Este producto ya está en el carrito.");
+	        	    return;
+	        	}
+
+	        	
+	        	
+	            int cantidad = 0;
+	            do {
+	                String input = JOptionPane.showInputDialog("Cantidad:");
+	                if (input == null || input.isEmpty()) return;
+
+	                try {
+	                    cantidad = Integer.parseInt(input);
+
+	                    if (cantidad <= 0) {
+	                        JOptionPane.showMessageDialog(null, "La cantidad debe ser mayor a cero.");
+	                    } else if (cantidad > productoElegido.getStock()) {
+	                        JOptionPane.showMessageDialog(null, "No hay suficiente stock.");
+	                    } else {
+	                        carrito.add(new Carrito(productoElegido, cantidad));
+	                        JOptionPane.showMessageDialog(null, "Producto agregado al carrito.");
+
+	                        
+	                     
+	                        PreparedStatement stmtProductoId = con.prepareStatement(
+	                            "SELECT id_producto FROM producto WHERE nombre = ?"
+	                        );
+	                        stmtProductoId.setString(1, productoElegido.getNombre());
+
+	                        ResultSet rsProducto = stmtProductoId.executeQuery();
+
+	                        int idProductoReal = -1;
+	                        if (rsProducto.next()) {
+	                            idProductoReal = rsProducto.getInt("id_producto");
+	                        } else {
+	                            JOptionPane.showMessageDialog(null, "No se encontró el producto.");
+	                            return;
+	                        }
+	                        
+	                        PreparedStatement stmtProductoCarrito = (PreparedStatement) con.prepareStatement(
+	                        		"INSERT INTO `producto_carrito`(`fk_producto`, `fk_carrito`, `cantidad`) VALUES (?, ?, ?)"
+	                            );
+	                        stmtProductoCarrito.setInt(1, idProductoReal);
+	                        stmtProductoCarrito.setInt(2, idCarrito);
+	                        stmtProductoCarrito.setInt(3, cantidad);
+	                        stmtProductoCarrito.executeUpdate();
+	                        
+	                        break;
+	                    }
+	                } catch (NumberFormatException e) {
+	                    JOptionPane.showMessageDialog(null, "Debe ingresar un número válido.");
+	                }
+	            } while (true);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(null, "Error al obtener productos de la sucursal.");
 	    }
 	}
 
+
 	@Override
-	public void verCarrito(LinkedList<Carrito> carrito) {
-		if (carrito.isEmpty()) {
+	public void verCarrito(Cliente cliente, Sucursal sucursal) {
+	    if (carrito.isEmpty()) {
 	        JOptionPane.showMessageDialog(null, "El carrito está vacío.");
 	        return;
 	    }
 
-		String resumen = "Carrito de Compras:\n";
+	    StringBuilder resumen = new StringBuilder("Carrito de Compras:\n");
 	    double total = 0;
 
 	    for (Carrito item : carrito) {
-	    	resumen += item.getProducto().getNombre() + " x " + item.getCantidad()
-            + " = $" + item.getTotal() + "\n";
-	    	total += item.getTotal();
+	        resumen.append(item.getProducto().getNombre())
+	               .append(" x ")
+	               .append(item.getCantidad())
+	               .append(" = $")
+	               .append(item.getTotal())
+	               .append("\n");
+	        total += item.getTotal();
 	    }
 
-	    resumen+=("\nTOTAL: $")+(total);
-	    JOptionPane.showMessageDialog(null, resumen);
-		
+	    resumen.append("\nTOTAL: $").append(total);
+
+	    String[] opciones = {"Confirmar compra", "Salir"};
+	    int seleccion = JOptionPane.showOptionDialog(
+	        null,
+	        resumen.toString() + "\n\n¿Desea realizar la compra?",
+	        "Carrito",
+	        JOptionPane.DEFAULT_OPTION,
+	        JOptionPane.QUESTION_MESSAGE,
+	        null,
+	        opciones,
+	        opciones[0]
+	    );
+
+	    if (seleccion == 0) {
+	    	realizarCompra(carrito, cliente, sucursalSeleccionada, idCarritoActual);
+
+	    } else {
+	        
+	    }
 	}
 
+
 	@Override
-	public void editarCarrito(LinkedList<Carrito> carrito) {
+	public void editarCarrito() {
 		if (carrito.isEmpty()) {
 	        JOptionPane.showMessageDialog(null, "El carrito está vacío.");
 	        return;
@@ -126,96 +277,81 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	            }
 	        }
 
-	        if (itemSeleccionado != null) {
-	            String[] opciones = {"Cambiar cantidad", "Eliminar del carrito"};
-	            int opcion = JOptionPane.showOptionDialog(null, "¿Qué desea hacer con " + itemSeleccionado.getProducto().getNombre() + "?", "Opciones",
-	                    0, 0, null, opciones, opciones[0]);
-
-	            if (opcion == 0) {
-	                int nuevaC=0;
-	                String nuevaCantidad;
-					do {
-						nuevaCantidad = JOptionPane.showInputDialog("Nueva Catidad:", itemSeleccionado.getCantidad());
-						if (!nuevaCantidad.isEmpty()) {
-							nuevaC = Integer.parseInt(nuevaCantidad);
-							if (nuevaC > itemSeleccionado.getProducto().getStock()) {
-								JOptionPane.showMessageDialog(null, "No hay suficiente stock.");
-							}else if(nuevaC<=0){
-								JOptionPane.showMessageDialog(null, "No puede ser menor o igual a 0");
-								return;
-							}else {
-							}
-			                    itemSeleccionado.setCantidad(nuevaC);
-			                    JOptionPane.showMessageDialog(null, "Cantidad actualizada.");
-			                
-						}
-					} while (nuevaCantidad.isEmpty() || nuevaC<=0 || nuevaC > itemSeleccionado.getProducto().getStock());
-					
-	            } else {
-	                carrito.remove(itemSeleccionado);
-	                JOptionPane.showMessageDialog(null, "Producto eliminado del carrito.");
-	            }
-	        }
+	        EleccionCarrito carri = new EleccionCarrito(itemSeleccionado, carrito);
+	        carri.setVisible(true);
 	    }
 		
 	}
 	
 	
-	public void realizarCompra(LinkedList<Carrito> carrito, Cliente cliente) {
-        try {
-            // Insertar pedido
-            LocalDate fecha = LocalDate.now();
-            PreparedStatement stmtPedido = (PreparedStatement) con.prepareStatement(
-                "INSERT INTO pedido (fecha, estado, fk_cliente) VALUES (?, 'pendiente', ?)"
-            );
-            stmtPedido.setString(1, fecha.toString());
-            stmtPedido.setInt(2, cliente.getId_cliente());
-            stmtPedido.executeUpdate();
+	public void realizarCompra(LinkedList<Carrito> carrito, Cliente cliente, Sucursal sucursal, int idCarritoActual) {
+	    try {
+	        // INSERTAR PEDIDO
+	        PreparedStatement psPedido = con.prepareStatement(
+	            "INSERT INTO pedido (fecha, estado, fk_cliente, fk_sucursal) VALUES (?, ?, ?, ?)",
+	            Statement.RETURN_GENERATED_KEYS
+	        );
+	        psPedido.setDate(1, new java.sql.Date(System.currentTimeMillis()));
+	        psPedido.setString(2, "pendiente");
+	        psPedido.setInt(3, cliente.getIdCliente());
+	        psPedido.setInt(4, sucursal.getId_Sucursal());
+	        psPedido.executeUpdate();
 
-            // Obtener id del pedido
-            PreparedStatement buscarPedido = (PreparedStatement) con.prepareStatement(
-                "SELECT id_pedido FROM pedido WHERE fecha = ? AND fk_cliente = ? ORDER BY id_pedido DESC LIMIT 1"
-            );
-            buscarPedido.setString(1, fecha.toString());
-            buscarPedido.setInt(2, cliente.getId_cliente());
-            ResultSet rs = buscarPedido.executeQuery();
-            
-            int idPedido = -1;
-            if (rs.next()) {
-                idPedido = rs.getInt("id_pedido");
-            }
+	        ResultSet rs = psPedido.getGeneratedKeys();
+	        int idPedido = 0;
+	        if (rs.next()) {
+	            idPedido = rs.getInt(1);
+	        }
 
-            
-            for (Carrito item : carrito) {
-                PreparedStatement stmtDetalle = con.prepareStatement(
-                        "INSERT INTO detalles_pedido (cantidad, fk_producto, fk_pedido) VALUES (?, ?, ?)");
-                stmtDetalle.setInt(1, item.getCantidad());
-                stmtDetalle.setInt(2, item.getProducto().getId_producto());
-                stmtDetalle.setInt(3, idPedido);
-                stmtDetalle.executeUpdate();
-            }
+	        // INSERTAR DETALLES
+	        for (Carrito item : carrito) {
+	            PreparedStatement psDetalle = con.prepareStatement(
+	                "INSERT INTO detalles_pedido (cantidad, fk_producto, fk_pedido) VALUES (?, ?, ?)"
+	            );
+	            psDetalle.setInt(1, item.getCantidad());
+	            psDetalle.setInt(2, item.getProducto().getIdProducto());
+	            psDetalle.setInt(3, idPedido);
+	            psDetalle.executeUpdate();
+	        }
 
-            JOptionPane.showMessageDialog(null, "Compra realizada con éxito.");
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error al realizar la compra.");
-        }
-    }
+	        // BORRAR DEL CARRITO EN BD
+	        PreparedStatement psBorrar = con.prepareStatement(
+	            "DELETE FROM producto_carrito WHERE fk_carrito = ?"
+	        );
+	        psBorrar.setInt(1, idCarritoActual);
+	        psBorrar.executeUpdate();
+
+	        carrito.clear();
+	        
+	     // BORRAR EL CARRITO EN SI
+	        PreparedStatement psBorrarCarrito = con.prepareStatement(
+	            "DELETE FROM carrito WHERE id_carrito = ?"
+	        );
+	        psBorrarCarrito.setInt(1, idCarritoActual);
+	        psBorrarCarrito.executeUpdate();
+
+	        JOptionPane.showMessageDialog(null, "Compra realizada con éxito.");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(null, "Error al realizar la compra.");
+	    }
+	}
+
 
 	@Override
 	public void verCompra() {
 		
 		try {
-            String nombre = JOptionPane.showInputDialog("Ingrese su nombre para ver sus pedidos:");
+            int telefono = Integer.parseInt(JOptionPane.showInputDialog("Ingrese su telefono para ver sus pedidos:"));
             PreparedStatement stmt =  con.prepareStatement(
             		"SELECT p.id_pedido, p.fecha, p.estado, d.cantidad, prod.nombre, prod.precio " +
                     "FROM pedido p " +
                     "JOIN detalles_pedido d ON p.id_pedido = d.fk_pedido " +
                     "JOIN producto prod ON d.fk_producto = prod.id_producto " +
                     "JOIN cliente c ON p.fk_cliente = c.id_cliente " +
-                    "WHERE c.nombre = ?");
+                    "WHERE c.telefono = ? AND p.estado != 'notificado'");
 
-            stmt.setString(1, nombre);
+            stmt.setInt(1, telefono);
             ResultSet rs = stmt.executeQuery();
 
             String resumen = "";
@@ -251,239 +387,5 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
             JOptionPane.showMessageDialog(null, "Error al consultar compras.");
         }
 		
-		
-		
-		
 	}
-	
-	private int obtenerIdCarrito(Cliente cliente) {
-	    try {
-	        PreparedStatement buscar = con.prepareStatement("SELECT id_carrito FROM carrito WHERE fk_cliente = ?");
-	        buscar.setInt(1, cliente.getId_cliente());
-	        ResultSet rs = buscar.executeQuery();
-	        if (rs.next()) {
-	            return rs.getInt("id_carrito");
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    return -1;
-	}
-
-	
-	@Override
-	public void guardarProductoBD(Carrito item, Cliente cliente) {
-	    try {
-	    	
-	    	int idCliente = cliente.getId_cliente();
-	    	if (idCliente <= 0) {
-				
-	    		JOptionPane.showMessageDialog(null, "ID del cliente inválido: " + idCliente);
-	            return;
-	    		
-			}
-	        int idCarrito = obtenerIdCarrito(cliente);
-	        if (idCarrito == -1) {
-	            PreparedStatement crearCarrito = con.prepareStatement("INSERT INTO carrito (fk_cliente) VALUES (?)");
-	            crearCarrito.setInt(1, idCliente);
-	            crearCarrito.executeUpdate();
-	            idCarrito = obtenerIdCarrito(cliente);
-	        }
-	        
-	        
-
-	        
-
-	        PreparedStatement verificar = con.prepareStatement(
-	            "SELECT cantidad FROM producto_carrito WHERE fk_carrito = ? AND fk_producto = ?"
-	        );
-	        verificar.setInt(1, idCarrito);
-	        verificar.setInt(2, item.getProducto().getId_producto());
-	        ResultSet rs = verificar.executeQuery();
-
-	        if (rs.next()) {
-	            int cantidadActual = rs.getInt("cantidad");
-	            int nuevaCantidad = cantidadActual + item.getCantidad();
-	            PreparedStatement update = con.prepareStatement(
-	                "UPDATE producto_carrito SET cantidad = ? WHERE fk_carrito = ? AND fk_producto = ?"
-	            );
-	            update.setInt(1, nuevaCantidad);
-	            update.setInt(2, idCarrito);
-	            update.setInt(3, item.getProducto().getId_producto());
-	            update.executeUpdate();
-	        } else {
-	            PreparedStatement insertar = con.prepareStatement(
-	                "INSERT INTO producto_carrito (fk_carrito, fk_producto, cantidad) VALUES (?, ?, ?)"
-	            );
-	            insertar.setInt(1, idCarrito);
-	            insertar.setInt(2, item.getProducto().getId_producto());
-	            insertar.setInt(3, item.getCantidad());
-	            insertar.executeUpdate();
-	        }
-
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        JOptionPane.showMessageDialog(null, "Error al guardar producto en la base de datos.");
-	    }
-	    
-	}   
-	
-	
-	/*public void guardarProductoBD2(LinkedList<Productos> productos, Carrito item, Cliente cliente) {
-try {
-	    	
-	    	int idCliente = cliente.getId_cliente();
-	    	if (idCliente <= 0) {
-				
-	    		JOptionPane.showMessageDialog(null, "ID del cliente inválido: " + idCliente);
-	            return;
-	    		
-			}
-	        int idCarrito = obtenerIdCarrito(cliente);
-	        if (idCarrito == -1) {
-	            PreparedStatement crearCarrito = con.prepareStatement("INSERT INTO carrito (fk_cliente) VALUES (?)");
-	            crearCarrito.setInt(1, idCliente);
-	            crearCarrito.executeUpdate();
-	            idCarrito = obtenerIdCarrito(cliente);
-	        }
-	        
-	        String[] nombres = new String[productos.size()];
-	        for (int i = 0; i < productos.size(); i++) {
-	            nombres[i] = productos.get(i).getNombre();
-	        }
-
-	        // ACÁ DECLARÁS Y DEFINÍS `seleccion`
-	        String seleccion = (String) JOptionPane.showInputDialog(
-	            null,
-	            "Seleccione producto:",
-	            "Agregar al carrito",
-	            JOptionPane.QUESTION_MESSAGE,
-	            null,
-	            nombres,
-	            nombres[0]
-	        );
-
-	        // Validación
-	        if (seleccion == null) {
-	            JOptionPane.showMessageDialog(null, "No seleccionaste ningún producto.");
-	            return;
-	        }
-
-	        Productos productoElegido = null;
-	        for (Productos p : productos) {
-	            if (p.getNombre().equalsIgnoreCase(seleccion)) {
-	                productoElegido = p;
-	                break;
-	            }
-	        }
-
-	        if (productoElegido == null) {
-	            JOptionPane.showMessageDialog(null, "Producto no encontrado.");
-	            return;
-	        }
-
-	        
-
-	        PreparedStatement verificar = con.prepareStatement(
-	            "SELECT cantidad FROM producto_carrito WHERE fk_carrito = ? AND fk_producto = ?"
-	        );
-	        verificar.setInt(1, idCarrito);
-	        verificar.setInt(2, item.getProducto().getIdProducto());
-	        ResultSet rs = verificar.executeQuery();
-
-	        if (rs.next()) {
-	            int cantidadActual = rs.getInt("cantidad");
-	            int nuevaCantidad = cantidadActual + item.getCantidad();
-	            PreparedStatement update = con.prepareStatement(
-	                "UPDATE producto_carrito SET cantidad = ? WHERE fk_carrito = ? AND fk_producto = ?"
-	            );
-	            
-	            int idProducto = item.getProducto().getIdProducto();
-	            update.setInt(1, nuevaCantidad);
-	            update.setInt(2, idCarrito);
-	            update.setInt(3, idProducto); 
-	            update.executeUpdate();
-	        } else {
-	            PreparedStatement insertar = con.prepareStatement(
-	                "INSERT INTO producto_carrito (fk_carrito, fk_producto, cantidad) VALUES (?, ?, ?)"
-	            );
-	            insertar.setInt(1, idCarrito);
-	            insertar.setInt(2, item.getProducto().getIdProducto());
-	            insertar.setInt(3, item.getCantidad());
-	            insertar.executeUpdate();
-	        }
-
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        JOptionPane.showMessageDialog(null, "Error al guardar producto en la base de datos.");
-	    }
-	}*/
-	
-	@Override
-	public void cargarCarritoDesdeBD(LinkedList<Carrito> carrito, Cliente cliente) {
-	    try {
-	        PreparedStatement stmt = con.prepareStatement(
-	            "SELECT p.id_producto, p.nombre, p.precio, p.stock, pc.cantidad " +
-	            "FROM producto_carrito pc " +
-	            "JOIN producto p ON pc.fk_producto = p.id_producto " +
-	            "JOIN carrito c ON pc.fk_carrito = c.id_carrito " +
-	            "WHERE c.fk_cliente = ?"
-	        );
-	        stmt.setInt(1, cliente.getId_cliente());
-	        ResultSet rs = stmt.executeQuery();
-
-	        while (rs.next()) {	
-	            Productos producto = new Productos(
-	                rs.getString("nombre"),
-	                rs.getDouble("precio"),
-	                rs.getInt("stock"),
-	                0
-	            );
-	            producto.setId_producto(rs.getInt("id_producto"));
-	            int cantidad = rs.getInt("cantidad");
-
-	            Carrito item = new Carrito(producto, cantidad, cliente);
-	            carrito.add(item);
-	        }
-
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        JOptionPane.showMessageDialog(null, "Error al cargar el carrito desde la base de datos.");
-	    }
-	
-	
-	}
-
-	@Override
-	public void limpiarCarritoBD(Cliente cliente) {
-		try {
-            int idCarrito = obtenerIdCarrito(cliente);
-            if (idCarrito != -1) {
-                PreparedStatement delete = con.prepareStatement(
-                        "DELETE FROM producto_carrito WHERE fk_carrito = ?");
-                delete.setInt(1, idCarrito);
-                delete.executeUpdate();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-		
-	}
-	
-	private int obtenerIdProductoPorNombre(String nombre) {
-	    try {
-	        PreparedStatement stmt = con.prepareStatement("SELECT id_producto FROM producto WHERE nombre = ?");
-	        stmt.setString(1, nombre);
-	        ResultSet rs = stmt.executeQuery();
-	        if (rs.next()) {
-	            return rs.getInt("id_producto");
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	    return -1;
-	}
-
-	
-
 }
