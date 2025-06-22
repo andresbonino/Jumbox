@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -18,9 +19,9 @@ public class OpcEdiProd extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JPasswordField passwordField;
-	private JPasswordField passwordField_1;
-	private JPasswordField passwordField_2;
+	private JTextField nombretxt;
+	private JTextField preciotxt;
+	private JTextField stocktxt;
 
 	/**
 	 * Launch the application.
@@ -61,10 +62,10 @@ public class OpcEdiProd extends JFrame {
 		lblNewLabel_2.setFont(new Font("Leelawadee UI", Font.BOLD, 25));
 		contentPane.add(lblNewLabel_2);
 		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(63, 261, 456, 39);
-		passwordField.setFont(new Font("Arial", Font.PLAIN, 18));
-		contentPane.add(passwordField);
+		nombretxt = new JTextField();
+		nombretxt.setBounds(63, 261, 456, 39);
+		nombretxt.setFont(new Font("Arial", Font.PLAIN, 18));
+		contentPane.add(nombretxt);
 		
 		JLabel LblError = new JLabel("");
 		LblError.setBounds(109, 322, 354, 29);
@@ -77,10 +78,10 @@ public class OpcEdiProd extends JFrame {
 		lblNewLabel_2_1.setFont(new Font("Leelawadee UI", Font.BOLD, 25));
 		contentPane.add(lblNewLabel_2_1);
 		
-		passwordField_1 = new JPasswordField();
-		passwordField_1.setBounds(63, 418, 456, 39);
-		passwordField_1.setFont(new Font("Arial", Font.PLAIN, 18));
-		contentPane.add(passwordField_1);
+		preciotxt = new JTextField();
+		preciotxt.setBounds(63, 418, 456, 39);
+		preciotxt.setFont(new Font("Arial", Font.PLAIN, 18));
+		contentPane.add(preciotxt);
 		
 		JLabel LblError_1 = new JLabel("");
 		LblError_1.setBounds(109, 497, 354, 31);
@@ -93,10 +94,10 @@ public class OpcEdiProd extends JFrame {
 		lblNewLabel_2_1_1.setFont(new Font("Leelawadee UI", Font.BOLD, 25));
 		contentPane.add(lblNewLabel_2_1_1);
 		
-		passwordField_2 = new JPasswordField();
-		passwordField_2.setBounds(63, 566, 456, 39);
-		passwordField_2.setFont(new Font("Arial", Font.PLAIN, 18));
-		contentPane.add(passwordField_2);
+		stocktxt = new JTextField();
+		stocktxt.setBounds(63, 566, 456, 39);
+		stocktxt.setFont(new Font("Arial", Font.PLAIN, 18));
+		contentPane.add(stocktxt);
 		
 		JLabel LblError_1_1 = new JLabel("");
 		LblError_1_1.setBounds(109, 468, 354, 31);
@@ -141,6 +142,32 @@ public class OpcEdiProd extends JFrame {
 		btnAceptar.setFont(new Font("Dialog", Font.PLAIN, 20));
 		btnAceptar.setBounds(228, 867, 141, 64);
 		contentPane.add(btnAceptar);
+		
+		btnAceptar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String nombre = new String(nombretxt.getText()).trim();
+
+				LblError.setText("");
+				LblError_1.setText("");
+				LblError_2.setText("");
+
+				if (nombre.isEmpty()) {
+					LblError.setText("Campo vacío");
+				}
+
+				String precio = new String(preciotxt.getText()).trim();
+				if (precio.isEmpty()) {
+					LblError_1.setText("Campo vacío");
+				}
+
+				String stock = new String(stocktxt.getText()).trim();
+				if (stock.isEmpty()) {
+					LblError_2.setText("Campo vacío");
+				}
+
+			}
+
+		});
 		
 		JLabel LblError_2_1 = new JLabel("");
 		LblError_2_1.setForeground(Color.RED);
