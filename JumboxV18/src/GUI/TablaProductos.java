@@ -8,7 +8,11 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+<<<<<<< Updated upstream
 import DDL.ControllerProducto;
+=======
+import DLL.ControllerProducto;
+>>>>>>> Stashed changes
 import jumbox.Categorias;
 import jumbox.Cliente;
 import jumbox.Productos;

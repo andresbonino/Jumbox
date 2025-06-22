@@ -9,3 +9,4 @@ public interface UsuarioRepository {
 	<T> T login(String nombre, String contrasena);
 	void verificarUsuario(Cliente usuario);
 }
+

@@ -7,9 +7,15 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+<<<<<<< Updated upstream
 import DDL.Conexion;
 import DDL.ControllerCarrito;
 import DDL.ControllerProducto;
+=======
+import DLL.Conexion;
+import DLL.ControllerCarrito;
+import DLL.ControllerProducto;
+>>>>>>> Stashed changes
 import jumbox.Carrito;
 import jumbox.Cliente;
 import jumbox.OpcionesSucursales;

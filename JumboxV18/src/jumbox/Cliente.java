@@ -7,11 +7,19 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.LinkedList;
+<<<<<<< Updated upstream
 import DDL.ControllerUsuario;
 import GUI.MenuCliente;
 import DDL.Conexion;
 import DDL.ControllerCarrito;
 import DDL.ControllerProducto;
+=======
+import DLL.ControllerUsuario;
+import GUI.MenuCliente;
+import DLL.Conexion;
+import DLL.ControllerCarrito;
+import DLL.ControllerProducto;
+>>>>>>> Stashed changes
 
 public class Cliente {
     private static Connection con = Conexion.getInstance().getConnection();
@@ -129,6 +137,66 @@ public class Cliente {
 	    controller.verificarUsuario(usuario);
 		return usuario;
 		
+<<<<<<< Updated upstream
+}
+	
+	
+	public void verificarPedidosEnviados() {
+	    try {
+	        PreparedStatement ps = con.prepareStatement(
+	            "SELECT p.id_pedido, p.fecha, p.fk_sucursal AS sucursal " +
+	            "FROM pedido p JOIN sucursal s ON p.fk_sucursal = s.id_sucursal " +
+	            "WHERE p.fk_cliente = ? AND p.estado = 'enviado'"
+	        );
+	        ps.setInt(1, this.getIdCliente()); 
+
+	        ResultSet rs = ps.executeQuery();
+
+	        while (rs.next()) {
+	            int idPedido = rs.getInt("id_pedido");
+	            Date fecha = rs.getDate("fecha");
+	            String sucursal = rs.getString("sucursal");
+
+	            StringBuilder mensaje = new StringBuilder("¡Tu pedido #" + idPedido + " fue enviado!\n");
+	            mensaje.append("Fecha: ").append(fecha).append("\n");
+	            mensaje.append("Sucursal: ").append(sucursal).append("\n");
+	            mensaje.append("Productos:\n");
+
+	            
+	            PreparedStatement psDetalle = con.prepareStatement(
+	                "SELECT dp.cantidad, p.nombre FROM detalles_pedido dp " +
+	                "JOIN producto p ON dp.fk_producto = p.id_producto " +
+	                "WHERE dp.fk_pedido = ?"
+	            );
+	            psDetalle.setInt(1, idPedido);
+	            ResultSet rsDetalle = psDetalle.executeQuery();
+
+	            while (rsDetalle.next()) {
+	                int cantidad = rsDetalle.getInt("cantidad"); 
+	                String nombre = rsDetalle.getString("nombre");
+	                mensaje.append(" - ").append(nombre).append(" x").append(cantidad).append("\n");
+	            }
+
+	            JOptionPane.showMessageDialog(null, mensaje.toString(), "Pedido En Camino", JOptionPane.INFORMATION_MESSAGE);
+	            
+	         // MARCAR PEDIDO COMO NOTIFICADO
+	            PreparedStatement psActualizar = con.prepareStatement(
+	                "UPDATE pedido SET estado = 'notificado' WHERE id_pedido = ?"
+	            );
+	            psActualizar.setInt(1, idPedido);
+	            psActualizar.executeUpdate();
+
+
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+	}
+
+
+	
+=======
+>>>>>>> Stashed changes
 }
 	
 	

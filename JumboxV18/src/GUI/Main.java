@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
+<<<<<<< Updated upstream
 import DDL.Conexion;
 import DDL.ControllerCarrito;
 import DDL.ControllerDeposito;
@@ -12,6 +13,15 @@ import DDL.ControllerPedidoSucursal;
 import DDL.ControllerProducto;
 import DDL.ControllerSucursal;
 import DDL.ControllerUsuario;
+=======
+import DLL.Conexion;
+import DLL.ControllerCarrito;
+import DLL.ControllerDeposito;
+import DLL.ControllerPedidoSucursal;
+import DLL.ControllerProducto;
+import DLL.ControllerSucursal;
+import DLL.ControllerUsuario;
+>>>>>>> Stashed changes
 import jumbox.Cliente;
 import jumbox.Deposito;
 import jumbox.OpcionesCliente;

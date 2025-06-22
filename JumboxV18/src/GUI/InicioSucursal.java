@@ -6,7 +6,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+<<<<<<< Updated upstream
 import DDL.ControllerSucursal;
+=======
+import DLL.ControllerSucursal;
+>>>>>>> Stashed changes
 import jumbox.Deposito;
 import jumbox.Sucursal;
 
