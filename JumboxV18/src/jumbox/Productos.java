@@ -4,13 +4,8 @@ package jumbox;
 
 import javax.swing.JOptionPane;
 
-<<<<<<< Updated upstream
 import DDL.ControllerProducto;
 import DDL.ControllerUsuario;
-=======
-import DLL.ControllerProducto;
-import DLL.ControllerUsuario;
->>>>>>> Stashed changes
 import GUI.AgregarProducto;
 import GUI.MenuCliente;
 
@@ -21,11 +16,7 @@ public class Productos {
 	private int stock;
 	private int categoria;
 	private int idProducto;
-<<<<<<< Updated upstream
 	
-=======
-
->>>>>>> Stashed changes
 	public Productos(int idProducto, String nombre, double precio, int stock, int categoria) {
 		this.nombre = nombre;
 		this.precio = precio;
@@ -33,11 +24,7 @@ public class Productos {
 		this.categoria = categoria;
 		this.idProducto = idProducto;
 	}
-<<<<<<< Updated upstream
 	
-=======
-
->>>>>>> Stashed changes
 	public Productos(String nombre, double precio, int stock) {
 		this.nombre = nombre;
 		this.precio = precio;
@@ -67,7 +54,7 @@ public class Productos {
 	public void setStock(int stock) {
 		this.stock = stock;
 	}
-
+	
 	public int getCategoria() {
 		return categoria;
 	}
@@ -75,7 +62,6 @@ public class Productos {
 	public void setCategoria(int categoria) {
 		this.categoria = categoria;
 	}
-<<<<<<< Updated upstream
 	public int getIdProducto() {
 		return idProducto;
 	}
@@ -94,20 +80,4 @@ public class Productos {
 	
 	
 	
-=======
-
-	public int getIdProducto() {
-		return idProducto;
-	}
-
-	public void setIdProducto(int idProducto) {
-		this.idProducto = idProducto;
-	}
-
-	public static void crearProducto() {
-		AgregarProducto menu = new AgregarProducto();
-		menu.setVisible(true);
-	}
-
->>>>>>> Stashed changes
 }

@@ -14,4 +14,3 @@ public interface CarritoRepository {
 	void editarCarrito();
 	void verCompra();
 }
-

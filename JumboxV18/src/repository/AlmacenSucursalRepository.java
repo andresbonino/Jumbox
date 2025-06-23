@@ -9,7 +9,3 @@ public interface AlmacenSucursalRepository {
     List<Almacen_Sucursal> mostrarAlmacen();
     void verAlmacen();
 }
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes

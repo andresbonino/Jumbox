@@ -1,8 +1,4 @@
-<<<<<<< Updated upstream:JumboxV18/src/DDL/ControllerPedidoSucursal.java
 package DDL;
-=======
-package DLL;
->>>>>>> Stashed changes:JumboxV18/src/DLL/ControllerPedidoSucursal.java
 
 import java.sql.Connection;
 import java.sql.Date;

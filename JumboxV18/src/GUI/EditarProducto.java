@@ -12,11 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-<<<<<<< Updated upstream
 import DDL.ControllerProducto;
-=======
-import DLL.ControllerProducto;
->>>>>>> Stashed changes
 import jumbox.Productos;
 
 public class EditarProducto extends JFrame {

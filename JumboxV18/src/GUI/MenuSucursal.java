@@ -2,15 +2,9 @@ package GUI;
 
 import javax.swing.*;
 
-<<<<<<< Updated upstream
 import DDL.ControllerPedidoSucursal;
 import DDL.ControllerProducto;
 import DDL.ControllerSucursal;
-=======
-import DLL.ControllerPedidoSucursal;
-import DLL.ControllerProducto;
-import DLL.ControllerSucursal;
->>>>>>> Stashed changes
 import jumbox.Sucursal;
 
 

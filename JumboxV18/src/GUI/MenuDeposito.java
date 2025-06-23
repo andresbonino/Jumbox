@@ -6,11 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-<<<<<<< Updated upstream
 import DDL.ControllerProducto;
-=======
-import DLL.ControllerProducto;
->>>>>>> Stashed changes
 
 import javax.swing.JLabel;
 import java.awt.Font;

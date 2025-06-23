@@ -13,11 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
 
-<<<<<<< Updated upstream
 import DDL.ControllerUsuario;
-=======
-import DLL.ControllerUsuario;
->>>>>>> Stashed changes
 import jumbox.Cliente;
 
 import javax.swing.JTabbedPane;
