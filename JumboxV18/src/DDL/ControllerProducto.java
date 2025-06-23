@@ -96,8 +96,8 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
                 String nombre = rs.getString("nombre");
                 Double precio = rs.getDouble("precio");
                 int stock = rs.getInt("stock");
-               
-                Productos p = new Productos(nombre, precio, stock);
+                int categoria = rs.getInt("fk_categoria");
+                Productos p = new Productos(nombre, precio, stock, categoria);
                 p.setIdProducto(id);
                 producto.add(p);
                         
@@ -120,8 +120,8 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
                 String nombre = rs.getString("nombre");
                 Double precio = rs.getDouble("precio");
                 int stock = rs.getInt("stock");
-               
-                Productos p = new Productos(nombre, precio, stock);
+                int categoria = rs.getInt("fk_categoria");
+                Productos p = new Productos(nombre, precio, stock, categoria);
                 p.setIdProducto(id);
                 producto.add(p);
                         

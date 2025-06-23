@@ -25,6 +25,13 @@ public class Productos {
 		this.idProducto = idProducto;
 	}
 	
+	public Productos(String nombre, double precio, int stock, int categoria) {
+		this.nombre = nombre;
+		this.precio = precio;
+		this.stock = stock;
+		this.categoria = categoria;
+	}
+	
 	public Productos(String nombre, double precio, int stock) {
 		this.nombre = nombre;
 		this.precio = precio;
