@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
 import DDL.ControllerProducto;
+import jumbox.Categorias;
 import jumbox.Cliente;
 import jumbox.Productos;
 import jumbox.Usuarios;
@@ -67,7 +68,7 @@ public class TablaProductos extends JFrame {
 		JButton btnAgregar = new JButton("Agregar");
 		btnAgregar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Productos.crearProducto("", 0, 0, 0, 0);
+				Productos.crearProducto();
 			}
 		});
 		btnAgregar.setBounds(10, 195, 89, 33);
@@ -119,6 +120,9 @@ public class TablaProductos extends JFrame {
 		JButton btnSalir = new JButton("Salir");
 		btnSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				dispose();
+				MenuDeposito menu = new MenuDeposito();
+				menu.setVisible(true);
 			}
 		});
 		btnSalir.setBounds(10, 256, 89, 23);
@@ -132,35 +136,39 @@ public class TablaProductos extends JFrame {
 		contentPane.add(lblNewLabel_1);
 		
 
-
 		
         JLabel lblSeleccionado = new JLabel("Seleccionado:");
         lblSeleccionado.setBounds(10, 49, 760, 20);
         contentPane.add(lblSeleccionado);
 		
-        model = new DefaultTableModel(new String[]{"ID", "Nombre", "Precio", "Stock", "Categoria"}, 0);
+        model = new DefaultTableModel(new String[]{"ID", "Nombre", "Precio", "Stock", "Categoria", "IDCategoria"}, 0);
         table = new JTable(model);
+        
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setBounds(10, 67, 453, 103);
 		contentPane.add(scrollPane);;
 		
-        // Acción al seleccionar fila
+        table.getColumnModel().getColumn(5).setMinWidth(0);
+		table.getColumnModel().getColumn(5).setMaxWidth(0);
+		table.getColumnModel().getColumn(5).setWidth(0);
+        
 		  table.getSelectionModel().addListSelectionListener(e -> {
 	            if (!e.getValueIsAdjusting()) {
 	                int row = table.getSelectedRow();
 	                if (row != -1) {
-	                    productoSeleccionado = new Productos(
-	                        (int) model.getValueAt(row, 0),
-	                        (String) model.getValueAt(row, 1),
-	                        (double) model.getValueAt(row, 2),
-	                        (int) model.getValueAt(row, 3),
-	                        (int) model.getValueAt(row, 4)
-	                    );
+	                	productoSeleccionado = new Productos(
+	                		    (int) model.getValueAt(row, 0),
+	                		    (String) model.getValueAt(row, 1),
+	                		    (double) model.getValueAt(row, 2),
+	                		    (int) model.getValueAt(row, 3),
+	                		    (int) model.getValueAt(row, 5)
+	                		);
+
 	                    lblSeleccionado.setText("Seleccionado: ID:" + productoSeleccionado.getIdProducto()
 	                            + ", Nombre:" + productoSeleccionado.getNombre()
 	                            + ", Precio:" + productoSeleccionado.getPrecio()
 	                            + ", Stock:" + productoSeleccionado.getStock()
-	                            + ", Categoria:" + productoSeleccionado.getCategoria());
+	                            + ", Categoria:" + obtenerNombreCategoria(productoSeleccionado.getCategoria()));
 	                    
 	                   
 	            	
@@ -176,7 +184,7 @@ public class TablaProductos extends JFrame {
           btnNewButton.setVisible(true);
           btnNewButton.addActionListener(new ActionListener() {
   			public void actionPerformed(ActionEvent e) {
-  				cargarTablaFiltrada(textField.getText());
+  				cargarTablaFiltrada(inpFiltro.getText());
   			}
   		});
   		btnNewButton.setBounds(374, 221, 89, 23);
@@ -195,6 +203,16 @@ public class TablaProductos extends JFrame {
 		  cargarTabla();
 	}
 	
+	private String obtenerNombreCategoria(int idCategoria) {
+	    for (Categorias cat : Categorias.values()) {
+	        if (cat.getId() == idCategoria) {
+	            return cat.name().replace("_", " ");
+	        }
+	    }
+	    return "Desconocida";
+	}
+
+	
     private void cargarTablaFiltrada(String filtro) {
         model.setRowCount(0);
         LinkedList<Productos> productos = ControllerProducto.mostrarProducto2();
@@ -207,7 +225,8 @@ public class TablaProductos extends JFrame {
             				u.getNombre(),
             				u.getPrecio(),
             				u.getStock(),
-            				u.getCategoria()}
+            				obtenerNombreCategoria(u.getCategoria()),
+            		        u.getCategoria()}
             		);
     		
 			}
@@ -224,7 +243,8 @@ public class TablaProductos extends JFrame {
             				u.getNombre(),
             				u.getPrecio(),
             				u.getStock(),
-            				u.getCategoria()}
+            				obtenerNombreCategoria(u.getCategoria()),
+            		        u.getCategoria()}
             		);
     		
 			

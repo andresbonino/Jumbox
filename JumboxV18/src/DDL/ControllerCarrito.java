@@ -6,6 +6,9 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
+import GUI.EleccionCarrito;
+import GUI.PantallaPrincipal;
+
 import java.sql.Statement;
 
 import java.sql.PreparedStatement;
@@ -274,36 +277,8 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	            }
 	        }
 
-	        if (itemSeleccionado != null) {
-	            String[] opciones = {"Cambiar cantidad", "Eliminar del carrito"};
-	            int opcion = JOptionPane.showOptionDialog(null, "¿Qué desea hacer con " + itemSeleccionado.getProducto().getNombre() + "?", "Opciones",
-	                    0, 0, null, opciones, opciones[0]);
-
-	            if (opcion == 0) {
-	                int nuevaC=0;
-	                String nuevaCantidad;
-					do {
-						nuevaCantidad = JOptionPane.showInputDialog("Nueva Cantidad:", itemSeleccionado.getCantidad());
-						if (!nuevaCantidad.isEmpty()) {
-							nuevaC = Integer.parseInt(nuevaCantidad);
-							if (nuevaC > itemSeleccionado.getProducto().getStock()) {
-								JOptionPane.showMessageDialog(null, "No hay suficiente stock.");
-							}else if(nuevaC<=0){
-								JOptionPane.showMessageDialog(null, "No puede ser menor o igual a 0");
-								return;
-							}else {
-							
-			                    itemSeleccionado.setCantidad(nuevaC);
-			                    JOptionPane.showMessageDialog(null, "Cantidad actualizada.");
-							}
-						}
-					} while (nuevaCantidad.isEmpty() || nuevaC<=0 || nuevaC > itemSeleccionado.getProducto().getStock());
-					
-	            } else {
-	                carrito.remove(itemSeleccionado);
-	                JOptionPane.showMessageDialog(null, "Producto eliminado del carrito.");
-	            }
-	        }
+	        EleccionCarrito carri = new EleccionCarrito(itemSeleccionado, carrito);
+	        carri.setVisible(true);
 	    }
 		
 	}

@@ -2,6 +2,7 @@ package GUI;
 
 import javax.swing.*;
 
+import DDL.ControllerPedidoSucursal;
 import DDL.ControllerProducto;
 import DDL.ControllerSucursal;
 import jumbox.Sucursal;
@@ -15,6 +16,8 @@ public class MenuSucursal extends JFrame {
     private Sucursal sucursal;
     private ControllerSucursal controllerS = new ControllerSucursal();
     private ControllerProducto controllerP = new ControllerProducto();
+    ControllerPedidoSucursal controllerPS = new ControllerPedidoSucursal();
+    
 
     public MenuSucursal(Sucursal sucursal) {
         this.sucursal = sucursal;
@@ -60,7 +63,8 @@ public class MenuSucursal extends JFrame {
 
         //accion: ver productos
         btnProductos.addActionListener(e -> {
-            controllerP.procesarPedidosPendientes(); 
+        	controllerPS.generarPedido(sucursal);
+            
         });
 
         //accion: gestionar pedidos
