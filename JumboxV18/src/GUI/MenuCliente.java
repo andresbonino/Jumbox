@@ -90,7 +90,9 @@ public class MenuCliente extends JFrame {
 		
 		btnComprar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-		        controlador.compras(listaProductos,cliente);
+				ClienteCompras menuPrinci = new ClienteCompras(cliente);
+				menuPrinci.setVisible(true);
+		        //controlador.compras(listaProductos,cliente);
 				
 			}
 		});
@@ -103,10 +105,7 @@ public class MenuCliente extends JFrame {
 
 		btnVerCarrito.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Sucursal idSucursal = new Sucursal(0, "");
-				idSucursal.getId_Sucursal();
-		        controlador.verCarrito(cliente, idSucursal);
-				
+		        controlador.mostrarCarritoGUI(cliente);
 			}
 		});
 		

@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 
 import GUI.EleccionCarrito;
 import GUI.PantallaPrincipal;
+import GUI.VerCarrito;
 
 import java.sql.Statement;
 
@@ -251,6 +252,16 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	        
 	    }
 	}
+	
+	public void mostrarCarritoGUI(Cliente cliente) {
+	    if (carrito.isEmpty()) {
+	        JOptionPane.showMessageDialog(null, "El carrito está vacío.");
+	        return;
+	    }
+	    VerCarrito frame = new VerCarrito(this, carrito, cliente, sucursalSeleccionada, idCarritoActual);
+	    frame.setVisible(true);
+	}
+
 
 
 	@Override
