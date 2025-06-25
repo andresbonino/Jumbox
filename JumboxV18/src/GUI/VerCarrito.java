@@ -1,26 +1,38 @@
 package GUI;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.LinkedList;
 
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
+import DDL.ControllerCarrito;
 import jumbox.Carrito;
 import jumbox.Cliente;
 import jumbox.Sucursal;
-import DDL.ControllerCarrito;
 
 public class VerCarrito extends JFrame {
+    
+	ControllerCarrito<Carrito> controllerC = new ControllerCarrito();
 
-    public VerCarrito(ControllerCarrito<?> controller, LinkedList<Carrito> carrito, Cliente cliente, Sucursal sucursal, int idCarritoActual) {
+    public VerCarrito(ControllerCarrito controllerCarrito, LinkedList<Carrito> carritoProductos, Cliente cliente, Sucursal sucursalSeleccionada, int idCarrito) {
 
-        setSize(538, 454);
+    	setSize(538, 454);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         double total = 0;
         StringBuilder carritoTxt = new StringBuilder("Productos en el carrito:\n\n");
-        for (Carrito item : carrito) {
+        for (Carrito item : carritoProductos) {
         	carritoTxt.append(item.getProducto().getNombre())
               .append(" x ").append(item.getCantidad())
               .append(" = $").append(item.getTotal()).append("\n");
@@ -50,7 +62,7 @@ public class VerCarrito extends JFrame {
         // Realizar Compra
         btnComprar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				controller.realizarCompra(carrito, cliente, sucursal, idCarritoActual);
+				controllerC.realizarCompra(carritoProductos, cliente, sucursalSeleccionada, idCarrito);
 	            dispose();
 				
 			}

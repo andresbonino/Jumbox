@@ -2,6 +2,7 @@ package DDL;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
@@ -32,7 +33,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 
         LinkedList<Carrito> carritoRecuperado = new LinkedList<>();
 
-        private int idCarritoActual;
+        public int idCarritoActual;
         private Sucursal sucursalSeleccionada;
 
 
@@ -52,6 +53,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	    	    idCarrito = generatedKeys.getInt(1);
 	    	}
 	    	idCarritoActual = idCarrito;
+
 
 
 	    	// ELEGIR SUCURSAL
@@ -209,6 +211,35 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	        JOptionPane.showMessageDialog(null, "Error al obtener productos de la sucursal.");
 	    }
 	}
+	
+	public LinkedList<Carrito> obtenerProductosCarrito(int idCarritoActual) {
+	    LinkedList<Carrito> productosCarrito = new LinkedList<>();
+	    try {
+	        PreparedStatement stmt = con.prepareStatement(
+	            "SELECT p.nombre, p.precio, pc.cantidad " +
+	            "FROM producto_carrito pc " +
+	            "JOIN producto p ON pc.fk_producto = p.id_producto " +
+	            "WHERE pc.fk_carrito = ?"
+	        );
+	        stmt.setInt(1, idCarritoActual);
+	        ResultSet rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+	            Productos producto = new Productos(
+	                rs.getString("nombre"),
+	                rs.getDouble("precio"),
+	                rs.getInt("cantidad")
+	            );
+	            Carrito carritoItem = new Carrito(producto, rs.getInt("cantidad"));
+	            productosCarrito.add(carritoItem);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return productosCarrito;
+	}
+
+	
 
 
 	@Override
@@ -254,13 +285,53 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	}
 	
 	public void mostrarCarritoGUI(Cliente cliente) {
-	    if (carrito.isEmpty()) {
+	    if (idCarritoActual == 0) {
+	        JOptionPane.showMessageDialog(null, "No se ha creado un carrito.");
+	        return;
+	    }
+	    LinkedList<Carrito> carritoRecuperado = obtenerProductosCarrito(idCarritoActual);  // Recuperar carrito actualizado
+	    if (carritoRecuperado.isEmpty()) {
 	        JOptionPane.showMessageDialog(null, "El carrito está vacío.");
 	        return;
 	    }
-	    VerCarrito frame = new VerCarrito(this, carrito, cliente, sucursalSeleccionada, idCarritoActual);
+	    VerCarrito frame = new VerCarrito(this, carritoRecuperado, cliente, sucursalSeleccionada, idCarritoActual);
 	    frame.setVisible(true);
 	}
+
+
+
+	public LinkedList<Carrito> obtenerCarrito(int idCarrito) {
+	    LinkedList<Carrito> productosEnCarrito = new LinkedList<>();
+	    
+	    try {
+	        PreparedStatement stmt = con.prepareStatement(
+	            "SELECT pc.fk_producto, pc.cantidad, p.nombre, p.precio " +
+	            "FROM producto_carrito pc " +
+	            "JOIN producto p ON pc.fk_producto = p.id_producto " +
+	            "WHERE pc.fk_carrito = ?"
+	        );
+	        stmt.setInt(1, idCarrito);
+
+	        ResultSet rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+	            Productos producto = new Productos(
+	                rs.getString("nombre"),
+	                rs.getDouble("precio"),
+	                rs.getInt("cantidad")
+	            );
+	            producto.setIdProducto(rs.getInt("fk_producto"));
+	            Carrito carrito = new Carrito(producto, rs.getInt("cantidad"), idCarrito);
+	            productosEnCarrito.add(carrito);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    
+	    return productosEnCarrito;
+	}
+
+
 
 
 

@@ -19,10 +19,10 @@ public class ClienteCompras extends JFrame {
     private JList<String> listaProductos;
     private LinkedList<Productos> productosSucursal = new LinkedList<>();
     private Connection con = Conexion.getInstance().getConnection();
-    private int idCarritoActual;
+    public int idCarritoActual;
     private JTextField txtCantidad;
     ControllerCarrito<Carrito> controllerCarrito = new ControllerCarrito<>();
-    ControllerCarrito<Carrito> controllerC = new ControllerCarrito<>();
+    private LinkedList<Carrito> carrito = new LinkedList<>();
 
 
 
@@ -53,12 +53,12 @@ public class ClienteCompras extends JFrame {
 
         // Confirmar selección
         JButton btnAgregar = new JButton("Agregar al carrito");
-        btnAgregar.setBounds(0, 438, 293, 23);
+        btnAgregar.setBounds(0, 438, 148, 23);
         getContentPane().add(btnAgregar);
         
         // Cerrar la ventana
         JButton btnSalir = new JButton("Volver al menu");
-        btnSalir.setBounds(291, 438, 293, 23);
+        btnSalir.setBounds(441, 438, 143, 23);
         getContentPane().add(btnSalir);
         
         JLabel lblNewLabel = new JLabel("Insertar la cantidad");
@@ -70,6 +70,35 @@ public class ClienteCompras extends JFrame {
         txtCantidad.setColumns(10);
         txtCantidad.setBounds(10, 413, 283, 20);
         getContentPane().add(txtCantidad);
+        
+        JButton btnVerCarrito = new JButton("Ver Carrito");
+        btnVerCarrito.setBounds(147, 438, 148, 23);
+        getContentPane().add(btnVerCarrito);
+        
+        btnVerCarrito.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                LinkedList<Carrito> carritoProductos = controllerCarrito.obtenerCarrito(idCarritoActual);
+
+                if (carritoProductos.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Tu carrito está vacío.");
+                } else {
+                    new VerCarrito(controllerCarrito, carritoProductos, cliente, null, idCarritoActual).setVisible(true);
+                }
+            }
+        });
+
+
+
+        
+        JButton btnEditarCarrito = new JButton("Editar Carrito");
+        btnEditarCarrito.setBounds(294, 438, 148, 23);
+        getContentPane().add(btnEditarCarrito);
+        
+        btnEditarCarrito.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				controllerCarrito.editarCarrito();
+			}
+		});
         
         // EVENTO VOLVER AL MENU
         btnSalir.addActionListener(new ActionListener() {
@@ -86,34 +115,95 @@ public class ClienteCompras extends JFrame {
 		});
 
         // EVENTO AGREGAR PRODUCTO
-
-        btnAgregar.addActionListener(new ActionListener() { // --> ARREGLAR ESTO
+        btnAgregar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				agregarAlCarrito();
 			}
 		});
 
         crearCarrito();
+
     }
 
     private void crearCarrito() {
         try {
+            // CREAR CARRITO
             PreparedStatement stmtCarrito = con.prepareStatement(
-                "INSERT INTO carrito(fk_cliente) VALUES (?)", Statement.RETURN_GENERATED_KEYS
+                "INSERT INTO `carrito`(`fk_cliente`) VALUES (?)", Statement.RETURN_GENERATED_KEYS
             );
             stmtCarrito.setInt(1, cliente.getIdCliente());
             stmtCarrito.executeUpdate();
 
             ResultSet generatedKeys = stmtCarrito.getGeneratedKeys();
+            int idCarrito = -1;
             if (generatedKeys.next()) {
-                idCarritoActual = generatedKeys.getInt(1);
+                idCarrito = generatedKeys.getInt(1);
             }
+            idCarritoActual = idCarrito;
 
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error al crear carrito.");
         }
     }
+
+
+
+
+    private void agregarAlCarrito() {
+        int index = listaProductos.getSelectedIndex();
+        if (index == -1) {
+            JOptionPane.showMessageDialog(this, "Seleccione un producto.");
+            return;
+        }
+
+        Productos producto = productosSucursal.get(index);
+        String texto = txtCantidad.getText().trim();
+        if (texto.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Ingrese una cantidad.");
+            return;
+        }
+
+        int cantidad;
+        try {
+            cantidad = Integer.parseInt(texto);
+            if (cantidad <= 0) {
+                JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor a cero.");
+                return;
+            }
+            if (cantidad > producto.getStock()) {
+                JOptionPane.showMessageDialog(this, "No hay suficiente stock.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Cantidad inválida.");
+            return;
+        }
+
+        System.out.println("Producto seleccionado: " + producto.getNombre());
+        System.out.println("Cantidad a agregar: " + cantidad);
+
+        try (PreparedStatement stmt = con.prepareStatement(
+                "INSERT INTO producto_carrito(fk_producto, fk_carrito, cantidad) VALUES (?, ?, ?)"
+            )) {
+            stmt.setInt(1, producto.getIdProducto());
+            stmt.setInt(2, idCarritoActual);
+            stmt.setInt(3, cantidad);
+
+            int filasInsertadas = stmt.executeUpdate();
+
+            if (filasInsertadas > 0) {
+                JOptionPane.showMessageDialog(this, "Producto agregado al carrito.");
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo agregar el producto al carrito.");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al agregar al carrito: " + ex.getMessage());
+        }
+    }
+
+
 
     private void cargarProductos() {
         try {
@@ -148,55 +238,6 @@ public class ClienteCompras extends JFrame {
         }
     }
 
-    private void agregarAlCarrito() { 	// --> ARREGLAR ESTO
-        int index = listaProductos.getSelectedIndex();
-        if (index == -1) {
-            JOptionPane.showMessageDialog(this, "Seleccione un producto.");
-            return;
-        }
-
-        Productos producto = productosSucursal.get(index);
-
-        String texto = txtCantidad.getText().trim();
-        if (texto.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Ingrese una cantidad.");
-            return;
-        }
-
-        int cantidad;
-        try {
-            cantidad = Integer.parseInt(texto);
-            if (cantidad <= 0) {
-                JOptionPane.showMessageDialog(this, "La cantidad debe ser mayor a cero.");
-                return;
-            }
-            if (cantidad > producto.getStock()) {
-                JOptionPane.showMessageDialog(this, "No hay suficiente stock.");
-                return;
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Cantidad inválida.");
-            return;
-        }
-
-        try (PreparedStatement stmt = con.prepareStatement(
-                "INSERT INTO producto_carrito(fk_producto, fk_carrito, cantidad) VALUES (?, ?, ?)"
-            )) {
-            stmt.setInt(1, producto.getIdProducto());
-            stmt.setInt(2, idCarritoActual);
-            stmt.setInt(3, cantidad);
-            int filasInsertadas = stmt.executeUpdate();
-
-            if (filasInsertadas > 0) {
-                JOptionPane.showMessageDialog(this, "Producto agregado al carrito.");
-            } else {
-                JOptionPane.showMessageDialog(this, "No se pudo agregar el producto al carrito.");
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Error al agregar al carrito: " + ex.getMessage());
-        }
-    }
-
+   
 
 }

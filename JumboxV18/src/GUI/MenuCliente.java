@@ -34,6 +34,7 @@ public class MenuCliente extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	ControllerCarrito<Carrito> controllerCarrito = new ControllerCarrito<>();
 
 	/**
 	 * Launch the application.
@@ -59,6 +60,7 @@ public class MenuCliente extends JFrame {
 	ControllerCarrito controlador = new ControllerCarrito();
 	ControllerProducto controllerP = new ControllerProducto();
 	LinkedList<Productos> listaProductos = controllerP.mostrarProducto();
+	protected int idCarritoActual;
 
 	public MenuCliente(LinkedList<Productos> productos,Cliente cliente) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -83,9 +85,9 @@ public class MenuCliente extends JFrame {
 		lblNewLabel_1.setBounds(213, 118, 440, 402);
 		contentPane.add(lblNewLabel_1);
 		
-		JButton btnComprar = new JButton("Comprar");
+		JButton btnComprar = new JButton("Acciones Carrito");
 		btnComprar.setFont(new Font("Dialog", Font.PLAIN, 30));
-		btnComprar.setBounds(73, 531, 207, 50);
+		btnComprar.setBounds(62, 531, 334, 50);
 		contentPane.add(btnComprar);
 		
 		btnComprar.addActionListener(new ActionListener() {
@@ -98,33 +100,9 @@ public class MenuCliente extends JFrame {
 		});
 		
 		
-		JButton btnVerCarrito = new JButton("Ver Carrito");
-		btnVerCarrito.setFont(new Font("Dialog", Font.PLAIN, 30));
-		btnVerCarrito.setBounds(315, 531, 207, 50);
-		contentPane.add(btnVerCarrito);
-
-		btnVerCarrito.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-		        controlador.mostrarCarritoGUI(cliente);
-			}
-		});
-		
-		JButton btnEdiCarrito = new JButton("Editar Carrito");
-		btnEdiCarrito.setFont(new Font("Dialog", Font.PLAIN, 30));
-		btnEdiCarrito.setBounds(559, 531, 225, 50);
-		contentPane.add(btnEdiCarrito);
-		
-		btnEdiCarrito.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				controlador.editarCarrito();
-				
-			}
-		});
-		
-		
 		JButton btnEstadoCompra = new JButton("Estado de la compra");
 		btnEstadoCompra.setFont(new Font("Dialog", Font.PLAIN, 30));
-		btnEstadoCompra.setBounds(143, 636, 334, 50);
+		btnEstadoCompra.setBounds(487, 531, 334, 50);
 		contentPane.add(btnEstadoCompra);
 		
 		btnEstadoCompra.addActionListener(new ActionListener() {
@@ -137,7 +115,7 @@ public class MenuCliente extends JFrame {
 		
 		JButton btnSalir = new JButton("Salir");
 		btnSalir.setFont(new Font("Dialog", Font.PLAIN, 30));
-		btnSalir.setBounds(507, 636, 207, 50);
+		btnSalir.setBounds(338, 609, 207, 50);
 		contentPane.add(btnSalir);
 		btnSalir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
