@@ -138,6 +138,15 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 
 	        if (productoElegido != null) {
 	        	
+	        	// CONTROLAR QUE TODOS LOS PRODUCTOS SEAN DE LA MISMA SUCURSAL
+	        	if (this.sucursalSeleccionada == null) {
+	        	    this.sucursalSeleccionada = new Sucursal(opcionSeleccionada.getId(), null);
+	        	} else if (this.sucursalSeleccionada.getId_Sucursal() != opcionSeleccionada.getId()) {
+	        	    JOptionPane.showMessageDialog(null, "Ya estás comprando en la sucursal: " + this.sucursalSeleccionada.getId_Sucursal()
+	        	        + "\nNo se pueden agregar productos de otra sucursal.");
+	        	    return;
+	        	}
+	        	
 	        	// VERIFICAR SI YA ESTA EN EL CARRITO
 	        	boolean yaEnCarrito = false;
 	        	for (Carrito item : carrito) {
@@ -322,7 +331,8 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	        psBorrar.executeUpdate();
 
 	        carrito.clear();
-	        
+	        this.sucursalSeleccionada = null;
+
 	     // BORRAR EL CARRITO EN SI
 	        PreparedStatement psBorrarCarrito = con.prepareStatement(
 	            "DELETE FROM carrito WHERE id_carrito = ?"
