@@ -78,11 +78,14 @@ public class ClienteCompras extends JFrame {
         btnVerCarrito.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 LinkedList<Carrito> carritoProductos = controllerCarrito.obtenerCarrito(idCarritoActual);
+                OpcionesSucursales opcion = (OpcionesSucursales) comboSucursales.getSelectedItem();
+                Sucursal sucursal = new Sucursal(idCarritoActual, null);
+                sucursal.setId_Sucursal(opcion.getId());
 
                 if (carritoProductos.isEmpty()) {
                     JOptionPane.showMessageDialog(null, "Tu carrito está vacío.");
                 } else {
-                    new VerCarrito(controllerCarrito, carritoProductos, cliente, null, idCarritoActual).setVisible(true);
+                    new VerCarrito(controllerCarrito, carritoProductos, cliente, sucursal, idCarritoActual).setVisible(true);
                 }
             }
         });
@@ -179,9 +182,6 @@ public class ClienteCompras extends JFrame {
             JOptionPane.showMessageDialog(this, "Cantidad inválida.");
             return;
         }
-
-        System.out.println("Producto seleccionado: " + producto.getNombre());
-        System.out.println("Cantidad a agregar: " + cantidad);
 
         try (PreparedStatement stmt = con.prepareStatement(
                 "INSERT INTO producto_carrito(fk_producto, fk_carrito, cantidad) VALUES (?, ?, ?)"

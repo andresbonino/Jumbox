@@ -61,12 +61,12 @@ public class VerCarrito extends JFrame {
         
         // Realizar Compra
         btnComprar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				controllerC.realizarCompra(carritoProductos, cliente, sucursalSeleccionada, idCarrito);
-	            dispose();
-				
-			}
-		});
+            public void actionPerformed(ActionEvent arg0) {
+            	controllerC.realizarCompra(carritoProductos, cliente, sucursalSeleccionada, idCarrito);
+                dispose();
+            }
+        });
+
         
         JButton btnCancelar = new JButton("Cancelar");
         btnCancelar.setFont(new Font("Dialog", Font.PLAIN, 15));

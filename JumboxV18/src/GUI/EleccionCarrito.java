@@ -6,6 +6,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import java.sql.Connection;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+import DDL.Conexion;
 import jumbox.Carrito;
 import jumbox.Cliente;
 
@@ -17,6 +23,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.LinkedList;
 
 import javax.swing.JButton;
@@ -101,7 +109,6 @@ public class EleccionCarrito extends JFrame {
 		
 		btnAceptar.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent arg0) {
-		        try {
 		            String texto = txtCantNueva.getText();
 		            LblError.setText("");
 		            if (texto.isEmpty()) {
@@ -119,13 +126,27 @@ public class EleccionCarrito extends JFrame {
 		                return;
 		            }
 
-		            itemSeleccionado.setCantidad(nuevaCantidad);
-		            LblError.setText("Cantidad actualizada correctamente");
-		            dispose();
+		            try (Connection con = Conexion.getInstance().getConnection()) {
+		                PreparedStatement stmt = con.prepareStatement(
+		                    "UPDATE producto_carrito SET cantidad = ? WHERE fk_producto = ? AND fk_carrito = ?"
+		                );
+		                stmt.setInt(1, nuevaCantidad);
+		                stmt.setInt(2, itemSeleccionado.getProducto().getIdProducto());
+		                stmt.setInt(3, itemSeleccionado.getIdCarrito());
+		                int rowsUpdated = stmt.executeUpdate();
+		                
+		                if (rowsUpdated > 0) {
+		                    JOptionPane.showMessageDialog(null, "Cantidad actualizada correctamente.");
+		                    dispose();
+		                } else {
+		                    LblError.setText("No se pudo actualizar la cantidad.");
+		                }
+		            } catch (SQLException ex) {
+		                ex.printStackTrace();
+		                LblError.setText("Error al actualizar en la base de datos.");
+		            }
 
-		        } catch (NumberFormatException e) {
-		            LblError.setText("Debe ingresar un número válido");
-		        }
+
 		    }
 		});
 
@@ -157,8 +178,26 @@ public class EleccionCarrito extends JFrame {
 		
 		btnBorrar.addActionListener(new ActionListener() {
 		    public void actionPerformed(ActionEvent e) {
-		    	carrito.remove(itemSeleccionado);
-                JOptionPane.showMessageDialog(null, "Producto eliminado del carrito");
+
+                try (Connection con = Conexion.getInstance().getConnection()) {
+                    PreparedStatement stmt = con.prepareStatement(
+                        "DELETE FROM producto_carrito WHERE fk_producto = ? AND fk_carrito = ?"
+                    );
+                    stmt.setInt(1, itemSeleccionado.getProducto().getIdProducto());
+                    stmt.setInt(2, itemSeleccionado.getIdCarrito());
+                    int rowsDeleted = stmt.executeUpdate();
+                    
+                    if (rowsDeleted > 0) {
+                        JOptionPane.showMessageDialog(null, "Producto eliminado del carrito.");
+                        dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No se pudo eliminar el producto.");
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Error al eliminar el producto.");
+                }
+
                 dispose();
 		    }
 		});
