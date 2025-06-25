@@ -45,12 +45,12 @@ public class SelecPedido extends JFrame {
 		
 		JLabel lblNewLabel_2 = new JLabel("Seleccione un pedido para gestionar");
 		lblNewLabel_2.setFont(new Font("Leelawadee UI", Font.BOLD, 25));
-		lblNewLabel_2.setBounds(61, 120, 433, 45);
+		lblNewLabel_2.setBounds(64, 93, 433, 45);
 		contentPane.add(lblNewLabel_2);
 		
 		JComboBox comboBox = new JComboBox();
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 21));
-		comboBox.setBounds(193, 199, 155, 55);
+		comboBox.setBounds(196, 185, 155, 55);
 		comboBox.addItem("Pedido Juan");
 		contentPane.add(comboBox);
 		
