@@ -36,10 +36,14 @@ public class ClienteCompras extends JFrame {
 
         // Sucursal
         comboSucursales = new JComboBox<>(OpcionesSucursales.values());
+        comboSucursales.setFont(new Font("Dialog", Font.PLAIN, 15));
         JButton btnCargarProductos = new JButton("Cargar productos");
+        btnCargarProductos.setFont(new Font("Dialog", Font.PLAIN, 15));
         JPanel panelSucursal = new JPanel();
-        panelSucursal.setBounds(0, 0, 584, 33);
-        panelSucursal.add(new JLabel("Sucursal:"));
+        panelSucursal.setBounds(119, 27, 468, 39);
+        JLabel label = new JLabel("Sucursal:");
+        label.setFont(new Font("Dialog", Font.PLAIN, 15));
+        panelSucursal.add(label);
         panelSucursal.add(comboSucursales);
         panelSucursal.add(btnCargarProductos);
         getContentPane().add(panelSucursal);
@@ -47,31 +51,41 @@ public class ClienteCompras extends JFrame {
         // Lista productos
         modeloLista = new DefaultListModel<>();
         listaProductos = new JList<>(modeloLista);
+        listaProductos.setFont(new Font("Calibri", Font.PLAIN, 15));
         JScrollPane scrollPane = new JScrollPane(listaProductos);
-        scrollPane.setBounds(0, 33, 584, 355);
+        scrollPane.setBounds(0, 98, 584, 290);
         getContentPane().add(scrollPane);
 
         // Confirmar selección
         JButton btnAgregar = new JButton("Agregar al carrito");
+        btnAgregar.setFont(new Font("Dialog", Font.PLAIN, 15));
         btnAgregar.setBounds(0, 438, 148, 23);
         getContentPane().add(btnAgregar);
         
         // Cerrar la ventana
         JButton btnSalir = new JButton("Volver al menu");
+        btnSalir.setFont(new Font("Dialog", Font.PLAIN, 15));
         btnSalir.setBounds(441, 438, 143, 23);
         getContentPane().add(btnSalir);
         
         JLabel lblNewLabel = new JLabel("Insertar la cantidad");
+        lblNewLabel.setFont(new Font("Dialog", Font.PLAIN, 15));
         lblNewLabel.setBounds(10, 399, 134, 14);
         getContentPane().add(lblNewLabel);
         
         txtCantidad = new JTextField();
-        txtCantidad.setFont(new Font("Arial", Font.PLAIN, 18));
+        txtCantidad.setFont(new Font("Calibri", Font.PLAIN, 15));
         txtCantidad.setColumns(10);
         txtCantidad.setBounds(10, 413, 283, 20);
         getContentPane().add(txtCantidad);
         
+        JLabel logo = new JLabel("");
+		logo.setIcon(new ImageIcon("src\\img\\logo-chico.png"));
+		logo.setBounds(0, 0, 109, 469);
+		getContentPane().add(logo);
+        
         JButton btnVerCarrito = new JButton("Ver Carrito");
+        btnVerCarrito.setFont(new Font("Dialog", Font.PLAIN, 15));
         btnVerCarrito.setBounds(147, 438, 148, 23);
         getContentPane().add(btnVerCarrito);
         
@@ -94,14 +108,16 @@ public class ClienteCompras extends JFrame {
 
         
         JButton btnEditarCarrito = new JButton("Editar Carrito");
+        btnEditarCarrito.setFont(new Font("Dialog", Font.PLAIN, 15));
         btnEditarCarrito.setBounds(294, 438, 148, 23);
         getContentPane().add(btnEditarCarrito);
         
         btnEditarCarrito.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				controllerCarrito.editarCarrito();
-			}
-		});
+            public void actionPerformed(ActionEvent arg0) {
+                controllerCarrito.editarCarrito(idCarritoActual);
+            }
+        });
+
         
         // EVENTO VOLVER AL MENU
         btnSalir.addActionListener(new ActionListener() {

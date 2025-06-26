@@ -106,11 +106,11 @@ public class MenuCliente extends JFrame {
 		contentPane.add(btnEstadoCompra);
 		
 		btnEstadoCompra.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				controlador.verCompra();
-				
-			}
+		    public void actionPerformed(ActionEvent arg0) {
+		        controlador.verCompra();
+		    }
 		});
+
 		
 		
 		JButton btnSalir = new JButton("Salir");

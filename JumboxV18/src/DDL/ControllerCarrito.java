@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
-import GUI.EleccionCarrito;
+import GUI.OpcionCarrito;
 import GUI.PantallaPrincipal;
 import GUI.VerCarrito;
 
@@ -254,34 +254,17 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	}
 	
 	@Override
-	public void editarCarrito() {
-		if (carrito.isEmpty()) {
+	public void editarCarrito(int idCarritoActual) {
+	    LinkedList<Carrito> carritoProductos = obtenerCarrito(idCarritoActual);
+	    if (carritoProductos.isEmpty()) {
 	        JOptionPane.showMessageDialog(null, "El carrito está vacío.");
 	        return;
 	    }
 
-	    String[] nombres = new String[carrito.size()];
-	    for (int i = 0; i < carrito.size(); i++) {
-	        nombres[i] = carrito.get(i).getProducto().getNombre() + " (x" + carrito.get(i).getCantidad() + ")";
-	    }
-
-	    String seleccion = (String) JOptionPane.showInputDialog(null, "Seleccione un producto a editar:", "Editar Carrito", JOptionPane.QUESTION_MESSAGE, null, nombres, nombres[0]);
-
-	    if (seleccion != null) {
-	    	Carrito itemSeleccionado = null;
-	        for (Carrito item : carrito) {
-	            String nombreItem = item.getProducto().getNombre() + " (x" + item.getCantidad() + ")";
-	            if (nombreItem.equals(seleccion)) {
-	                itemSeleccionado = item;
-	                break;
-	            }
-	        }
-
-	        EleccionCarrito carri = new EleccionCarrito(itemSeleccionado, carrito);
-	        carri.setVisible(true);
-	    }
-		
+	    OpcionCarrito editar = new OpcionCarrito(carritoProductos);
+	    editar.setVisible(true);
 	}
+
 	
 	
 	
@@ -437,52 +420,14 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 
 	@Override
 	public void verCompra() {
-		
-		try {
-            int telefono = Integer.parseInt(JOptionPane.showInputDialog("Ingrese su telefono para ver sus pedidos:"));
-            PreparedStatement stmt =  con.prepareStatement(
-            		"SELECT p.id_pedido, p.fecha, p.estado, d.cantidad, prod.nombre, prod.precio " +
-                    "FROM pedido p " +
-                    "JOIN detalles_pedido d ON p.id_pedido = d.fk_pedido " +
-                    "JOIN producto prod ON d.fk_producto = prod.id_producto " +
-                    "JOIN cliente c ON p.fk_cliente = c.id_cliente " +
-                    "WHERE c.telefono = ? AND p.estado != 'notificado'");
+		EstadoCompra verCompra = new EstadoCompra(con);
+		verCompra.setVisible(true);
+	}
 
-            stmt.setInt(1, telefono);
-            ResultSet rs = stmt.executeQuery();
 
-            String resumen = "";
-            int pedidoActual = -1;
-
-            while (rs.next()) {
-                int idPedido = rs.getInt("id_pedido");
-                String fecha = rs.getString("fecha");
-                String estado = rs.getString("estado");
-                String producto = rs.getString("nombre");
-                int cantidad = rs.getInt("cantidad");
-                double precio = rs.getDouble("precio");
-
-                if (pedidoActual != idPedido) {
-                    if (pedidoActual != -1) resumen += "\n-----------------------------\n";
-                    resumen += "Pedido #" + idPedido +
-                               "\nFecha: " + fecha +
-                               "\nEstado: " + estado +
-                               "\nProductos:\n";
-                    pedidoActual = idPedido;
-                }
-                resumen += "- " + producto + " x " + cantidad + " = $" + (precio * cantidad) + "\n";
-            }
-
-            if (resumen.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "No se encontraron compras para ese cliente.");
-            } else {
-                JOptionPane.showMessageDialog(null, resumen);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Error al consultar compras.");
-        }
+	@Override
+	public void editarCarrito() {
+		// TODO Auto-generated method stub
 		
 	}
 }
