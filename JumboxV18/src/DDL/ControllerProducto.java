@@ -63,7 +63,6 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
         }
         return false;
     }
-
     
     public void eliminarProducto(Productos producto) {
         try {

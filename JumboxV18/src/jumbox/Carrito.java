@@ -7,7 +7,6 @@ public class Carrito{
     private int id_carrito;
     private Sucursal sucursalAsociada;
 
-
     public Carrito(Productos producto, int cantidad) {
         this.producto = producto;
         this.cantidad = cantidad;
@@ -38,6 +37,11 @@ public class Carrito{
         this.id_carrito = id_carrito;
     }
     
+    
+    public double getTotal() {
+        return producto.getPrecio() * cantidad;
+    }
+    
     public Sucursal getSucursalAsociada() {
         return sucursalAsociada;
     }
@@ -45,11 +49,4 @@ public class Carrito{
     public void setSucursalAsociada(Sucursal sucursal) {
         this.sucursalAsociada = sucursal;
     }
-
-    
-    
-    public double getTotal() {
-        return producto.getPrecio() * cantidad;
-    }
-
 }
