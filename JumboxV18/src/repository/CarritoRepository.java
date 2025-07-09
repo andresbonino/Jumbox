@@ -13,4 +13,5 @@ public interface CarritoRepository {
 	void verCarrito(Cliente cliente, Sucursal sucursal);
 	void editarCarrito();
 	void verCompra();
+	void editarCarrito(int idCarritoActual);
 }

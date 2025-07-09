@@ -49,6 +49,20 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
         }
     }
     
+    public boolean existeProductoConNombre(String nombre) {
+        try {
+            String sql = "SELECT COUNT(*) FROM producto WHERE LOWER(nombre) = LOWER(?)";
+            PreparedStatement stmt = con.prepareStatement(sql);
+            stmt.setString(1, nombre);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     
     public void eliminarProducto(Productos producto) {
         try {
@@ -96,8 +110,8 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
                 String nombre = rs.getString("nombre");
                 Double precio = rs.getDouble("precio");
                 int stock = rs.getInt("stock");
-               
-                Productos p = new Productos(nombre, precio, stock);
+                int categoria = rs.getInt("fk_categoria");
+                Productos p = new Productos(nombre, precio, stock, categoria);
                 p.setIdProducto(id);
                 producto.add(p);
                         
@@ -120,8 +134,8 @@ public class ControllerProducto<T extends Productos> implements ProductoReposito
                 String nombre = rs.getString("nombre");
                 Double precio = rs.getDouble("precio");
                 int stock = rs.getInt("stock");
-               
-                Productos p = new Productos(nombre, precio, stock);
+                int categoria = rs.getInt("fk_categoria");
+                Productos p = new Productos(nombre, precio, stock, categoria);
                 p.setIdProducto(id);
                 producto.add(p);
                         

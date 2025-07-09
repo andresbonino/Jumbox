@@ -120,6 +120,10 @@ public class AgregarProducto extends JFrame {
 		            LblError.setText("Campo Vacio");
 		            return;
 		        }
+		        if (controllerP.existeProductoConNombre(nombre)) {
+		            LblError.setText("Ya existe un producto con ese nombre");
+		            return;
+		        }
 
 		        double precio = Double.parseDouble(precioStr);
 		        int stock = Integer.parseInt(stockStr);
