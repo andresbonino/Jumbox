@@ -68,7 +68,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	    	    OpcionesSucursales.values()[0]
 	    	);
 
-	    	// Validar si se seleccionó una opción
+	    	
 	    	if (opcionSeleccionada == null) return;
 
 	    	this.sucursalSeleccionada = new Sucursal(opcionSeleccionada.getId(), null);
@@ -232,13 +232,25 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	    double total = 0;
 
 	    for (Carrito item : carrito) {
-	        resumen.append(item.getProducto().getNombre())
+	    	
+	    	if (item.getCantidad() > 10) {
+	    		resumen.append(item.getProducto().getNombre())
+	               .append(" x ")
+	               .append(item.getCantidad())
+	               .append(" (+ 10% Descuento)= $")
+	               .append(item.getTotal()*0.9)
+	               .append("\n");
+	    		total += item.getTotal()*0.9;
+			} else {
+				resumen.append(item.getProducto().getNombre())
 	               .append(" x ")
 	               .append(item.getCantidad())
 	               .append(" = $")
 	               .append(item.getTotal())
 	               .append("\n");
-	        total += item.getTotal();
+				total += item.getTotal();
+			}
+	        
 	    }
 
 	    resumen.append("\nTOTAL: $").append(total);
