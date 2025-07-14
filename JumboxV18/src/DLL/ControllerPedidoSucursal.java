@@ -229,9 +229,8 @@ public class ControllerPedidoSucursal<T extends Sucursal> implements ProductoRep
 
 
 	@Override
-	public void agregarProducto(Productos Producto) {
+	public void agregarProducto(Productos producto) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

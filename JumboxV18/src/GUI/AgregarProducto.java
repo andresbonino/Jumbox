@@ -115,6 +115,7 @@ public class AgregarProducto extends JFrame {
 		        String nombre = textField.getText().trim();
 		        String precioStr = textField_1.getText().trim();
 		        String stockStr = textField_2.getText().trim();
+		        
 
 		        if (nombre.isEmpty() || precioStr.isEmpty() || stockStr.isEmpty()) {
 		            LblError.setText("Campo Vacio");
