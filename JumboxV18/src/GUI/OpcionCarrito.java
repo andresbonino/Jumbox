@@ -9,6 +9,7 @@ import jumbox.Carrito;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class OpcionCarrito extends JFrame {
@@ -114,12 +115,21 @@ public class OpcionCarrito extends JFrame {
                     return;
                 }
 
-                if (nuevaCantidad > itemSeleccionado.getProducto().getStock()) {
-                    lblError.setText("Cantidad supera el stock.");
-                    return;
+                Connection con = Conexion.getInstance().getConnection();
+                PreparedStatement stmtStock = con.prepareStatement(
+                	    "SELECT cantidad FROM almacen_sucursal WHERE fk_producto = ?"
+                	);
+                stmtStock.setInt(1, itemSeleccionado.getProducto().getIdProducto());
+                ResultSet rs = stmtStock.executeQuery();
+                if (rs.next()) {
+                    int stockDisponible = rs.getInt("cantidad");
+                    if (nuevaCantidad > stockDisponible) {
+                        lblError.setText("Stock insuficiente. Disponible: " + stockDisponible);
+                        return;
+                    }
                 }
 
-                Connection con = Conexion.getInstance().getConnection();
+
                 PreparedStatement stmt = con.prepareStatement(
                     "UPDATE producto_carrito SET cantidad = ? WHERE fk_producto = ? AND fk_carrito = ?"
                 );
