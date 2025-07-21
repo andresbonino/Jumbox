@@ -31,14 +31,29 @@ public class VerCarrito extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         double total = 0;
+        int cantidadTotal = 0;
+
         StringBuilder carritoTxt = new StringBuilder("Productos en el carrito:\n\n");
         for (Carrito item : carritoProductos) {
         	carritoTxt.append(item.getProducto().getNombre())
-              .append(" x ").append(item.getCantidad())
-              .append(" = $").append(item.getTotal()).append("\n");
-            total += item.getTotal();
+        	  .append(" x ").append(item.getCantidad())
+        	  .append(" = $").append(item.getTotal()).append("\n");
+        	total += item.getTotal();
+        	cantidadTotal += item.getCantidad();
         }
-        carritoTxt.append("\nTOTAL: $").append(total);
+
+
+
+        if (cantidadTotal > 30) {
+        	double descuento = total * 0.10;
+        	double totalConDescuento = total - descuento;
+        	carritoTxt.append("\nTOTAL sin descuento $"+total);
+        	carritoTxt.append("\nDESCUENTO 10% aplicado: -$").append(String.format("%.2f", descuento));
+        	carritoTxt.append("\nTOTAL FINAL: $").append(String.format("%.2f", totalConDescuento));
+        } else {
+            carritoTxt.append("\nTOTAL $"+total);
+        }
+        
         getContentPane().setLayout(null);
         
         JTextArea area = new JTextArea();

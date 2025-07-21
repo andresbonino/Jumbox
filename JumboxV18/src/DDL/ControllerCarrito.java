@@ -7,6 +7,7 @@ import java.util.LinkedList;
 
 import javax.swing.JOptionPane;
 
+import GUI.EstadoCompra;
 import GUI.OpcionCarrito;
 import GUI.PantallaPrincipal;
 import GUI.VerCarrito;
@@ -67,7 +68,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	    	    OpcionesSucursales.values()[0]
 	    	);
 
-	    	// Validar si se seleccionó una opción
+	    	
 	    	if (opcionSeleccionada == null) return;
 
 	    	this.sucursalSeleccionada = new Sucursal(opcionSeleccionada.getId(), null);
@@ -139,6 +140,15 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	        }
 
 	        if (productoElegido != null) {
+	        	
+	        	// CONTROLAR QUE TODOS LOS PRODUCTOS SEAN DE LA MISMA SUCURSAL
+	        	if (this.sucursalSeleccionada == null) {
+	        	    this.sucursalSeleccionada = new Sucursal(opcionSeleccionada.getId(), null);
+	        	} else if (this.sucursalSeleccionada.getId_Sucursal() != opcionSeleccionada.getId()) {
+	        	    JOptionPane.showMessageDialog(null, "Ya estás comprando en la sucursal: " + this.sucursalSeleccionada.getId_Sucursal()
+	        	        + "\nNo se pueden agregar productos de otra sucursal.");
+	        	    return;
+	        	}
 	        	
 	        	// VERIFICAR SI YA ESTA EN EL CARRITO
 	        	boolean yaEnCarrito = false;
@@ -222,13 +232,25 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	    double total = 0;
 
 	    for (Carrito item : carrito) {
-	        resumen.append(item.getProducto().getNombre())
+	    	
+	    	if (item.getCantidad() > 10) {
+	    		resumen.append(item.getProducto().getNombre())
+	               .append(" x ")
+	               .append(item.getCantidad())
+	               .append(" (+ 10% Descuento)= $")
+	               .append(item.getTotal()*0.9)
+	               .append("\n");
+	    		total += item.getTotal()*0.9;
+			} else {
+				resumen.append(item.getProducto().getNombre())
 	               .append(" x ")
 	               .append(item.getCantidad())
 	               .append(" = $")
 	               .append(item.getTotal())
 	               .append("\n");
-	        total += item.getTotal();
+				total += item.getTotal();
+			}
+	        
 	    }
 
 	    resumen.append("\nTOTAL: $").append(total);
@@ -402,6 +424,7 @@ public class ControllerCarrito <T extends Carrito> implements CarritoRepository{
 	        psBorrar.executeUpdate();
 
 	        carrito.clear();
+	        this.sucursalSeleccionada = null;
 	        
 	     // BORRAR EL CARRITO EN SI
 	        PreparedStatement psBorrarCarrito = con.prepareStatement(

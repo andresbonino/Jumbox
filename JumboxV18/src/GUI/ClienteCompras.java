@@ -199,25 +199,42 @@ public class ClienteCompras extends JFrame {
             return;
         }
 
-        try (PreparedStatement stmt = con.prepareStatement(
+        try {
+           
+
+         // VERIFICAR SI YA ESTA EN EL CARRITO EL PRODUCTO
+            PreparedStatement checkDup = con.prepareStatement(
+                "SELECT COUNT(*) FROM producto_carrito WHERE fk_producto = ? AND fk_carrito = ?"
+            );
+            checkDup.setInt(1, producto.getIdProducto());
+            checkDup.setInt(2, idCarritoActual);
+            ResultSet rsDup = checkDup.executeQuery();
+            if (rsDup.next() && rsDup.getInt(1) > 0) {
+                JOptionPane.showMessageDialog(this, "Este producto ya está en el carrito.");
+                return;
+            }
+            
+            PreparedStatement stmt = con.prepareStatement(
                 "INSERT INTO producto_carrito(fk_producto, fk_carrito, cantidad) VALUES (?, ?, ?)"
-            )) {
+            );
             stmt.setInt(1, producto.getIdProducto());
             stmt.setInt(2, idCarritoActual);
             stmt.setInt(3, cantidad);
 
             int filasInsertadas = stmt.executeUpdate();
-
             if (filasInsertadas > 0) {
                 JOptionPane.showMessageDialog(this, "Producto agregado al carrito.");
             } else {
                 JOptionPane.showMessageDialog(this, "No se pudo agregar el producto al carrito.");
             }
+
         } catch (SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error al agregar al carrito: " + ex.getMessage());
         }
     }
+
+
 
 
 
