@@ -70,7 +70,9 @@ public class MenuDeposito extends JFrame {
 		
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				controllerP.procesarPedidosPendientes();
+				ProcesarPedidos menu = new ProcesarPedidos();
+				menu.setVisible(true);
+
 			}
 		});
 		
